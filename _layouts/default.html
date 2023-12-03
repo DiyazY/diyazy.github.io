@@ -16,10 +16,9 @@
                 <h1>Personal Website</h1>
                 <nav>
                     <ul>
-                        <li><a href="#">Home</a></li>
-                        <li><a href="#">About</a></li>
-                        <li><a href="#">Blog</a></li>
-                        <li><a href="#">Contact</a></li>
+                        {% for item in site.data.navigation %}
+                            <li><a href="{{ item.url }}">{{ item.title }}</a></li>
+                        {% endfor %}
                     </ul>
                 </nav>
             </div>

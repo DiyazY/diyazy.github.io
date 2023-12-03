@@ -11,18 +11,7 @@
 </head>
 <body>
     <div id="page-container">
-        <header>
-            <div class="container">
-                <h1>Personal Website</h1>
-                <nav>
-                    <ul>
-                        {% for item in site.data.navigation %}
-                            <li><a href="{{ item.url }}">{{ item.title }}</a></li>
-                        {% endfor %}
-                    </ul>
-                </nav>
-            </div>
-        </header>
+        {% include header.html %}
 
         <main id="content-wrap">
             <div class="container">
@@ -30,9 +19,7 @@
             </div>
         </main>
 
-        <footer>
-            <p>© 2023 Diyaz Yakubov. All rights reserved.</p>
-        </footer>
+        {% include footer.html %}
     </div>
 </body>
 </html>

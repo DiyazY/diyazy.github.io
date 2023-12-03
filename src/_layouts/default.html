@@ -1,0 +1,39 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>{{page.title}}</title>
+    <link rel="stylesheet" href="../styles/main.css"> 
+    <!-- {% if jekyll.environment == 'development' %}
+        <script src="http://{{ site.host }}:35729/livereload.js"></script>
+    {% endif %} -->
+</head>
+<body>
+    <div id="page-container">
+        <header>
+            <div class="container">
+                <h1>Personal Website</h1>
+                <nav>
+                    <ul>
+                        <li><a href="#">Home</a></li>
+                        <li><a href="#">About</a></li>
+                        <li><a href="#">Blog</a></li>
+                        <li><a href="#">Contact</a></li>
+                    </ul>
+                </nav>
+            </div>
+        </header>
+
+        <main id="content-wrap">
+            <div class="container">
+                {{content}}
+            </div>
+        </main>
+
+        <footer>
+            <p>© 2023 Diyaz Yakubov. All rights reserved.</p>
+        </footer>
+    </div>
+</body>
+</html>

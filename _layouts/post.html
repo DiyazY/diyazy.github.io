@@ -1,7 +1,18 @@
-<article>
-    <h1>{{ page.title }}</h1>
-    <p>Published on {{ page.date | date_to_string }}</p>
-    <div>
+<!DOCTYPE html>
+<html>
+<head>
+    <link rel="stylesheet" href="{{ site.baseurl }}/assets/css/post.css">
+</head>
+<body>   
+    <article class="article-post">
+        <div class="post-header">
+            <h1>{{ page.title }}</h1>
+            <a href="{{ site.baseurl }}/blog" class="back-link">Back</a>
+        </div>
+        <p><small>Published on {{ page.date | date: "%B %d, %Y" }}</small></p>
+        
         {{ content }}
-    </div>
-</article>
+    </article>
+    
+</body>
+</html>

@@ -1,0 +1,48 @@
+/* Style for posts list */
+.posts-list {
+    list-style: none;
+    padding: 0;
+    width: 80%;
+    max-width: 800px;
+    margin: 40px auto;
+}
+
+.posts-list li {
+    border-bottom: 1px solid #eee;
+    padding: 15px 0;
+}
+
+.posts-list li:last-child {
+    border-bottom: none;
+}
+
+.posts-list a {
+    font-size: 1.2em;
+    color: #007bff;
+    text-decoration: none;
+}
+
+.posts-list a:hover {
+    text-decoration: underline;
+}
+
+.posts-list p {
+    margin: 5px 0 0;
+    color: #666;
+}
+
+.posts-list .post-date {
+    font-style: italic;
+    color: #999;
+}
+
+.posts-list .post-excerpt {
+    margin-top: 5px;
+}
+
+/* Responsive Design for smaller devices */
+@media (max-width: 768px) {
+    .posts-list {
+        width: 95%;
+    }
+}

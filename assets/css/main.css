@@ -1,12 +1,20 @@
 /* Base layout */
 html, body {
     font-family: 'Helvetica Neue', Helvetica, Arial, sans-serif;
-    color: #333;
+    color: #333; /* Retained original text color for readability */
     line-height: 1.6;
     margin: 0;
     padding: 0;
-    background-color: #f9f9f9;
+    background-color: #e3eae9; /* Updated background color */
     height: 100%; /* Added for sticky footer */
+}
+
+body {
+    background-image: url('../images/kazakh_steppe.png'); /* Replace with the actual path to your image */
+    background-size: cover; /* Cover the entire page */
+    background-position: center; /* Center the image */
+    background-repeat: no-repeat; /* Do not repeat the image */
+    background-attachment: fixed; /* Fixed background */
 }
 
 #page-container {
@@ -17,12 +25,16 @@ html, body {
 
 #content-wrap {
     flex: 1; /* Allows the content to expand and fill the space */
+    background-color: rgba(255, 255, 255, 0.7); /* White background with transparency */
+    backdrop-filter: blur(10px); /* Blur effect for the background */
+    border-radius: 15px; /* Rounded corners */
+    padding: 20px; /* Add padding if needed */
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1); /* Optional: add a subtle shadow for depth */
 }
 
 /* Header */
 header {
-    background-color: #fff;
-    border-bottom: 1px solid #eee;
+    background-color: #87dfefab; /* Updated header background color */
     padding: 20px 0;
 }
 
@@ -34,6 +46,7 @@ header .container {
 header h1 {
     margin: 0;
     font-size: 2em;
+    color: #2a2521; /* Updated header text color */
 }
 
 /* Navigation */
@@ -47,36 +60,44 @@ nav ul li {
     margin-right: 20px;
 }
 
+nav ul li a {
+    color: #2a2520; /* Updated link color in navigation */
+}
+
+nav ul li a:hover {
+    color: #2a2520; /* Updated hover color in navigation */
+}
+
 /* Main content */
 main {
     width: 80%;
     margin: 40px auto;
     padding: 20px;
-    background-color: #fff;
-    border: 1px solid #eee;
+    background-color: #fff; /* Retained the white background for content area */
 }
 
 /* Footer */
 footer {
     text-align: center;
     padding: 20px 0;
-    background-color: #fff;
-    border-top: 1px solid #eee;
+    background-color: #d2925bb3;
     flex-shrink: 0; /* Prevents the footer from shrinking */
 }
 
 footer p {
     margin: 0;
+    color: #2a2521; /* Updated footer text color */
 }
 
 /* Links */
 a {
-    color: #007bff;
+    color: #007bff; /* Retained original link color for contrast */
     text-decoration: none;
 }
 
 a:hover {
     text-decoration: underline;
+    color: #594a40; /* Updated hover color for links */
 }
 
 /* Responsive design */
@@ -88,5 +109,9 @@ a:hover {
     nav ul li {
         display: block;
         margin-bottom: 10px;
+    }
+
+    #content-wrap {
+        border-radius: 0%;
     }
 }

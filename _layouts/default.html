@@ -5,6 +5,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>{{page.title}}</title>
     <link rel="stylesheet" href="{{ site.baseurl }}/assets/css/main.css"> 
+    <link rel="stylesheet" href="{{ site.baseurl }}/assets/css/panels.css"> 
     <link rel="stylesheet" href="{{ site.baseurl }}/assets/css/blog.css"> 
     <link rel="apple-touch-icon" sizes="180x180" href="/apple-touch-icon.png">
     <link rel="icon" type="image/png" sizes="32x32" href="{{ site.baseurl }}/assets/favicon-32x32.png">
@@ -16,9 +17,7 @@
         {% include header.html %}
 
         <main id="content-wrap">
-            <div class="container">
-                {{content}}
-            </div>
+            {{content}}
         </main>
 
         {% include footer.html %}

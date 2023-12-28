@@ -24,12 +24,9 @@ body {
 }
 
 #content-wrap {
+    display: flex;
     flex: 1; /* Allows the content to expand and fill the space */
-    background-color: rgba(255, 255, 255, 0.7); /* White background with transparency */
-    backdrop-filter: blur(10px); /* Blur effect for the background */
-    border-radius: 15px; /* Rounded corners */
-    padding: 20px; /* Add padding if needed */
-    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1); /* Optional: add a subtle shadow for depth */
+    background-color: transparent;
 }
 
 /* Header */
@@ -72,7 +69,6 @@ nav ul li a:hover {
 main {
     width: 80%;
     margin: 40px auto;
-    padding: 20px;
     background-color: #fff; /* Retained the white background for content area */
 }
 

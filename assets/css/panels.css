@@ -7,7 +7,7 @@
   padding: 10px; /* Padding around the grid */
 }
 
-.item-it {
+.item-1-1-4-2 {
   grid-area: 1 / 1 / 4 / 2; /* Spans from row 1 to 4, column 1 */
 }
 
@@ -31,11 +31,16 @@
   grid-area: 3 / 3 / 4 / 4; /* Spans from row 3 to 4, column 3 */
 }
 
+.item-1-3-4-4 {
+  grid-area: 1 / 3 / 4 / 4;
+}
+
+.item-1-2-2-2 {
+  grid-area: 1 / 2 / 2 / 2;
+}
+
 /* Add common styles for all items */
 .panel-container > div {
-  display: flex;
-  justify-content: center;
-  align-items: center;
   padding: 20px;
   border-radius: 10px; /* Rounded corners like macOS */
   background-color: rgba(

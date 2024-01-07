@@ -1,13 +1,18 @@
 /* Post Layout Style */
 
+body {
+    background-color: #d2925be6;
+}
+
 .article-post {
-    width: 80%;
-    max-width: 800px; /* Adjusts the maximum width of the article */
+    font-family: system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, 'Open Sans', 'Helvetica Neue', sans-serif;
+    /* width: 80%;
+    max-width: 800px; 
     margin: 40px auto;
     padding: 20px;
     background-color: #fff;
     border: 1px solid #eee;
-    box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+    box-shadow: 0 2px 5px rgba(0,0,0,0.1); */
 }
 
 .article-post h1, 

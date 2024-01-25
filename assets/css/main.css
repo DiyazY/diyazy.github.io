@@ -6,7 +6,6 @@ html, body {
     margin: 0;
     padding: 0;
     background-color: #e3eae9; /* Updated background color */
-    height: 100%; /* Added for sticky footer */
 }
 
 body {

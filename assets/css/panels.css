@@ -64,10 +64,11 @@
 @media (max-width: 768px) {
   .panel-container {
     display: block;
-    padding: 5px; /* Padding around the grid */
+    padding: 0px; /* Padding around the grid */
   }
   .panel-container > div {
     margin: 1vh 0;
+    border-radius: 0px;
   }
 
   .none-mobile {

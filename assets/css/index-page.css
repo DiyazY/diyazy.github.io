@@ -1,0 +1,12 @@
+.homelab {
+  background-image: url(../images/homelab.png);
+  background-position: center;
+  background-size: cover;
+}
+.homelab h2 {
+  text-align: center;
+  color: antiquewhite;
+  border-radius: 0.6rem;
+  margin: 0;
+  backdrop-filter: blur(10px);
+}

@@ -6,7 +6,6 @@ html, body {
     margin: 0;
     padding: 0;
     background-color: #e3eae9; /* Updated background color */
-    height: 100%; /* Added for sticky footer */
 }
 
 body {
@@ -20,7 +19,7 @@ body {
 #page-container {
     display: flex;
     flex-direction: column;
-    min-height: 100%; /* Ensures minimum height for the flex container */
+    min-height: 100vh; /* Ensures minimum height for the flex container */
 }
 
 #content-wrap {

@@ -75,14 +75,6 @@ body {
     color: #666;
 }
 
-/* Responsive Design for smaller devices */
-@media (max-width: 768px) {
-    .article-post {
-        width: 95%;
-        padding: 15px;
-    }
-}
-
 .article-post .post-header {
     display: flex;
     justify-content: space-between;
@@ -97,4 +89,12 @@ body {
 .article-post .back-link {
     margin-left: 20px; /* Spacing between title and back link */
     border-radius: 5px;
+}
+
+/* Responsive Design for smaller devices */
+@media (max-width: 768px) {
+    .article-post {
+        width: 95%;
+        padding: 15px;
+    }
 }

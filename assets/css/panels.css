@@ -73,10 +73,13 @@
   .panel-container > div {
     margin: 1vh 0;
     border-radius: 0px;
-    height: 12vh;
   }
 
   .none-mobile {
     display: none;
+  }
+
+  .mob-h-12vh {
+    height: 12vh;
   }
 }

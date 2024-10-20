@@ -132,3 +132,4 @@ dist
 _site
 .jekyll-metadata
 .DS_Store
+.todo-list

@@ -75,14 +75,6 @@ body {
     color: #666;
 }
 
-/* Responsive Design for smaller devices */
-@media (max-width: 768px) {
-    .article-post {
-        width: 95%;
-        padding: 15px;
-    }
-}
-
 .article-post .post-header {
     display: flex;
     justify-content: space-between;
@@ -97,4 +89,21 @@ body {
 .article-post .back-link {
     margin-left: 20px; /* Spacing between title and back link */
     border-radius: 5px;
+}
+
+.article-image {
+    margin: 20px 0;
+    border-radius: 8px;
+    overflow: hidden;
+    max-height: 40vh;
+    display: block;
+    margin: auto;
+}
+
+/* Responsive Design for smaller devices */
+@media (max-width: 768px) {
+    .article-post {
+        width: 95%;
+        padding: 15px;
+    }
 }

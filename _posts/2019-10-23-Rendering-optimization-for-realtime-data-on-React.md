@@ -3,10 +3,11 @@ layout: post
 author: Diyaz Yakubov
 title: Rendering optimization for real-time data on React
 date: 2019-10-23 12:53:01 UTC
-background: //cdn-images-1.medium.com/max/1024/1*nmlSKhw0qPLbOi4w1JB5IA.png
+background: https://cdn-images-1.medium.com/max/1024/1*nmlSKhw0qPLbOi4w1JB5IA.png
+excerpt_separator: <!--more-->
 ---
 
-Nowadays some users want to interact with real-time applications which are smooth and with zero delays. From development side I would ask “Why?”, “Is it needed?” “Can we avoid it???!!!” and so on. But some business model needs live data, and this is a reason when we need to use an optimized solution for real-time.
+Nowadays some users want to interact with real-time applications which are smooth and with zero delays. From development side I would ask “Why?”, “Is it needed?” “Can we avoid it???!!!” and so on. <!--more--> But some business model needs live data, and this is a reason when we need to use an optimized solution for real-time.
 
 I will briefly explain the technology stack, task and of course implementation.
 

@@ -100,6 +100,15 @@ body {
     margin: auto;
 }
 
+.article-post p > img {
+    margin: 20px 0;
+    border-radius: 8px;
+    overflow: hidden;
+    max-height: 40vh;
+    display: block;
+    margin: auto;
+}
+
 /* Responsive Design for smaller devices */
 @media (max-width: 768px) {
     .article-post {

@@ -3,16 +3,16 @@ layout: post
 author: Diyaz Yakubov
 title: My conclusions after using Blazor on a real project.
 date: 2020-04-19 18:46:33 UTC
-background: //cdn-images-1.medium.com/max/1024/1*Klw3oYkkhK5eGzoLEAWTqQ.png
+background: https://cdn-images-1.medium.com/max/1024/1*Klw3oYkkhK5eGzoLEAWTqQ.png
+excerpt_separator: <!--more-->
 ---
 
-> Nov 2022&nbsp;Updates:
 
-> It is getting better certainly 🙂. With the newest&nbsp;.NET 7, the new JavaScript interop functionality was shipped, which can easily invoke&nbsp;.NET code from JavaScript using the&nbsp;.NET WebAssembly runtime, and vice versa. So, it can call JavaScript functionality from&nbsp;.NET. I may conclude that Blazor become more DX-friendly and open. And of course, it has many other improvements, such as performance improvements, more AOT, etc. [This link](https://visualstudiomagazine.com/articles/2022/11/10/aspnet-core-net-7.aspx?m=1) is a good overview of Blazor updates and&nbsp;plans.
-
-C# and&nbsp;.Net Core have significantly improved in everything (architecture, performance, portability, etc.), and now, we can see how the ecosystem growing fast. In 2019, The Blazor framework was released which extended the&nbsp;.NET ecosystem. I have read many blogs and articles about this framework, and writers mostly made some HelloWorld projects. Despite the fact that some of the authors showed more complex examples, none of these examples seemed realistic. I wondered to use it on a real project, and I thought that it would be super interesting and easy, for a&nbsp;.NET developer, to build a SPA application in such a way (using C# and razor engine). Nevertheless, I found this framework a bit&nbsp;awkward.
+C# and&nbsp;.Net Core have significantly improved in everything (architecture, performance, portability, etc.), and now, we can see how the ecosystem growing fast. <!--more-->In 2019, The Blazor framework was released which extended the&nbsp;.NET ecosystem. I have read many blogs and articles about this framework, and writers mostly made some HelloWorld projects. Despite the fact that some of the authors showed more complex examples, none of these examples seemed realistic. I wondered to use it on a real project, and I thought that it would be super interesting and easy, for a&nbsp;.NET developer, to build a SPA application in such a way (using C# and razor engine). Nevertheless, I found this framework a bit&nbsp;awkward.
 
 The Blazor framework has cons and pros as any other framework, but I want to share drawbacks that I noticed during my&nbsp;project.
+
+> It is getting better certainly 🙂. With the newest&nbsp;.NET 7, the new JavaScript interop functionality was shipped, which can easily invoke&nbsp;.NET code from JavaScript using the&nbsp;.NET WebAssembly runtime, and vice versa. So, it can call JavaScript functionality from&nbsp;.NET. I may conclude that Blazor become more DX-friendly and open. And of course, it has many other improvements, such as performance improvements, more AOT, etc. [This link](https://visualstudiomagazine.com/articles/2022/11/10/aspnet-core-net-7.aspx?m=1) is a good overview of Blazor updates and&nbsp;plans.
 
 > Note: It’s only my vision and thoughts about this framework.
 

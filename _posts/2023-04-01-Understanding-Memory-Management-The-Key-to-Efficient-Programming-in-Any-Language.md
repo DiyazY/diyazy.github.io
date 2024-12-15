@@ -1,12 +1,13 @@
 ---
 layout: post
 author: Diyaz Yakubov
-title: Understanding Memory Management:\ The Key to Efficient Programming in Any Language
+title: Understanding Memory Management - The Key to Efficient Programming in Any Language
 date: 2023-04-01 18:34:05 UTC
-background: //cdn-images-1.medium.com/max/1024/1*XKWruMmafS0Zah-f-TiS_w.png
+background: https://cdn-images-1.medium.com/max/1024/1*XKWruMmafS0Zah-f-TiS_w.png
+excerpt_separator: <!--more-->
 ---
 
-Memory management is a critical aspect of programming languages that involves allocating and deallocating memory during program execution. Here are some key concepts related to memory management:
+Memory management is a critical aspect of programming languages that involves allocating and deallocating memory during program execution. <!--more-->Here are some key concepts related to memory management:
 
 1. Memory allocation: When a program needs to store data, it requests memory from the operating system. The memory can be allocated statically, at compile time, or dynamically, at&nbsp;runtime.
 2. Memory deallocation: Once the program is finished using the memory, it must be returned to the operating system. Failure to do so can lead to memory leaks, which can cause the program to crash or slow down over&nbsp;time.

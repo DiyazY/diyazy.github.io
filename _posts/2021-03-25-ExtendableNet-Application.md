@@ -3,14 +3,11 @@ layout: post
 author: Diyaz Yakubov
 title: Extendable .Net Application
 date: 2021-03-25 20:26:33 UTC
-background: //cdn-images-1.medium.com/max/1024/1*IXggAPHeLtMESIiTdQecSQ.png
+background: https://cdn-images-1.medium.com/max/1024/1*IXggAPHeLtMESIiTdQecSQ.png
+excerpt_separator: <!--more-->
 ---
 
-### Extendable&nbsp;.Net Application
-
-### Intro
-
-Contemporary software development requires a high frequency of changes, business’s needs change quite often as well as customers demand more and more features. In this competitive and not stable world, software systems should be able to be modified by requests in a reasonable time. That’s why we see rising dev tools, CI/CD, IDEs, integration tools and etc. Apart from those things, there are also some design methods that may facilitate rapid development. In this article, I’m going to cover a well-known technique which name is plug-in architecture.
+Contemporary software development requires a high frequency of changes, business’s needs change quite often as well as customers demand more and more features. In this competitive and not stable world, software systems should be able to be modified by requests in a reasonable time. <!--more-->That’s why we see rising dev tools, CI/CD, IDEs, integration tools and etc. Apart from those things, there are also some design methods that may facilitate rapid development. In this article, I’m going to cover a well-known technique which name is plug-in architecture.
 
 Plug-in architecture is an attractive solution for developers seeking to build applications that are modular, customizable, and easily extensible. And a _plug-in_ is a bundle that adds functionality to an application, called the _host application_, through some well-defined architecture for extensibility. This allows developers to add functionality to an application without having access to the source&nbsp;code.[[1]](https://developer.apple.com/library/archive/documentation/Cocoa/Conceptual/LoadingCode/Concepts/Plugins.html#:~:text=A%20plug%2Din%20is%20a,access%20to%20the%20source%20code.)
 

@@ -23,10 +23,10 @@ feed.entries.each do |e|
 	published_date = e.published.strftime("%Y-%m-%d")
 	filename = output_dir + '/' + published_date + '-' + e.title.gsub(/[^0-9a-z\s]/i, '').gsub(/\s+/,'-') + '.md'
 	puts e
-	# if File.exists?(filename)
-	# 	puts "#{filename} already exists. Skipping.."
-	# 	next
-	# end
+	if File.exist?(filename)
+		puts "#{filename} already exists. Skipping.."
+		next
+	end
 
 	content = e.content
 	parseHTML = Nokogiri::HTML(content)
@@ -42,7 +42,8 @@ layout: post
 author: #{e.author}
 title: #{e.title}
 date: #{e.published}
-background: #{img}
+background: https:#{img}
+excerpt_separator: <!--more-->
 ---
 
 	META

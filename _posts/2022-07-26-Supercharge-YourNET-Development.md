@@ -1,14 +1,13 @@
 ---
 layout: post
 author: Diyaz Yakubov
-title: The article about .NET tools
+title: Supercharge Your .NET Development
 date: 2022-07-26 07:03:05 UTC
-background: //cdn-images-1.medium.com/max/1024/1*ybjCt0sZ0tyKg0UiP0AYsw.png
+background: https://cdn-images-1.medium.com/max/1024/1*ybjCt0sZ0tyKg0UiP0AYsw.png
+excerpt_separator: <!--more-->
 ---
 
-### The article about&nbsp;.NET&nbsp;tools
-
-Usually, in small companies, people wear several roles. And quite often, among technical people, there is a person or group of people who is responsible for designing and evaluating the system architecture. Commonly, they share architecture and development activities (to some extent), hence, they have to zoom out/in on a system again and again to design the right abstractions on the right level. Of course, it is highly possible to miss the context between switching modes, especially, betwixt switching high-level design (services, modules, contracts, etc.) and low-level design (components, interfaces, classes, etc.). However, it is possible to be efficient on both sides if you reduce the inter switchings’ “mental payloads”. Modes are different, and they need different ways of thinking, e.g. fast/slow, profound/cherry-picking, etc. In this article, I will show my battle-tested set of tools that help me to cope with the problem of designing high-level architecture and low-level engineering stuff for&nbsp;.NET projects.
+Usually, in small companies, people wear several roles. And quite often, among technical people, there is a person or group of people who is responsible for designing and evaluating the system architecture. <!--more-->Commonly, they share architecture and development activities (to some extent), hence, they have to zoom out/in on a system again and again to design the right abstractions on the right level. Of course, it is highly possible to miss the context between switching modes, especially, betwixt switching high-level design (services, modules, contracts, etc.) and low-level design (components, interfaces, classes, etc.). However, it is possible to be efficient on both sides if you reduce the inter switchings’ “mental payloads”. Modes are different, and they need different ways of thinking, e.g. fast/slow, profound/cherry-picking, etc. In this article, I will show my battle-tested set of tools that help me to cope with the problem of designing high-level architecture and low-level engineering stuff for&nbsp;.NET projects.
 
 Particularly, I want to cover the following questions:
 

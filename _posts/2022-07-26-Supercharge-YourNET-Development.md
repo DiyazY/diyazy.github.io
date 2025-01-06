@@ -5,9 +5,13 @@ title: Supercharge Your .NET Development
 date: 2022-07-26 07:03:05 UTC
 background: https://cdn-images-1.medium.com/max/1024/1*ybjCt0sZ0tyKg0UiP0AYsw.png
 excerpt_separator: <!--more-->
+tags: [system-architecture, ndepend, c4-model, architecture, dotnet]
+original_link: https://medium.com/@diyaz.yakubov/the-article-about-net-tools-196fc810a55c?source=rss-ce9f85b2b690------2
 ---
 
 Usually, in small companies, people wear several roles. And quite often, among technical people, there is a person or group of people who is responsible for designing and evaluating the system architecture. <!--more-->Commonly, they share architecture and development activities (to some extent), hence, they have to zoom out/in on a system again and again to design the right abstractions on the right level. Of course, it is highly possible to miss the context between switching modes, especially, betwixt switching high-level design (services, modules, contracts, etc.) and low-level design (components, interfaces, classes, etc.). However, it is possible to be efficient on both sides if you reduce the inter switchings’ “mental payloads”. Modes are different, and they need different ways of thinking, e.g. fast/slow, profound/cherry-picking, etc. In this article, I will show my battle-tested set of tools that help me to cope with the problem of designing high-level architecture and low-level engineering stuff for&nbsp;.NET projects.
+
+![hero image](https://cdn-images-1.medium.com/max/1024/1*ybjCt0sZ0tyKg0UiP0AYsw.png)
 
 Particularly, I want to cover the following questions:
 
@@ -98,3 +102,4 @@ To sum up, I reckon that tools like NDepend significantly improve the process of
 
 ![](https://cdn-images-1.medium.com/max/834/1*z4P3eTfkMz12Ra3M9pHhIg.png)
  ![](https://medium.com/_/stat?event=post.clientViewed&referrerSource=full_rss&postId=196fc810a55c)
+Originally posted on [Supercharge Your .NET Development](https://medium.com/@diyaz.yakubov/the-article-about-net-tools-196fc810a55c?source=rss-ce9f85b2b690------2)

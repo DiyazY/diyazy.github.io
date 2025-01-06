@@ -31,6 +31,9 @@ feed.entries.each do |e|
 	content = e.content
 	parseHTML = Nokogiri::HTML(content)
 	img = parseHTML.xpath("//img")[0]['src'].sub!(/http(s)?:/,'')
+
+	tags = e.categories.join(', ')
+	original_link = e.url
 	
 	# Medium feed includes the hero image in the `content` field. Since Jekyll and other systems will probably render the hero image separately, remove it from the HTML before generating the Markdown
 	content.sub!(/<figure><img\salt="([\w\.\-])?"\ssrc="https:\/\/cdn-images-1.medium.com\/max\/[0-9]+\/[0-9]\*[0-9a-zA-Z._-]+"\s\/>(\<figcaption\>.*\<\/figcaption\>)?<\/figure>/, '')
@@ -44,9 +47,18 @@ title: #{e.title}
 date: #{e.published}
 background: https:#{img}
 excerpt_separator: <!--more-->
+tags: [#{tags}]
+original_link: #{original_link}
 ---
 
+
+	![hero image](https:#{img})
+	adjust excerpt_separator
+
+
+
 	META
-	
-	File.write(filename, meta + result)
+
+	originally_posted = "\r\nOriginally posted on [#{e.title}](#{original_link})"
+	File.write(filename, meta + result + originally_posted)
 end

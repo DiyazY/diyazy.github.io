@@ -5,9 +5,13 @@ title: How to run C# code in a browser.
 date: 2019-12-11 20:03:01 UTC
 background: https://cdn-images-1.medium.com/max/1024/1*7ShYHmJbf7W3HZ7Q09KV8Q.png
 excerpt_separator: <!--more-->
+tags: [webassembly, wasm, csharp, javascript, dotnet]
+original_link: https://medium.com/@diyaz.yakubov/how-to-run-c-code-in-a-browser-15d2c0c8bed3?source=rss-ce9f85b2b690------2
 ---
 
-Nowadays, there are a lot of talks about WebAssembly and how it would penetrate the front-end world. In fact, it has not yet. <!--more-->There are tons of articles about web assembly and how it works. I want to show you a use-case of running C# code in a&nbsp;browser.
+Nowadays, there are a lot of talks about WebAssembly and how it would penetrate the front-end world. In fact, it has not yet. There are tons of articles about web assembly and how it works. I want to show you a use-case of running C# code in<!--more--> a&nbsp;browser.
+
+![hero image](https://cdn-images-1.medium.com/max/1024/1*7ShYHmJbf7W3HZ7Q09KV8Q.png)
 
 > Nov 2022&nbsp;Updates:
 
@@ -113,3 +117,4 @@ This technology is pretty young. It has many issues but it also shows potential.
 > Thanks [Niki](https://medium.com/@nikitagavrilenko) for awesome illustration.
 
  ![](https://medium.com/_/stat?event=post.clientViewed&referrerSource=full_rss&postId=15d2c0c8bed3)
+Originally posted on [How to run C# code in a browser.](https://medium.com/@diyaz.yakubov/how-to-run-c-code-in-a-browser-15d2c0c8bed3?source=rss-ce9f85b2b690------2)

@@ -9,7 +9,7 @@ html, body {
 }
 
 body {
-    background-image: url('../images/kazakh_steppe.png'); /* Replace with the actual path to your image */
+    background-image: url('../images/kazakh_steppe.webp'); /* Replace with the actual path to your image */
     background-size: cover; /* Cover the entire page */
     background-position: center; /* Center the image */
     background-repeat: no-repeat; /* Do not repeat the image */

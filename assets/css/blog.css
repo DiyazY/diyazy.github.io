@@ -5,6 +5,8 @@
     width: 80%;
     max-width: 800px;
     margin: 40px auto;
+    height: 70vh;
+    overflow-y: scroll;
 }
 
 .posts-list li {

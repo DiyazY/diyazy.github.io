@@ -1,11 +1,11 @@
 ---
 layout: default
-title: DYI
+title: DIY
 ---
 <div class="panel-container">
     <div class="item-1-1-4-2"> 
         <ul class="posts-list">
-            {% assign posts = site.posts | where_exp: "item", "item.tags contains 'DIY'" %}
+            {% assign posts = site.posts | where_exp: "item", "item.tags contains 'diy'" %}
             {% for post in posts %}
                 <li>
                     <a href="{{ post.url }}">{{ post.title }}</a>
@@ -17,7 +17,7 @@ title: DYI
     </div>
     <div 
         class="item-1-2-4-4 none-mobile"
-        style="background-image: url(/assets/images/diy-page.png); background-size: cover; background-position: center;"
+        style="background-image: url(/assets/images/diy-page.webp); background-size: cover; background-position: center;"
     > 
     </div>
 </div>

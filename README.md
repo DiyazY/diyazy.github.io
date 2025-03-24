@@ -11,3 +11,4 @@ This is a personal website of mine!
 1. get tags from medium
 2. display background image in the post
 3. show original medium post link
+4. manage to get the content of the posts behind the paywall

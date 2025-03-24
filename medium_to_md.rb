@@ -28,7 +28,8 @@ feed.entries.each do |e|
 		next
 	end
 
-	content = e.content
+	
+	content = e.content || e.summary # if article is behind paywall, content will be nil
 	parseHTML = Nokogiri::HTML(content)
 	img = parseHTML.xpath("//img")[0]['src'].sub!(/http(s)?:/,'')
 

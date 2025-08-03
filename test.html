@@ -1,0 +1,50 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>AI Sprite Animation</title>
+  <style>
+    body {
+      background-color: #0d0d0d;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      height: 100vh;
+    }
+
+    #sprite-container {
+      width: 128px;              /* Single frame width */
+      height: 250px;             /* Single frame height */
+      background: url('ai-business-sprite.webp') no-repeat;
+      background-position: 0 -300px; /* Second row: Y offset = -128px */
+      image-rendering: pixelated;
+    }
+
+    .animate {
+      animation: playSprite 3s steps(8) infinite;
+    }
+
+    @keyframes playSprite {
+      from {
+        background-position-x: 0;
+      }
+      to {
+        background-position-x: -1024px; /* 128px * 8 = 1024px total width */
+      }
+    }
+  </style>
+</head>
+<body>
+  <div id="sprite-container" class="animate"></div>
+
+  <script>
+    // Optional JS to add interactivity
+    const sprite = document.getElementById('sprite-container');
+
+    // Pause animation on click
+    sprite.addEventListener('click', () => {
+      sprite.classList.toggle('animate');
+    });
+  </script>
+</body>
+</html>

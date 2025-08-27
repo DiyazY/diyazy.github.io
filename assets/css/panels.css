@@ -53,7 +53,7 @@
 
 /* Add common styles for all items */
 .panel-container > div {
-  padding: 20px;
+/*   padding: 20px; */
   border-radius: 10px; /* Rounded corners like macOS */
   background-color: rgba(
     255,

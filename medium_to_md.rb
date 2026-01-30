@@ -40,6 +40,10 @@ feed.entries.each do |e|
 	content.sub!(/<figure><img\salt="([\w\.\-])?"\ssrc="https:\/\/cdn-images-1.medium.com\/max\/[0-9]+\/[0-9]\*[0-9a-zA-Z._-]+"\s\/>(\<figcaption\>.*\<\/figcaption\>)?<\/figure>/, '')
 
 	result = ReverseMarkdown.convert(content).gsub(/\\n/,"\n")
+
+	# Remove "Continue reading on Medium" links that may be in the content
+	result.gsub!(/\[Continue reading on Medium.*?\]\(.*?\)/, '')
+
 	meta = <<-META
 ---
 layout: post
@@ -51,15 +55,7 @@ excerpt_separator: <!--more-->
 tags: [#{tags}]
 original_link: #{original_link}
 ---
-
-
-	![hero image](https:#{img})
-	adjust excerpt_separator
-
-
-
 	META
 
-	originally_posted = "\r\nOriginally posted on [#{e.title}](#{original_link})"
-	File.write(filename, meta + result + originally_posted)
+	File.write(filename, meta + result)
 end

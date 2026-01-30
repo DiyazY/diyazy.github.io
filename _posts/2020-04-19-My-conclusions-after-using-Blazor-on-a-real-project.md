@@ -34,4 +34,3 @@ In conclusion, the Blazor team has been doing a great job, they made **another f
 > Note: I used the Blazor SSR template. The client-side version is not released yet. Furthermore, the framework extends to mobile development and desktop part. It’s interesting, right? I still keep looking at&nbsp;it.
 
  ![](https://medium.com/_/stat?event=post.clientViewed&referrerSource=full_rss&postId=993234bdc7b0)
-Originally posted on [My conclusions after using Blazor on a real project.](https://medium.com/@diyaz.yakubov/my-conclusions-after-using-blazor-on-a-real-project-993234bdc7b0?source=rss-ce9f85b2b690------2)

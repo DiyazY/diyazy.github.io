@@ -10,7 +10,6 @@ original_link: https://medium.com/@diyaz.yakubov/speculative-design-from-taboo-t
 ---
 Farting is often the punchline of a joke — an embarrassing, smelly fact of life that many prefer to ignore. Yet as odd as it sounds,&nbsp;…
 
-[Continue reading on Medium »](https://medium.com/@diyaz.yakubov/speculative-design-from-taboo-to-technology-why-farts-might-be-worth-harnessing-42b71ec5aeb0?source=rss-ce9f85b2b690------2)
 <!--more-->
 
 
@@ -19,4 +18,3 @@ Farting is often the punchline of a joke — an embarrassing, smelly fact of
 
 
 
-Originally posted on [Speculative Design \| From Taboo to Technology: Why Farts Might Be Worth Harnessing](https://medium.com/@diyaz.yakubov/speculative-design-from-taboo-to-technology-why-farts-might-be-worth-harnessing-42b71ec5aeb0?source=rss-ce9f85b2b690------2)

@@ -53,4 +53,3 @@ I’m very happy with the result. The desk is sturdy, looks great, and fits perf
 I hope this post has inspired you to build your own work desk. It’s a fun and rewarding project that anyone can do. Happy building!
 
  ![](https://medium.com/_/stat?event=post.clientViewed&referrerSource=full_rss&postId=2013614ba528)
-Originally posted on [DIY-Working Table](https://medium.com/@diyaz.yakubov/diy-working-table-2013614ba528?source=rss-ce9f85b2b690------2)

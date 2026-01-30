@@ -10,7 +10,6 @@ original_link: https://medium.com/@diyaz.yakubov/speculative-design-fart-reactor
 ---
 This seven-part exploration turns a playful idea — capturing flatulence for clean energy — into a springboard for rethinking how&nbsp;…
 
-[Continue reading on Medium »](https://medium.com/@diyaz.yakubov/speculative-design-fart-reactor-35c1d7b6ef5b?source=rss-ce9f85b2b690------2)
 <!--more-->
 
 
@@ -18,4 +17,3 @@ This seven-part exploration turns a playful idea — capturing flatulence fo
 
 
 
-Originally posted on [Speculative Design \| Fart Reactor](https://medium.com/@diyaz.yakubov/speculative-design-fart-reactor-35c1d7b6ef5b?source=rss-ce9f85b2b690------2)

@@ -45,4 +45,3 @@ As you can see, this approach is very simple and straightforward, especially, fo
 To sum up, this is a very simple and to some extent naive way of implementing the plug-in architecture. At the same time, it might be a very powerful and cheap technique if the project already uses the MediatR library. Of course, a decision of using it should be evaluated properly from many aspects, such as risks, project’s scope, maintainability, modifiability, etc. Then, based on pros, cons, and trade-offs the team may take it or just&nbsp;refuse.
 
  ![](https://medium.com/_/stat?event=post.clientViewed&referrerSource=full_rss&postId=e55596849be3)
-Originally posted on [Extendable .Net Application](https://medium.com/@diyaz.yakubov/extendable-net-application-e55596849be3?source=rss-ce9f85b2b690------2)

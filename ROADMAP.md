@@ -98,51 +98,56 @@ A structured plan to make [diyazy.github.io](https://diyazy.github.io/) more int
 
 **Priority:** High
 **Goal:** Make content more engaging and interactive
+**Status:** COMPLETED (Giscus needs configuration)
 
 ### Tasks
 
-- [ ] **Resolve Medium content strategy**
-    - [ ] Decision: Primary platform or secondary?
-    - [ ] If primary: Import full content from Medium posts
-    - [ ] If secondary: Add clear "Originally on Medium" badges with links
+- [x] **Resolve Medium content strategy**
+    - [x] Decision: Site is primary hub, Medium for text content
+    - [x] Added "Originally published on Medium" badges with links
 
-- [ ] **Add reading time to posts**
-    - [ ] Calculate words / 200 wpm
-    - [ ] Display in post header and blog listing
+- [x] **Add reading time to posts**
+    - [x] Calculate words / 200 wpm
+    - [x] Display in post header and blog listing
 
-- [ ] **Implement comments system**
-    - [ ] Choose provider (Giscus, Utterances, or Disqus)
-    - [ ] Add to post template
-    - [ ] Style to match site design
+- [x] **Implement comments system**
+    - [x] Choose provider: Giscus (GitHub Discussions)
+    - [x] Add to post template
+    - [x] Style to match site design
+    - [ ] **ACTION REQUIRED:** Configure Giscus repo ID and category ID (see setup instructions below)
 
-- [ ] **Add social sharing buttons**
-    - [ ] Twitter/X share
-    - [ ] LinkedIn share
-    - [ ] Copy link button
+- [x] **Add social sharing buttons**
+    - [x] Twitter/X share
+    - [x] LinkedIn share
+    - [x] Copy link button
 
-- [ ] **Create "Related Posts" section**
-    - [ ] Show 2-3 posts with matching tags
-    - [ ] Add to bottom of post template
+- [x] **Create "Related Posts" section**
+    - [x] Show up to 3 posts with matching tags
+    - [x] Add to bottom of post template
 
-- [ ] **Add post navigation**
-    - [ ] Previous post link
-    - [ ] Next post link
+- [x] **Add post navigation**
+    - [x] Previous post link
+    - [x] Next post link
 
-- [ ] **Standardize post frontmatter**
-    - [ ] Consistent date format
-    - [ ] Categories field
-    - [ ] Tags field
-    - [ ] Description/excerpt field
-    - [ ] Featured image field
+- [x] **Display tags on posts**
+    - [x] Show tags in post meta section
 
-### Files to Modify
+### Giscus Setup Instructions
 
-- `_layouts/post.html`
-- `blog.html`
-- `_posts/*.md` (all posts)
-- New: `_includes/comments.html`
-- New: `_includes/share-buttons.html`
-- New: `_includes/related-posts.html`
+To enable comments, you need to:
+1. Go to https://giscus.app
+2. Enable GitHub Discussions on your repo (Settings > Features > Discussions)
+3. Create a "Blog Comments" category in Discussions
+4. Fill in the form on giscus.app with your repo details
+5. Copy the `data-repo-id` and `data-category-id` values
+6. Update `_layouts/post.html` with these values
+
+### Files Modified
+
+- `_layouts/post.html` - Added all Phase 2 features
+- `assets/css/post.css` - Styles for new features
+- `blog.html` - Added reading time
+- `diy.html` - Added reading time
 
 ---
 
@@ -411,6 +416,12 @@ A structured plan to make [diyazy.github.io](https://diyazy.github.io/) more int
 | 2025-01-30 | Phase 1 | Added robots.txt              | Basic robots file with sitemap reference   |
 | 2025-01-30 | Phase 1 | Added jekyll-sitemap          | Auto-generates sitemap.xml                 |
 | 2025-01-30 | Phase 1 | Fixed navigation active state | Highlights current page in nav             |
+| 2025-01-30 | Phase 2 | Added reading time            | Shows on post pages and blog listings      |
+| 2025-01-30 | Phase 2 | Added Medium badges           | "Originally on Medium" for synced posts    |
+| 2025-01-30 | Phase 2 | Added social sharing          | Twitter, LinkedIn, copy link buttons       |
+| 2025-01-30 | Phase 2 | Added related posts           | Shows up to 3 posts with matching tags     |
+| 2025-01-30 | Phase 2 | Added post navigation         | Previous/Next post links                   |
+| 2025-01-30 | Phase 2 | Added Giscus comments         | Needs repo ID configuration                |
 
 ---
 

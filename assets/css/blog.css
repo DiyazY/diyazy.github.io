@@ -1,12 +1,15 @@
+/* Text panel padding */
+.text-panel {
+    padding: 20px;
+}
+
 /* Style for posts list */
 .posts-list {
     list-style: none;
     padding: 0;
-    width: 80%;
-    max-width: 800px;
-    margin: 40px auto;
-    height: 70vh;
-    overflow-y: scroll;
+    margin: 0;
+    max-height: 70vh;
+    overflow-y: auto;
 }
 
 .posts-list li {
@@ -50,7 +53,12 @@
 
 /* Responsive Design for smaller devices */
 @media (max-width: 768px) {
+    .text-panel {
+        padding: 15px;
+    }
+
     .posts-list {
-        width: 95%;
+        max-height: none;
+        overflow-y: visible;
     }
 }

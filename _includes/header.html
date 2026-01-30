@@ -1,10 +1,16 @@
 <header>
     <div class="container">
-        <h1>Diyaz's Website</h1>
+        <h1><a href="/" class="site-title">Diyaz's Website</a></h1>
         <nav>
             <ul>
                 {% for item in site.data.navigation %}
-                    <li><a href="{{ item.url }}">{{ item.title }}</a></li>
+                    {% assign current = page.url | remove: '.html' %}
+                    {% assign nav_url = item.url | remove: '.html' %}
+                    <li>
+                        <a href="{{ item.url }}"{% if current == nav_url or page.url == item.url %} class="active"{% endif %}>
+                            {{ item.title }}
+                        </a>
+                    </li>
                 {% endfor %}
             </ul>
         </nav>

@@ -57,11 +57,32 @@ nav ul li {
 }
 
 nav ul li a {
-    color: #2a2520; /* Updated link color in navigation */
+    color: #2a2520;
+    padding: 4px 8px;
+    border-radius: 4px;
+    transition: background-color 0.2s ease;
 }
 
 nav ul li a:hover {
-    color: #2a2520; /* Updated hover color in navigation */
+    color: #2a2520;
+    background-color: rgba(42, 37, 32, 0.1);
+    text-decoration: none;
+}
+
+nav ul li a.active {
+    font-weight: 600;
+    background-color: rgba(42, 37, 32, 0.15);
+}
+
+/* Site title link */
+.site-title {
+    color: #2a2521;
+    text-decoration: none;
+}
+
+.site-title:hover {
+    text-decoration: none;
+    color: #594a40;
 }
 
 /* Main content */

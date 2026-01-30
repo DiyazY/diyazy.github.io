@@ -1,9 +1,10 @@
 ---
 layout: default
-title: DIY
+title: DIY Projects
+description: "Do-it-yourself projects, maker experiments, and hands-on building adventures."
 ---
 <div class="panel-container">
-    <div class="item-1-1-4-2"> 
+    <div class="item-1-1-4-2 text-panel">
         <ul class="posts-list">
             {% assign posts = site.posts | where_exp: "item", "item.tags contains 'diy'" %}
             {% for post in posts %}

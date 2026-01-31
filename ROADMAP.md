@@ -155,17 +155,18 @@ To enable comments, you need to:
 
 **Priority:** Medium
 **Goal:** Establish personal brand and expand About page
+**Status:** PARTIALLY COMPLETE
 
 ### Tasks
 
-- [ ] **Expand About page**
-    - [ ] Professional summary/bio
-    - [ ] Career timeline or milestones
-    - [ ] Technical skills with categories
-    - [ ] Education and certifications
-    - [ ] Interests and hobbies
-    - [ ] Social media links (GitHub, LinkedIn, Medium, Twitter)
-    - [ ] Contact method or form
+- [x] **Expand About page**
+    - [x] Professional summary/bio
+    - [x] Career timeline or milestones (6 key roles from 2013-2025)
+    - [x] Technical skills with categories (condensed from full list)
+    - [x] Education (Master's from Tampere, Bachelor's from EKSTU)
+    - [x] Interests and hobbies
+    - [x] Social media links (GitHub, LinkedIn, Medium, Toptal)
+    - [ ] Contact method or form (can add later)
 
 - [ ] **Create project showcase**
     - [ ] Design project cards
@@ -182,13 +183,11 @@ To enable comments, you need to:
     - [ ] Create PDF version
     - [ ] Add download button on About page
 
-### Files to Modify
+### Files Modified
 
-- `about.html`
-- `assets/css/profile.css`
-- New: `projects.html` (optional dedicated page)
-- New: `assets/images/projects/` (project screenshots)
-- New: `assets/resume.pdf`
+- `about.html` - Complete redesign with skills, expertise, experience timeline, education, interests, social links
+- `_config.yml` - Added LinkedIn profile
+- New: `assets/css/about.css` - About page styles including timeline and education sections
 
 ---
 
@@ -421,7 +420,15 @@ To enable comments, you need to:
 | 2025-01-30 | Phase 2 | Added social sharing          | Twitter, LinkedIn, copy link buttons       |
 | 2025-01-30 | Phase 2 | Added related posts           | Shows up to 3 posts with matching tags     |
 | 2025-01-30 | Phase 2 | Added post navigation         | Previous/Next post links                   |
-| 2025-01-30 | Phase 2 | Added Giscus comments         | Needs repo ID configuration                |
+| 2025-01-30 | Phase 2 | Added Giscus comments         | Configured with repo ID                    |
+| 2025-01-30 | Phase 2 | Cleaned up Medium posts       | Removed redundant "Originally posted" text |
+| 2025-01-30 | Phase 2 | Updated medium_to_md.rb       | Script no longer adds redundant links      |
+| 2025-01-30 | Phase 3 | Redesigned About page         | Skills, expertise, interests, social links |
+| 2025-01-30 | Phase 3 | Added LinkedIn to config      | Social profiles now complete               |
+| 2025-01-31 | Phase 3 | Added experience timeline     | 6 key roles from 2013-2025                 |
+| 2025-01-31 | Phase 3 | Added education section       | Master's (Tampere), Bachelor's (EKSTU)     |
+| 2025-01-31 | Phase 3 | Added Toptal to social links  | Complete social profile links              |
+| 2025-01-31 | Phase 3 | Added timeline/education CSS  | Styled timeline and education sections     |
 
 ---
 

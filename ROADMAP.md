@@ -155,7 +155,7 @@ To enable comments, you need to:
 
 **Priority:** Medium
 **Goal:** Establish personal brand and expand About page
-**Status:** PARTIALLY COMPLETE
+**Status:** COMPLETE (awaiting screenshot assets and resume PDF)
 
 ### Tasks
 
@@ -168,26 +168,34 @@ To enable comments, you need to:
     - [x] Social media links (GitHub, LinkedIn, Medium, Toptal)
     - [ ] Contact method or form (can add later)
 
-- [ ] **Create project showcase**
-    - [ ] Design project cards
-    - [ ] Add 3-5 notable projects
-    - [ ] Include screenshots/images
-    - [ ] Link to repos or live demos
+- [x] **Create project showcase**
+    - [x] Design project cards
+    - [x] Add 3-5 notable projects (TopTop.dev, EuroJackpotStats, iot-edge, + 3 coming soon)
+    - [ ] Include screenshots/images (placeholders ready, awaiting assets)
+    - [x] Link to repos or live demos
 
-- [ ] **Personal branding**
-    - [ ] Create simple logo or wordmark
-    - [ ] Define brand colors (replace generic Bootstrap blue)
-    - [ ] Consistent visual identity across pages
+- [x] **Personal branding**
+    - [x] Create simple logo or wordmark ("diyaz." with gold accent)
+    - [x] Define brand colors (primary: #2a2521, accent: #c9a227 gold)
+    - [x] CSS variables design system created
+    - [x] Consistent visual identity across pages
 
-- [ ] **Add downloadable resume/CV**
-    - [ ] Create PDF version
-    - [ ] Add download button on About page
+- [x] **Add downloadable resume/CV**
+    - [ ] Create PDF version (awaiting file from user)
+    - [x] Add download button on About page
 
 ### Files Modified
 
-- `about.html` - Complete redesign with skills, expertise, experience timeline, education, interests, social links
-- `_config.yml` - Added LinkedIn profile
-- New: `assets/css/about.css` - About page styles including timeline and education sections
+- `about.html` - Complete redesign with skills, expertise, experience timeline, education, resume download, social links
+- `_config.yml` - Added LinkedIn profile, updated site title to "diyaz"
+- `_includes/header.html` - Updated to "diyaz." brand logo
+- `_data/navigation.yml` - Added Projects page
+- `_layouts/default.html` - Added variables.css
+- New: `projects.html` - Projects showcase page
+- New: `assets/css/projects.css` - Project cards styling
+- New: `assets/css/about.css` - About page styles including timeline, education, resume sections
+- New: `assets/css/variables.css` - Brand design system (colors, spacing, typography)
+- New: `assets/images/projects/` - Directory for project screenshots
 
 ---
 
@@ -429,6 +437,11 @@ To enable comments, you need to:
 | 2025-01-31 | Phase 3 | Added education section       | Master's (Tampere), Bachelor's (EKSTU)     |
 | 2025-01-31 | Phase 3 | Added Toptal to social links  | Complete social profile links              |
 | 2025-01-31 | Phase 3 | Added timeline/education CSS  | Styled timeline and education sections     |
+| 2025-01-31 | Phase 3 | Updated timeline              | Removed Toptal projects, added missing roles |
+| 2025-01-31 | Phase 3 | Created Projects page         | TopTop.dev, EuroJackpotStats, iot-edge research |
+| 2025-01-31 | Phase 3 | Implemented branding          | "diyaz." logo, gold accent color (#c9a227) |
+| 2025-01-31 | Phase 3 | Created CSS variables         | Design system with colors, spacing, typography |
+| 2025-01-31 | Phase 3 | Added resume download section | Button on About page, awaiting PDF file    |
 
 ---
 

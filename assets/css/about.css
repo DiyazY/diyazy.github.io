@@ -246,6 +246,37 @@
   font-weight: 500;
 }
 
+/* Resume Download */
+.resume-download p {
+  margin: 0 0 15px 0;
+  color: #555;
+}
+
+.resume-btn {
+  display: inline-flex;
+  align-items: center;
+  gap: 10px;
+  padding: 12px 24px;
+  background-color: var(--color-accent, #c9a227);
+  color: white;
+  text-decoration: none;
+  border-radius: 8px;
+  font-weight: 600;
+  font-size: 1em;
+  transition: background-color 0.2s, transform 0.2s;
+}
+
+.resume-btn:hover {
+  background-color: var(--color-accent-dark, #a8861f);
+  transform: translateY(-2px);
+  text-decoration: none;
+  color: white;
+}
+
+.resume-btn svg {
+  flex-shrink: 0;
+}
+
 
 /* Responsive */
 @media (max-width: 768px) {

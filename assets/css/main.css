@@ -76,13 +76,25 @@ nav ul li a.active {
 
 /* Site title link */
 .site-title {
-    color: #2a2521;
+    color: var(--color-primary, #2a2521);
     text-decoration: none;
 }
 
 .site-title:hover {
     text-decoration: none;
-    color: #594a40;
+    color: var(--color-primary-light, #594a40);
+}
+
+/* Brand logo styling */
+.brand-logo {
+    font-weight: 700;
+    letter-spacing: -0.5px;
+    position: relative;
+}
+
+.brand-logo::after {
+    content: '.';
+    color: var(--color-accent, #c9a227);
 }
 
 /* Main content */
@@ -107,13 +119,13 @@ footer p {
 
 /* Links */
 a {
-    color: #007bff; /* Retained original link color for contrast */
+    color: var(--color-accent-dark, #a8861f);
     text-decoration: none;
 }
 
 a:hover {
     text-decoration: underline;
-    color: #594a40; /* Updated hover color for links */
+    color: var(--color-primary, #2a2521);
 }
 
 /* Responsive design */

@@ -30,7 +30,8 @@ body {
 
 /* Header */
 header {
-    background-color: #87dfefab; /* Updated header background color */
+    background-color: #52cce2b5;
+    /*background-color: #87dfefab; !* Updated header background color *!*/
     padding-top: 1vh;
 }
 
@@ -87,14 +88,16 @@ nav ul li a.active {
 
 /* Brand logo styling */
 .brand-logo {
-    font-weight: 700;
+    font-family: 'SF Mono', Monaco, 'Cascadia Code', Consolas, monospace;
+    font-weight: 500;
     letter-spacing: -0.5px;
-    position: relative;
 }
 
 .brand-logo::after {
     content: '.';
     color: var(--color-accent, #c9a227);
+    font-weight: 900;
+    font-size: 1.2em;
 }
 
 /* Main content */

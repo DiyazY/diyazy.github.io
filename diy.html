@@ -1,27 +1,17 @@
 ---
-layout: default
-title: DIY Projects
-description: "Do-it-yourself projects, maker experiments, and hands-on building adventures."
+layout: none
+permalink: /diy.html
 ---
-<div class="panel-container">
-    <div class="item-1-1-4-2 text-panel">
-        <ul class="posts-list">
-            {% assign posts = site.posts | where_exp: "item", "item.tags contains 'diy'" %}
-            {% for post in posts %}
-                {% assign words = post.content | strip_html | number_of_words %}
-                {% assign read_time = words | divided_by: 200 %}
-                {% if read_time < 1 %}{% assign read_time = 1 %}{% endif %}
-                <li>
-                    <a href="{{ post.url }}">{{ post.title }}</a>
-                    <p class="post-date">{{ post.date | date: "%b %d, %Y" }} &bull; {{ read_time }} min read</p>
-                    <p class="post-excerpt">{{ post.excerpt | strip_html | truncate: 150 }}</p>
-                </li>
-            {% endfor %}
-        </ul>
-    </div>
-    <div 
-        class="item-1-2-4-4 none-mobile"
-        style="background-image: url(/assets/images/diy-page.webp); background-size: cover; background-position: center;"
-    > 
-    </div>
-</div>
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="refresh" content="0; url=/blog.html?tag=diy">
+    <link rel="canonical" href="/blog.html?tag=diy">
+    <title>Redirecting to DIY Projects...</title>
+</head>
+<body>
+    <p>Redirecting to <a href="/blog.html?tag=diy">DIY Projects</a>...</p>
+    <script>window.location.href = '/blog.html?tag=diy';</script>
+</body>
+</html>

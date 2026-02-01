@@ -6,7 +6,7 @@ description: "Personal blog and portfolio of Diyaz Yakubov - adventures in tech,
 
 <link rel="stylesheet" href="{{ site.baseurl }}/assets/css/index-page.css" />
 
-<div class="panel-container">
+<div class="panel-container home-grid">
   <div class="item-latest-post mob-h-auto">
     <h2 class="section-title">Latest Post</h2>
     {% assign latest = site.posts.first %}
@@ -22,12 +22,16 @@ description: "Personal blog and portfolio of Diyaz Yakubov - adventures in tech,
     {% endif %}
   </div>
 
-  <div class="item-diy diy mob-h-12vh" onclick="location.href='/diy.html'">
-    <h2 class="title"><a href="/diy.html">Do It Yourself</a></h2>
+  <div class="item-diy diy mob-h-12vh" onclick="location.href='/blog.html?tag=diy'">
+    <h2 class="title"><a href="/blog.html?tag=diy">Do It Yourself</a></h2>
   </div>
 
-  <div class="item-homelab homelab mob-h-12vh" onclick="location.href='/blog.html'">
-    <h2 class="title"><a href="/blog.html">HomeLab</a></h2>
+  <div class="item-homelab homelab mob-h-12vh" onclick="location.href='/blog.html?tag=homelab'">
+    <h2 class="title"><a href="/blog.html?tag=homelab">HomeLab</a></h2>
+  </div>
+
+  <div class="item-art art mob-h-12vh" onclick="location.href='/blog.html?tag=art'">
+    <h2 class="title"><a href="/blog.html?tag=art">Art</a></h2>
   </div>
 
   <div class="item-about mob-h-auto">

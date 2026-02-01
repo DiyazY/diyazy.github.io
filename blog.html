@@ -70,16 +70,45 @@ description: "Articles about software development, DIY projects, home lab experi
 
     const POSTS_PER_PAGE = 5;
     let currentPage = 1;
+    let currentTag = 'all';
     let filteredPosts = postItems;
 
+    // Get tag from URL
+    function getTagFromUrl() {
+        const params = new URLSearchParams(window.location.search);
+        return params.get('tag')?.toLowerCase() || 'all';
+    }
+
+    // Update URL without reload
+    function updateUrl(tag) {
+        const url = new URL(window.location);
+        if (tag === 'all') {
+            url.searchParams.delete('tag');
+        } else {
+            url.searchParams.set('tag', tag);
+        }
+        history.pushState({tag}, '', url);
+    }
+
     // Filter by tag
-    function filterByTag(tag) {
+    function filterByTag(tag, updateHistory = true) {
+        currentTag = tag;
         if (tag === 'all') {
             filteredPosts = postItems;
         } else {
             filteredPosts = postItems.filter(post => post.dataset.tags.includes(tag));
         }
         currentPage = 1;
+
+        // Update active button
+        tagButtons.forEach(btn => {
+            btn.classList.toggle('active', btn.dataset.tag === tag);
+        });
+
+        if (updateHistory) {
+            updateUrl(tag);
+        }
+
         renderPosts();
         renderPagination();
     }
@@ -132,14 +161,18 @@ description: "Articles about software development, DIY projects, home lab experi
     // Tag button listeners
     tagButtons.forEach(btn => {
         btn.addEventListener('click', () => {
-            tagButtons.forEach(b => b.classList.remove('active'));
-            btn.classList.add('active');
             filterByTag(btn.dataset.tag);
         });
     });
 
-    // Initial render
-    renderPosts();
-    renderPagination();
+    // Handle browser back/forward
+    window.addEventListener('popstate', (e) => {
+        const tag = e.state?.tag || getTagFromUrl();
+        filterByTag(tag, false);
+    });
+
+    // Initial render with URL tag
+    const initialTag = getTagFromUrl();
+    filterByTag(initialTag, false);
 })();
 </script>

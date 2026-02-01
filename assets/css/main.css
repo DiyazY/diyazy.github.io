@@ -1,19 +1,32 @@
 /* Base layout */
 html, body {
     font-family: system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, 'Open Sans', 'Helvetica Neue', sans-serif;
-    color: #333; /* Retained original text color for readability */
+    color: var(--color-text, #333);
     line-height: 1.6;
     margin: 0;
     padding: 0;
-    background-color: #e3eae9; /* Updated background color */
+    background-color: #e3eae9;
 }
 
 body {
-    background-image: url('../images/kazakh_steppe.webp'); /* Replace with the actual path to your image */
-    background-size: cover; /* Cover the entire page */
-    background-position: center; /* Center the image */
-    background-repeat: no-repeat; /* Do not repeat the image */
-    background-attachment: fixed; /* Fixed background */
+    background-image: url('../images/kazakh_steppe.webp');
+    background-size: cover;
+    background-position: center;
+    background-repeat: no-repeat;
+    background-attachment: fixed;
+}
+
+/* Dark mode background overlay */
+[data-theme="dark"] body::before {
+    content: '';
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background-color: rgba(0, 0, 0, 0.6);
+    pointer-events: none;
+    z-index: -1;
 }
 
 #page-container {
@@ -30,8 +43,7 @@ body {
 
 /* Header */
 header {
-    background-color: #52cce2b5;
-    /*background-color: #87dfefab; !* Updated header background color *!*/
+    background-color: var(--color-header-bg, #52cce2b5);
     padding-top: 1vh;
 }
 
@@ -47,10 +59,47 @@ header .container {
     gap: 20px;
 }
 
+.header-actions {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+}
+
 header h1 {
     margin: 0;
     font-size: 2em;
-    color: #2a2521; /* Updated header text color */
+    color: var(--color-primary, #2a2521);
+}
+
+/* Theme Toggle Button */
+.theme-toggle {
+    background: none;
+    border: none;
+    cursor: pointer;
+    padding: 8px;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: var(--color-primary, #2a2521);
+    transition: background-color 0.2s ease, transform 0.2s ease;
+}
+
+.theme-toggle:hover {
+    background-color: rgba(0, 0, 0, 0.1);
+    transform: scale(1.1);
+}
+
+[data-theme="dark"] .theme-toggle:hover {
+    background-color: rgba(255, 255, 255, 0.1);
+}
+
+.theme-toggle .hidden {
+    display: none;
+}
+
+.theme-toggle svg {
+    transition: transform 0.3s ease;
 }
 
 /* Navigation */
@@ -65,21 +114,21 @@ nav ul li {
 }
 
 nav ul li a {
-    color: #2a2520;
+    color: var(--color-primary, #2a2520);
     padding: 4px 8px;
     border-radius: 4px;
     transition: background-color 0.2s ease;
 }
 
 nav ul li a:hover {
-    color: #2a2520;
-    background-color: rgba(42, 37, 32, 0.1);
+    color: var(--color-primary, #2a2520);
+    background-color: rgba(255, 255, 255, 0.2);
     text-decoration: none;
 }
 
 nav ul li a.active {
     font-weight: 600;
-    background-color: rgba(42, 37, 32, 0.15);
+    background-color: rgba(255, 255, 255, 0.25);
 }
 
 /* Site title link */
@@ -118,13 +167,13 @@ main {
 footer {
     text-align: center;
     padding: 20px 0;
-    background-color: #d2925bb3;
-    flex-shrink: 0; /* Prevents the footer from shrinking */
+    background-color: var(--color-footer-bg, #d2925bb3);
+    flex-shrink: 0;
 }
 
 footer p {
     margin: 0;
-    color: #2a2521; /* Updated footer text color */
+    color: var(--color-primary, #2a2521);
 }
 
 /* Breadcrumbs */
@@ -193,9 +242,14 @@ a:hover {
         gap: 10px;
     }
 
-    .header-top .search-wrapper {
+    .header-actions {
         width: 100%;
-        max-width: 100%;
+        justify-content: space-between;
+    }
+
+    .header-top .search-wrapper {
+        flex: 1;
+        max-width: calc(100% - 50px);
     }
 
     nav ul li {

@@ -23,17 +23,17 @@
 .about-header h1 {
   margin: 0 0 5px 0;
   font-size: 2.2em;
-  color: #2a2521;
+  color: var(--color-primary, #2a2521);
 }
 
 .about-tagline {
-  color: #666;
+  color: var(--color-text-light, #666);
   font-size: 1.1em;
   margin: 0;
 }
 
 .about-location {
-  color: #888;
+  color: var(--color-text-muted, #888);
   font-size: 0.95em;
   margin: 5px 0 0 0;
 }
@@ -53,14 +53,14 @@
 
 .about-section h2 {
   font-size: 1.3em;
-  color: #2a2521;
+  color: var(--color-primary, #2a2521);
   margin: 0 0 15px 0;
   padding-bottom: 8px;
-  border-bottom: 2px solid rgba(42, 37, 33, 0.1);
+  border-bottom: 2px solid var(--color-border, rgba(42, 37, 33, 0.1));
 }
 
 .about-section p {
-  color: #444;
+  color: var(--color-text, #444);
   line-height: 1.7;
   margin: 0;
 }
@@ -73,7 +73,7 @@
 }
 
 .skill-category {
-  background-color: #f8f8f8;
+  background-color: var(--color-bg-secondary, #f8f8f8);
   padding: 15px;
   border-radius: 8px;
 }
@@ -81,14 +81,14 @@
 .skill-category h3 {
   margin: 0 0 8px 0;
   font-size: 0.95em;
-  color: #2a2521;
+  color: var(--color-primary, #2a2521);
   font-weight: 600;
 }
 
 .skill-category p {
   margin: 0;
   font-size: 0.9em;
-  color: #555;
+  color: var(--color-text-light, #555);
   line-height: 1.5;
 }
 
@@ -100,8 +100,8 @@
 }
 
 .expertise-tags .tag {
-  background-color: #2a2521;
-  color: white;
+  background-color: var(--color-primary, #2a2521);
+  color: var(--color-bg, white);
   padding: 6px 12px;
   border-radius: 20px;
   font-size: 0.85em;
@@ -120,7 +120,7 @@
   top: 5px;
   bottom: 5px;
   width: 2px;
-  background-color: rgba(42, 37, 33, 0.2);
+  background-color: var(--color-border-strong, rgba(42, 37, 33, 0.2));
 }
 
 .timeline-item {
@@ -139,13 +139,13 @@
   top: 6px;
   width: 10px;
   height: 10px;
-  background-color: #2a2521;
+  background-color: var(--color-accent, #c9a227);
   border-radius: 50%;
 }
 
 .timeline-date {
   font-size: 0.85em;
-  color: #888;
+  color: var(--color-text-muted, #888);
   font-weight: 500;
   margin-bottom: 5px;
 }
@@ -153,32 +153,32 @@
 .timeline-content h3 {
   margin: 0 0 3px 0;
   font-size: 1em;
-  color: #2a2521;
+  color: var(--color-primary, #2a2521);
   font-weight: 600;
 }
 
 .timeline-company {
-  color: #666;
+  color: var(--color-text-light, #666);
   font-size: 0.9em;
   margin: 0 0 5px 0;
   font-weight: 500;
 }
 
 .timeline-company a {
-  color: #2a2521;
+  color: var(--color-primary, #2a2521);
   text-decoration: none;
-  border-bottom: 1px solid rgba(42, 37, 33, 0.3);
+  border-bottom: 1px solid var(--color-border-strong, rgba(42, 37, 33, 0.3));
   transition: border-color 0.2s;
 }
 
 .timeline-company a:hover {
-  border-color: #2a2521;
+  border-color: var(--color-accent, #c9a227);
 }
 
 .timeline-content p:last-child {
   margin: 0;
   font-size: 0.9em;
-  color: #555;
+  color: var(--color-text-light, #555);
   line-height: 1.5;
 }
 
@@ -190,24 +190,24 @@
 }
 
 .education-item {
-  background-color: #f8f8f8;
+  background-color: var(--color-bg-secondary, #f8f8f8);
   padding: 15px;
   border-radius: 8px;
 }
 
 .education-degree {
   font-weight: 600;
-  color: #2a2521;
+  color: var(--color-primary, #2a2521);
   margin-bottom: 3px;
 }
 
 .education-school {
-  color: #555;
+  color: var(--color-text-light, #555);
   font-size: 0.95em;
 }
 
 .education-year {
-  color: #888;
+  color: var(--color-text-muted, #888);
   font-size: 0.85em;
   margin-top: 5px;
 }
@@ -224,18 +224,18 @@
   align-items: center;
   gap: 8px;
   padding: 10px 20px;
-  background-color: #f8f8f8;
+  background-color: var(--color-bg-secondary, #f8f8f8);
   border-radius: 8px;
-  color: #333;
+  color: var(--color-text, #333);
   text-decoration: none;
   transition: background-color 0.2s, transform 0.2s;
 }
 
 .social-link:hover {
-  background-color: #eee;
+  background-color: var(--color-bg-tertiary, #eee);
   transform: translateY(-2px);
   text-decoration: none;
-  color: #333;
+  color: var(--color-text, #333);
 }
 
 .social-link svg {
@@ -249,7 +249,7 @@
 /* Resume Download */
 .resume-download p {
   margin: 0 0 15px 0;
-  color: #555;
+  color: var(--color-text-light, #555);
 }
 
 .resume-btn {

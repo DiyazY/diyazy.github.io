@@ -18,11 +18,11 @@
 .projects-header h1 {
   margin: 0 0 5px 0;
   font-size: 2.2em;
-  color: #2a2521;
+  color: var(--color-primary, #2a2521);
 }
 
 .projects-tagline {
-  color: #666;
+  color: var(--color-text-light, #666);
   font-size: 1.1em;
   margin: 0;
 }
@@ -38,10 +38,10 @@
 
 .projects-section h2 {
   font-size: 1.3em;
-  color: #2a2521;
+  color: var(--color-primary, #2a2521);
   margin: 0 0 20px 0;
   padding-bottom: 8px;
-  border-bottom: 2px solid rgba(42, 37, 33, 0.1);
+  border-bottom: 2px solid var(--color-border, rgba(42, 37, 33, 0.1));
 }
 
 /* Project Card */
@@ -49,7 +49,7 @@
   display: grid;
   grid-template-columns: 280px 1fr;
   gap: 25px;
-  background-color: #f8f8f8;
+  background-color: var(--color-bg-secondary, #f8f8f8);
   border-radius: 12px;
   overflow: hidden;
   margin-bottom: 20px;
@@ -62,7 +62,7 @@
 .project-image {
   position: relative;
   min-height: 180px;
-  background-color: #e0e0e0;
+  background-color: var(--color-bg-tertiary, #e0e0e0);
   background-size: cover;
   background-position: center;
 }
@@ -103,12 +103,12 @@
 .project-info h3 {
   margin: 0 0 10px 0;
   font-size: 1.25em;
-  color: #2a2521;
+  color: var(--color-primary, #2a2521);
 }
 
 .project-description {
   margin: 0 0 15px 0;
-  color: #555;
+  color: var(--color-text-light, #555);
   font-size: 0.95em;
   line-height: 1.6;
   flex-grow: 1;
@@ -123,8 +123,8 @@
 }
 
 .project-tech span {
-  background-color: rgba(42, 37, 33, 0.1);
-  color: #2a2521;
+  background-color: var(--color-bg-tertiary, rgba(42, 37, 33, 0.1));
+  color: var(--color-primary, #2a2521);
   padding: 4px 10px;
   border-radius: 4px;
   font-size: 0.8em;
@@ -141,8 +141,8 @@
   align-items: center;
   gap: 6px;
   padding: 8px 14px;
-  background-color: #2a2521;
-  color: white;
+  background-color: var(--color-accent, #c9a227);
+  color: var(--color-bg, white);
   text-decoration: none;
   border-radius: 6px;
   font-size: 0.9em;
@@ -151,10 +151,10 @@
 }
 
 .project-link:hover {
-  background-color: #3d3530;
+  background-color: var(--color-accent-dark, #a8861f);
   transform: translateY(-1px);
   text-decoration: none;
-  color: white;
+  color: var(--color-bg, white);
 }
 
 .project-link svg {
@@ -169,23 +169,23 @@
 }
 
 .coming-soon-card {
-  background-color: #f8f8f8;
+  background-color: var(--color-bg-secondary, #f8f8f8);
   border-radius: 10px;
   padding: 20px;
   text-align: center;
   position: relative;
-  border: 2px dashed rgba(42, 37, 33, 0.15);
+  border: 2px dashed var(--color-border-strong, rgba(42, 37, 33, 0.15));
 }
 
 .coming-soon-card h3 {
   margin: 0 0 5px 0;
   font-size: 1.1em;
-  color: #2a2521;
+  color: var(--color-primary, #2a2521);
 }
 
 .coming-soon-card p {
   margin: 0 0 12px 0;
-  color: #888;
+  color: var(--color-text-muted, #888);
   font-size: 0.85em;
 }
 

@@ -119,21 +119,28 @@ layout: default
         <!-- Comments -->
         <div class="comments-section">
             <h3>Comments</h3>
-            <script src="https://giscus.app/client.js"
-                data-repo="{{ site.author.github }}/{{ site.author.github }}.github.io"
-                data-repo-id="R_kgDOKyQobg"
-                data-category="Blog Comments"
-                data-category-id="DIC_kwDOKyQobs4C1pEb"
-                data-mapping="pathname"
-                data-strict="0"
-                data-reactions-enabled="1"
-                data-emit-metadata="0"
-                data-input-position="top"
-                data-theme="light"
-                data-lang="en"
-                data-loading="lazy"
-                crossorigin="anonymous"
-                async>
+            <script>
+                // Determine initial Giscus theme
+                (function() {
+                    const stored = localStorage.getItem('theme-preference');
+                    const prefersDark = window.matchMedia('(prefers-color-scheme: dark)').matches;
+                    const theme = stored || (prefersDark ? 'dark' : 'light');
+                    document.write(`<script src="https://giscus.app/client.js"
+                        data-repo="{{ site.author.github }}/{{ site.author.github }}.github.io"
+                        data-repo-id="R_kgDOKyQobg"
+                        data-category="Blog Comments"
+                        data-category-id="DIC_kwDOKyQobs4C1pEb"
+                        data-mapping="pathname"
+                        data-strict="0"
+                        data-reactions-enabled="1"
+                        data-emit-metadata="0"
+                        data-input-position="top"
+                        data-theme="${theme}"
+                        data-lang="en"
+                        data-loading="lazy"
+                        crossorigin="anonymous"
+                        async><\/script>`);
+                })();
             </script>
         </div>
     </article>

@@ -10,12 +10,12 @@
     gap: 8px;
     margin-bottom: 20px;
     padding-bottom: 15px;
-    border-bottom: 1px solid #eee;
+    border-bottom: 1px solid var(--color-border, rgba(42, 37, 33, 0.1));
 }
 
 .tag-btn {
     padding: 6px 14px;
-    border: 1px solid rgba(42, 37, 33, 0.15);
+    border: 1px solid var(--color-border-strong, rgba(42, 37, 33, 0.15));
     border-radius: 20px;
     background-color: transparent;
     color: var(--color-text, #333);
@@ -45,7 +45,7 @@
 }
 
 .posts-list li {
-    border-bottom: 1px solid #eee;
+    border-bottom: 1px solid var(--color-border, rgba(42, 37, 33, 0.1));
     padding: 15px 0;
     display: flex;
     gap: 15px;
@@ -95,12 +95,12 @@
 
 .posts-list p {
     margin: 5px 0 0;
-    color: #666;
+    color: var(--color-text-light, #666);
 }
 
 .posts-list .post-date {
     font-style: italic;
-    color: #999;
+    color: var(--color-text-muted, #888);
     font-size: 0.9em;
 }
 
@@ -119,16 +119,16 @@
 
 .post-tag {
     padding: 3px 10px;
-    background-color: rgba(42, 37, 33, 0.08);
+    background-color: var(--color-bg-tertiary, rgba(42, 37, 33, 0.08));
     border-radius: 4px;
     font-size: 0.75em;
-    color: #666;
+    color: var(--color-text-light, #666);
 }
 
 /* No posts message */
 .no-posts-message {
     text-align: center;
-    color: #888;
+    color: var(--color-text-muted, #888);
     padding: 30px;
     font-style: italic;
 }
@@ -140,12 +140,12 @@
     gap: 8px;
     margin-top: 20px;
     padding-top: 20px;
-    border-top: 1px solid #eee;
+    border-top: 1px solid var(--color-border, rgba(42, 37, 33, 0.1));
 }
 
 .page-btn {
     padding: 8px 14px;
-    border: 1px solid rgba(42, 37, 33, 0.15);
+    border: 1px solid var(--color-border-strong, rgba(42, 37, 33, 0.15));
     border-radius: 6px;
     background-color: transparent;
     color: var(--color-text, #333);

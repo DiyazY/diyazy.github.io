@@ -54,15 +54,10 @@
 /* Add common styles for all items */
 .panel-container > div {
 /*   padding: 20px; */
-  border-radius: 10px; /* Rounded corners like macOS */
-  background-color: rgba(
-    255,
-    255,
-    255,
-    0.7
-  ); /* White background with transparency */
-  backdrop-filter: blur(10px); /* Blur effect for the background */
-  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1); /* Optional: add a subtle shadow for depth */
+  border-radius: 10px;
+  background-color: var(--color-panel-bg, rgba(255, 255, 255, 0.95));
+  backdrop-filter: blur(10px);
+  box-shadow: var(--shadow-md, 0 4px 6px rgba(0, 0, 0, 0.1));
 }
 
 @media (max-width: 768px) {

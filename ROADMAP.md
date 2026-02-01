@@ -203,46 +203,52 @@ To enable comments, you need to:
 
 **Priority:** Medium
 **Goal:** Improve navigation and content discovery
+**Status:** COMPLETE
 
 ### Tasks
 
-- [ ] **Add search functionality**
-    - [ ] Implement Lunr.js or Simple-Jekyll-Search
-    - [ ] Create search UI component
-    - [ ] Index all posts and pages
+- [x] **Add search functionality**
+    - [x] Implement Simple-Jekyll-Search
+    - [x] Create search UI component in header
+    - [x] Index all posts with search.json
 
-- [ ] **Tag filtering UI on blog page**
-    - [ ] Display all tags as clickable buttons
-    - [ ] Filter posts client-side or create tag pages
+- [x] **Tag filtering UI on blog page**
+    - [x] Display all tags as clickable buttons
+    - [x] Filter posts client-side
 
-- [ ] **Add breadcrumb navigation**
-    - [ ] Show path: Home > Blog > Post Title
-    - [ ] Style consistently
+- [x] **Add breadcrumb navigation**
+    - [x] Show path: Home > Blog > Post Title
+    - [x] Style consistently
 
-- [ ] **Improve blog listing**
-    - [ ] Add post thumbnails/featured images
-    - [ ] Show tags on listing
-    - [ ] Better excerpt display
-    - [ ] Pagination (replace fixed-height scroll)
+- [x] **Improve blog listing**
+    - [x] Add post thumbnails/featured images
+    - [x] Show tags on listing
+    - [x] Better excerpt display
+    - [x] Client-side pagination (5 posts per page)
 
-- [ ] **Add table of contents for long posts**
-    - [ ] Auto-generate from headings
-    - [ ] Sticky sidebar or top of post
+- [x] **Add table of contents for long posts**
+    - [x] Auto-generate from h2 headings
+    - [x] Collapsible TOC at top of post
 
-- [ ] **Keyboard navigation**
-    - [ ] Arrow keys for prev/next post
-    - [ ] Slash key to focus search
+- [x] **Keyboard navigation**
+    - [x] Arrow keys for prev/next post
+    - [x] Slash key to focus search
 
-### Files to Modify
+### Files Modified
 
-- `blog.html`
-- `_layouts/post.html`
-- `_layouts/default.html`
-- `assets/css/blog.css`
-- New: `_includes/search.html`
-- New: `_includes/breadcrumbs.html`
-- New: `_includes/toc.html`
-- New: `assets/js/search.js`
+- `blog.html` - Tag filter, thumbnails, pagination
+- `_layouts/post.html` - Breadcrumbs, TOC, keyboard nav
+- `_layouts/default.html` - Search CSS/JS
+- `_includes/header.html` - Search component
+- `assets/css/blog.css` - Tags, pagination, thumbnails
+- `assets/css/main.css` - Breadcrumbs
+- `assets/css/post.css` - TOC styles
+- New: `_includes/search.html` - Search UI
+- New: `_includes/breadcrumbs.html` - Breadcrumb nav
+- New: `_includes/toc.html` - Table of contents
+- New: `assets/js/search.js` - Search functionality
+- New: `assets/css/search.css` - Search styles
+- New: `search.json` - Search index
 
 ---
 
@@ -442,6 +448,12 @@ To enable comments, you need to:
 | 2025-01-31 | Phase 3 | Implemented branding          | "diyaz." logo, gold accent color (#c9a227) |
 | 2025-01-31 | Phase 3 | Created CSS variables         | Design system with colors, spacing, typography |
 | 2025-01-31 | Phase 3 | Added resume download section | Button on About page, awaiting PDF file    |
+| 2025-01-31 | Phase 4 | Implemented search            | Header search with / shortcut, search.json |
+| 2025-01-31 | Phase 4 | Added tag filtering           | Clickable tags on blog page, client-side   |
+| 2025-01-31 | Phase 4 | Added breadcrumb navigation   | Home > Blog > Post Title                   |
+| 2025-01-31 | Phase 4 | Improved blog listing         | Thumbnails, tags, pagination (5 per page)  |
+| 2025-01-31 | Phase 4 | Added table of contents       | Auto-generated from h2 headings            |
+| 2025-01-31 | Phase 4 | Added keyboard navigation     | Arrow keys for posts, / for search         |
 
 ---
 

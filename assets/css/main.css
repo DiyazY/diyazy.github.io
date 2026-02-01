@@ -40,6 +40,13 @@ header .container {
     margin: 0 auto;
 }
 
+.header-top {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    gap: 20px;
+}
+
 header h1 {
     margin: 0;
     font-size: 2em;
@@ -120,6 +127,49 @@ footer p {
     color: #2a2521; /* Updated footer text color */
 }
 
+/* Breadcrumbs */
+.breadcrumbs {
+    padding: 12px 0;
+    margin-bottom: 10px;
+}
+
+.breadcrumbs ol {
+    list-style: none;
+    padding: 0;
+    margin: 0;
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    gap: 8px;
+    font-size: 0.9em;
+}
+
+.breadcrumbs li {
+    display: flex;
+    align-items: center;
+}
+
+.breadcrumbs li:not(:last-child)::after {
+    content: '›';
+    margin-left: 8px;
+    color: #999;
+}
+
+.breadcrumbs a {
+    color: var(--color-text-light, #666);
+    text-decoration: none;
+}
+
+.breadcrumbs a:hover {
+    color: var(--color-accent, #c9a227);
+    text-decoration: none;
+}
+
+.breadcrumbs span[aria-current="page"] {
+    color: var(--color-primary, #2a2521);
+    font-weight: 500;
+}
+
 /* Links */
 a {
     color: var(--color-accent-dark, #a8861f);
@@ -135,6 +185,17 @@ a:hover {
 @media (max-width: 768px) {
     header .container, main {
         width: 95%;
+    }
+
+    .header-top {
+        flex-direction: column;
+        align-items: flex-start;
+        gap: 10px;
+    }
+
+    .header-top .search-wrapper {
+        width: 100%;
+        max-width: 100%;
     }
 
     nav ul li {

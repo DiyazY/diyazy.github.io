@@ -10,9 +10,7 @@ layout: default
 
 <div class="panel-container post-container">
     <article class="article-post text-panel">
-        <div class="post-header">
-            <a href="{{ site.baseurl }}/blog" class="back-link">&larr; Back to Blog</a>
-        </div>
+        {% include breadcrumbs.html %}
         <h1 class="post-title">{{ page.title }}</h1>
 
         <div class="post-meta">
@@ -39,6 +37,8 @@ layout: default
             </a>
         </div>
         {% endif %}
+
+        {% include toc.html content=content %}
 
         <div class="post-content">
             {{ content }}
@@ -144,4 +144,25 @@ function copyLink() {
     navigator.clipboard.writeText(window.location.href);
     alert('Link copied to clipboard!');
 }
+
+// Keyboard navigation
+(function() {
+    const prevLink = document.querySelector('.nav-prev:not(.disabled)');
+    const nextLink = document.querySelector('.nav-next:not(.disabled)');
+
+    document.addEventListener('keydown', (e) => {
+        // Don't trigger if user is typing in an input
+        if (e.target.tagName === 'INPUT' || e.target.tagName === 'TEXTAREA') return;
+
+        if (e.key === 'ArrowLeft' && prevLink) {
+            window.location.href = prevLink.href;
+        } else if (e.key === 'ArrowRight' && nextLink) {
+            window.location.href = nextLink.href;
+        }
+    });
+
+    // Add hint to navigation
+    if (prevLink) prevLink.title = 'Previous post (← arrow key)';
+    if (nextLink) nextLink.title = 'Next post (→ arrow key)';
+})();
 </script>

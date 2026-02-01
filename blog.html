@@ -5,22 +5,141 @@ description: "Articles about software development, DIY projects, home lab experi
 ---
 <div class="panel-container">
     <div class="item-1-1-4-2 text-panel">
-        <ul class="posts-list">
+        <!-- Tag Filter -->
+        {% assign all_tags = "" | split: "" %}
+        {% for post in site.posts %}
+            {% for tag in post.tags %}
+                {% unless all_tags contains tag %}
+                    {% assign all_tags = all_tags | push: tag %}
+                {% endunless %}
+            {% endfor %}
+        {% endfor %}
+        {% assign sorted_tags = all_tags | sort %}
+
+        <div class="tag-filter">
+            <button class="tag-btn active" data-tag="all">All</button>
+            {% for tag in sorted_tags %}
+                <button class="tag-btn" data-tag="{{ tag | downcase }}">{{ tag }}</button>
+            {% endfor %}
+        </div>
+
+        <ul class="posts-list" id="posts-list">
             {% for post in site.posts %}
                 {% assign words = post.content | strip_html | number_of_words %}
                 {% assign read_time = words | divided_by: 200 %}
                 {% if read_time < 1 %}{% assign read_time = 1 %}{% endif %}
-                <li>
-                    <a href="{{ post.url }}">{{ post.title }}</a>
-                    <p class="post-date">{{ post.date | date: "%b %d, %Y" }} &bull; {{ read_time }} min read</p>
-                    <p class="post-excerpt">{{ post.excerpt | strip_html | truncate: 150 }}</p>
+                <li class="post-item" data-tags="{{ post.tags | join: ' ' | downcase }}">
+                    {% if post.background %}
+                    <a href="{{ post.url }}" class="post-thumbnail">
+                        <img src="{{ post.background }}" alt="{{ post.title }}" loading="lazy">
+                    </a>
+                    {% endif %}
+                    <div class="post-content-wrapper">
+                        <a href="{{ post.url }}" class="post-title-link">{{ post.title }}</a>
+                        <p class="post-date">{{ post.date | date: "%b %d, %Y" }} &bull; {{ read_time }} min read</p>
+                        {% if post.tags.size > 0 %}
+                        <div class="post-tags">
+                            {% for tag in post.tags %}
+                                <span class="post-tag">{{ tag }}</span>
+                            {% endfor %}
+                        </div>
+                        {% endif %}
+                        <p class="post-excerpt">{{ post.excerpt | strip_html | truncate: 120 }}</p>
+                    </div>
                 </li>
             {% endfor %}
         </ul>
+
+        <!-- Pagination -->
+        <div class="pagination" id="pagination"></div>
+        <p class="no-posts-message" style="display: none;">No posts found with this tag.</p>
     </div>
-    <div 
+    <div
         class="item-1-2-4-4 none-mobile"
         style="background-image: url(/assets/images/blog-page.webp); background-size: cover; background-position: center;"
-    > 
+    >
     </div>
 </div>
+
+<script>
+(function() {
+    const tagButtons = document.querySelectorAll('.tag-btn');
+    const postItems = Array.from(document.querySelectorAll('.post-item'));
+    const noPostsMessage = document.querySelector('.no-posts-message');
+    const paginationContainer = document.getElementById('pagination');
+
+    const POSTS_PER_PAGE = 5;
+    let currentPage = 1;
+    let filteredPosts = postItems;
+
+    // Filter by tag
+    function filterByTag(tag) {
+        if (tag === 'all') {
+            filteredPosts = postItems;
+        } else {
+            filteredPosts = postItems.filter(post => post.dataset.tags.includes(tag));
+        }
+        currentPage = 1;
+        renderPosts();
+        renderPagination();
+    }
+
+    // Render posts for current page
+    function renderPosts() {
+        const start = (currentPage - 1) * POSTS_PER_PAGE;
+        const end = start + POSTS_PER_PAGE;
+
+        postItems.forEach(post => post.style.display = 'none');
+        filteredPosts.slice(start, end).forEach(post => post.style.display = '');
+
+        noPostsMessage.style.display = filteredPosts.length === 0 ? 'block' : 'none';
+    }
+
+    // Render pagination
+    function renderPagination() {
+        const totalPages = Math.ceil(filteredPosts.length / POSTS_PER_PAGE);
+        if (totalPages <= 1) {
+            paginationContainer.innerHTML = '';
+            return;
+        }
+
+        let html = '';
+        if (currentPage > 1) {
+            html += `<button class="page-btn" data-page="${currentPage - 1}">&larr; Prev</button>`;
+        }
+
+        for (let i = 1; i <= totalPages; i++) {
+            html += `<button class="page-btn ${i === currentPage ? 'active' : ''}" data-page="${i}">${i}</button>`;
+        }
+
+        if (currentPage < totalPages) {
+            html += `<button class="page-btn" data-page="${currentPage + 1}">Next &rarr;</button>`;
+        }
+
+        paginationContainer.innerHTML = html;
+
+        // Add event listeners
+        paginationContainer.querySelectorAll('.page-btn').forEach(btn => {
+            btn.addEventListener('click', () => {
+                currentPage = parseInt(btn.dataset.page);
+                renderPosts();
+                renderPagination();
+                document.querySelector('.posts-list').scrollIntoView({ behavior: 'smooth' });
+            });
+        });
+    }
+
+    // Tag button listeners
+    tagButtons.forEach(btn => {
+        btn.addEventListener('click', () => {
+            tagButtons.forEach(b => b.classList.remove('active'));
+            btn.classList.add('active');
+            filterByTag(btn.dataset.tag);
+        });
+    });
+
+    // Initial render
+    renderPosts();
+    renderPagination();
+})();
+</script>

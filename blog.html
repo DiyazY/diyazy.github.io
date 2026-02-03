@@ -30,8 +30,8 @@ description: "Articles about software development, DIY projects, home lab experi
                 {% if read_time < 1 %}{% assign read_time = 1 %}{% endif %}
                 <li class="post-item" data-tags="{{ post.tags | join: ' ' | downcase }}">
                     {% if post.background %}
-                    <a href="{{ post.url }}" class="post-thumbnail">
-                        <img src="{{ post.background }}" alt="{{ post.title }}" loading="lazy">
+                    <a href="{{ post.url }}" class="post-thumbnail" aria-label="Read {{ post.title }}">
+                        <img src="{{ post.background }}" alt="" loading="lazy" decoding="async">
                     </a>
                     {% endif %}
                     <div class="post-content-wrapper">

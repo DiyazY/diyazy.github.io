@@ -314,40 +314,60 @@ To enable comments, you need to:
 
 ### Tasks
 
-- [ ] **Newsletter signup**
-    - [ ] Choose provider (Buttondown, ConvertKit, Mailchimp)
-    - [ ] Design signup form
-    - [ ] Add to homepage and/or post footer
-    - [ ] Create welcome email
+- [ ] **Newsletter signup** (deferred)
+    - [ ] Choose provider:
+        - **Buttondown** (recommended) - Free 100 subs, developer-friendly, Markdown
+        - **EmailOctopus** - Free 2,500 subs, generous tier
+        - **ConvertKit** - Free 1,000 subs, creator-focused
+    - [ ] Sign up and get embed form code
+    - [ ] Add form to footer or dedicated section
+    - [ ] Example embed:
+      ```html
+      <form action="https://buttondown.email/api/emails/embed-subscribe/USERNAME" method="post">
+        <input type="email" name="email" placeholder="Your email">
+        <button type="submit">Subscribe</button>
+      </form>
+      ```
 
-- [ ] **Analytics**
-    - [ ] Choose privacy-friendly option (Plausible, Umami, GoatCounter)
-    - [ ] Install tracking code
-    - [ ] Set up basic dashboard
+- [ ] **Analytics** (deferred)
+    - [ ] Choose provider:
+        - **GoatCounter** (recommended) - Free, simple, no cookie banner needed
+        - **Umami** - Free self-host (HomeLab!) or $9/mo cloud
+        - **Plausible** - $9/mo or self-host, privacy-friendly
+        - **Cloudflare Analytics** - Free if using Cloudflare DNS
+    - [ ] Sign up and get tracking script
+    - [ ] Add to `_includes/analytics.html` and include in `default.html`
+    - [ ] Example (GoatCounter):
+      ```html
+      <script data-goatcounter="https://YOURSITE.goatcounter.com/count"
+              async src="//gc.zgo.at/count.js"></script>
+      ```
 
-- [ ] **RSS feed improvements**
-    - [ ] Ensure full content in feed
-    - [ ] Add feed autodiscovery link
-    - [ ] Create feed icon/link in header
+- [x] **RSS feed improvements**
+    - [x] Full content in feed (content:encoded)
+    - [x] Feed autodiscovery link in head
+    - [x] RSS link in footer with icon
 
-- [ ] **Performance optimization**
-    - [ ] Implement lazy loading for images
-    - [ ] Extract critical CSS
-    - [ ] Add preload hints for key resources
-    - [ ] Optimize and compress images
-    - [ ] Add service worker for offline support
+- [x] **Performance optimization**
+    - [x] Native lazy loading for images (loading="lazy")
+    - [x] Async image decoding (decoding="async")
+    - [x] Preload hints for critical CSS and JS
+    - [ ] Optimize and compress images (manual task)
+    - [ ] Add service worker for offline support (optional)
 
-- [ ] **Accessibility audit**
-    - [ ] Add proper alt text to all images
-    - [ ] Ensure heading hierarchy
-    - [ ] Add skip navigation link
-    - [ ] Test with screen reader
-    - [ ] Ensure sufficient color contrast
+- [x] **Accessibility audit**
+    - [x] Proper alt text handling for decorative images
+    - [x] ARIA landmarks (banner, navigation, main, contentinfo)
+    - [x] Skip navigation link
+    - [x] Focus-visible styles for keyboard navigation
+    - [x] Proper button types and labels
+    - [ ] Test with screen reader (manual task)
+    - [ ] Verify color contrast (manual task)
 
-- [ ] **Structured data (SEO)**
-    - [ ] Add JSON-LD for Person (About page)
-    - [ ] Add JSON-LD for Article (blog posts)
-    - [ ] Add JSON-LD for WebSite (homepage)
+- [x] **Structured data (SEO)**
+    - [x] JSON-LD for WebSite (all pages)
+    - [x] JSON-LD for BlogPosting (post pages)
+    - [x] Author information included
 
 ### Files to Modify
 
@@ -463,6 +483,12 @@ To enable comments, you need to:
 | 2025-02-01 | Phase 5 | Added animations/transitions  | Hover effects, smooth scroll, focus states |
 | 2025-02-01 | Phase 5 | Responsive improvements       | Tablet breakpoint, touch targets, mobile   |
 | 2025-02-01 | Phase 5 | CSS consolidation             | Utility classes, consistent variables      |
+| 2025-02-02 | Phase 5 | URL-based blog filtering      | ?tag=xxx support, browser history          |
+| 2025-02-02 | Phase 5 | Added Art tile to homepage    | New category tile, grid layout update      |
+| 2025-02-02 | Phase 6 | Created RSS feed              | Full content, autodiscovery, footer link   |
+| 2025-02-02 | Phase 6 | Added structured data         | JSON-LD for WebSite and BlogPosting        |
+| 2025-02-02 | Phase 6 | Accessibility improvements    | Skip link, ARIA landmarks, focus styles    |
+| 2025-02-02 | Phase 6 | Performance optimization      | Preload hints, lazy loading images         |
 
 ---
 

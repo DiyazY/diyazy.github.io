@@ -73,9 +73,10 @@
 }
 
 .skill-category {
-  background-color: var(--color-bg-secondary, #f8f8f8);
+  background-color: var(--color-bg-secondary, #f2f2f2);
   padding: 15px;
   border-radius: 8px;
+  border: 1px solid var(--color-border, rgba(42, 37, 33, 0.1));
   transition: transform var(--transition-fast, 0.15s ease),
               box-shadow var(--transition-fast, 0.15s ease);
 }
@@ -197,9 +198,10 @@
 }
 
 .education-item {
-  background-color: var(--color-bg-secondary, #f8f8f8);
+  background-color: var(--color-bg-secondary, #f2f2f2);
   padding: 15px;
   border-radius: 8px;
+  border: 1px solid var(--color-border, rgba(42, 37, 33, 0.1));
 }
 
 .education-degree {
@@ -231,8 +233,9 @@
   align-items: center;
   gap: 8px;
   padding: 10px 20px;
-  background-color: var(--color-bg-secondary, #f8f8f8);
+  background-color: var(--color-bg-secondary, #f2f2f2);
   border-radius: 8px;
+  border: 1px solid var(--color-border, rgba(42, 37, 33, 0.1));
   color: var(--color-text, #333);
   text-decoration: none;
   transition: all var(--transition-base, 0.2s ease);

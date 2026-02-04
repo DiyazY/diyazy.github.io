@@ -8,18 +8,17 @@ description: "Personal blog and portfolio of Diyaz Yakubov - adventures in tech,
 
 <div class="panel-container home-grid">
   <div class="item-latest-post mob-h-auto">
-    <h2 class="section-title">Latest Post</h2>
-    {% assign latest = site.posts.first %}
-    {% if latest %}
+    <h2 class="section-title">Latest Posts</h2>
+    {% for post in site.posts limit:2 %}
     <article class="featured-post">
-      <a href="{{ latest.url }}" class="post-link">
-        <h3>{{ latest.title }}</h3>
+      <a href="{{ post.url }}" class="post-link">
+        <h3>{{ post.title }}</h3>
       </a>
-      <p class="post-meta">{{ latest.date | date: "%B %d, %Y" }}</p>
-      <p class="post-excerpt">{{ latest.excerpt | strip_html | truncate: 150 }}</p>
-      <a href="{{ latest.url }}" class="read-more">Read more &rarr;</a>
+      <p class="post-meta">{{ post.date | date: "%B %d, %Y" }}</p>
+      <p class="post-excerpt">{{ post.excerpt | strip_html | truncate: 150 }}</p>
+      <a href="{{ post.url }}" class="read-more">Read more &rarr;</a>
     </article>
-    {% endif %}
+    {% endfor %}
   </div>
 
   <div class="item-diy diy mob-h-12vh" onclick="location.href='/blog.html?tag=diy'">

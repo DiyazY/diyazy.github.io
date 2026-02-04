@@ -13,30 +13,42 @@
 .item-diy {
   grid-area: 1 / 2 / 2 / 3;
   cursor: pointer;
-  transition: transform var(--transition-fast, 0.15s ease),
-              box-shadow var(--transition-fast, 0.15s ease);
 }
 
 .item-homelab {
   grid-area: 1 / 3 / 2 / 4;
   cursor: pointer;
-  transition: transform var(--transition-fast, 0.15s ease),
-              box-shadow var(--transition-fast, 0.15s ease);
 }
 
 .item-art {
   grid-area: 2 / 2 / 3 / 3;
   cursor: pointer;
-  transition: transform var(--transition-fast, 0.15s ease),
-              box-shadow var(--transition-fast, 0.15s ease);
 }
 
 .item-about {
   grid-area: 2 / 3 / 3 / 4;
   padding: 20px;
+  position: relative;
+  overflow: hidden;
 }
 
-/* Hover effect for category tiles */
+.item-about .particles-container {
+  position: absolute;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  height: 50%;
+  margin-top: 0;
+  border-radius: 0;
+}
+
+.item-diy,
+.item-homelab,
+.item-art {
+  transition: transform var(--transition-fast, 0.15s ease),
+              box-shadow var(--transition-fast, 0.15s ease);
+}
+
 .item-diy:hover,
 .item-homelab:hover,
 .item-art:hover {
@@ -170,17 +182,6 @@
     padding: 15px;
   }
 
-  .item-diy:hover,
-  .item-homelab:hover,
-  .item-art:hover {
-    transform: none;
-  }
-
-  .item-diy:active,
-  .item-homelab:active,
-  .item-art:active {
-    transform: scale(0.98);
-  }
 
   .mob-h-auto {
     height: auto;

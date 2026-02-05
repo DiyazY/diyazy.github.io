@@ -179,6 +179,13 @@
   .item-about {
     grid-area: 3 / 1 / 4 / 3;
   }
+
+  .item-about .particles-container {
+    position: static;
+    height: 150px;
+    margin-top: 15px;
+    border-radius: var(--radius-md, 8px);
+  }
 }
 
 /* Mobile adjustments */

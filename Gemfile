@@ -10,3 +10,9 @@ gem 'jekyll-watch'
 gem 'jekyll-sitemap'
 # gem 'jekyll-livereload'
 # gem 'jekyll-sass-converter'
+
+# Medium post sync (medium_to_md.rb)
+gem 'feedjira'
+gem 'httparty'
+gem 'nokogiri'
+gem 'reverse_markdown'

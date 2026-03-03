@@ -48,7 +48,7 @@ feed.entries.each do |e|
 ---
 layout: post
 author: #{e.author}
-title: #{e.title}
+title: "#{e.title.gsub('"', '\\"')}"
 date: #{e.published}
 background: https:#{img}
 excerpt_separator: <!--more-->

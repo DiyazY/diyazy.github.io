@@ -1,0 +1,5 @@
+User-agent: *
+Allow: /
+
+Sitemap: https://diyazy.github.io/sitemap.xml
+LLMs-Txt: https://diyazy.github.io/llms.txt

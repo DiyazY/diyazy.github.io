@@ -1,28 +1,334 @@
 ---
 layout: default
 title: About
+description: "Learn more about Diyaz Yakubov - software engineer, tech enthusiast, DIY maker, and home lab experimenter."
 ---
 
-<div class="panel-container">
-  <div class="item-1-3-4-4">
-    <h2>Hello! I'am Diyaz.</h2>
-    <p>
-      Welcome to my personal space on the web, where I share my adventures in
-      the tech world. This site is a window into my world - from the challenges
-      I face in my home lab, exploring and experimenting with technology, to my
-      diverse hobbies that fuel my creativity and curiosity. You'll also find my
-      perspectives on a variety of interesting topics, reflecting my journey and
-      learnings.
-    </p>
+<link rel="stylesheet" href="{{ site.baseurl }}/assets/css/about.css">
 
-    <p>
-      Join me as I navigate through these experiences, sharing insights and
-      stories that I hope will resonate with you and spark your own
-      explorations.
-    </p>
+<!-- Rich Person Schema (JSON-LD) -->
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "Person",
+  "name": "Diyaz Yakubov",
+  "url": "https://diyazy.github.io",
+  "image": "https://diyazy.github.io/assets/images/diyaz.webp",
+  "jobTitle": "Software Engineer & Founder",
+  "description": "Full-stack software engineer with 10+ years of experience in scalable web applications, distributed systems, and cloud-native solutions. Founder of TopTop.dev.",
+  "address": {
+    "@type": "PostalAddress",
+    "addressLocality": "Helsinki",
+    "addressCountry": "FI"
+  },
+  "alumniOf": [
+    {
+      "@type": "CollegeOrUniversity",
+      "name": "Tampere University",
+      "url": "https://www.tuni.fi/en",
+      "address": { "@type": "PostalAddress", "addressCountry": "FI" }
+    },
+    {
+      "@type": "CollegeOrUniversity",
+      "name": "East-Kazakhstan State Technical University",
+      "address": { "@type": "PostalAddress", "addressCountry": "KZ" }
+    }
+  ],
+  "hasCredential": [
+    {
+      "@type": "EducationalOccupationalCredential",
+      "credentialCategory": "degree",
+      "educationalLevel": "Master's",
+      "name": "Master's in Software Engineering",
+      "recognizedBy": { "@type": "CollegeOrUniversity", "name": "Tampere University" }
+    },
+    {
+      "@type": "EducationalOccupationalCredential",
+      "credentialCategory": "degree",
+      "educationalLevel": "Bachelor's",
+      "name": "Bachelor's in Computer Engineering",
+      "recognizedBy": { "@type": "CollegeOrUniversity", "name": "East-Kazakhstan State Technical University" }
+    }
+  ],
+  "knowsAbout": [
+    "Software Architecture", "AI Engineering", "Microservices", "Domain-Driven Design",
+    "Event Storming", "Full-Stack Development", "Distributed Systems", "API Design",
+    "C#", ".NET", "ASP.NET Core", "TypeScript", "JavaScript", "Python", "FastAPI",
+    "React", "Angular", "Blazor", "Node.js", "Next.js",
+    "PostgreSQL", "SQL Server", "MongoDB", "Redis", "Elasticsearch",
+    "Docker", "Kubernetes", "Azure", "CI/CD",
+    "LLMs", "OpenAI", "RAG", "Prompt Engineering", "AI Agents", "WebAssembly",
+    "Edge Computing", "IoT"
+  ],
+  "worksFor": {
+    "@type": "Organization",
+    "name": "TopTop.dev",
+    "url": "https://toptop.dev",
+    "description": "Custom software development, cloud solutions, and AI-powered services for Nordic SMBs"
+  },
+  "hasOccupation": [
+    {
+      "@type": "Occupation",
+      "name": "Founder",
+      "occupationLocation": { "@type": "Country", "name": "Finland" },
+      "description": "Custom software development, cloud solutions, and AI-powered development services"
+    },
+    {
+      "@type": "Occupation",
+      "name": "Senior Software Engineer",
+      "skills": "AI classification, browser extensions, data pipelines, MV3 migration"
+    },
+    {
+      "@type": "Occupation",
+      "name": "Software Architect & Consultant",
+      "skills": "EventStorming, DDD, micro-frontend architecture, cloud migrations, CQRS"
+    }
+  ],
+  "sameAs": [
+    "https://github.com/DiyazY",
+    "https://linkedin.com/in/diyaz-y-4ba636116",
+    "https://medium.com/@diyaz.yakubov",
+    "https://orcid.org/0009-0000-7989-4614",
+    "https://www.toptal.com/resume/diyaz-yakubov",
+    "https://toptop.dev"
+  ]
+}
+</script>
+
+<div class="panel-container about-container">
+  <div class="about-content text-panel">
+
+    <!-- Header Section -->
+    <div class="about-header">
+      <div class="about-photo-mobile">
+        <img src="/assets/images/diyaz.webp" alt="Diyaz Yakubov">
+      </div>
+      <h1>Hello! I'm Diyaz.</h1>
+      <p class="about-tagline">Software Engineer & Full-Stack Developer</p>
+      <p class="about-location">Helsinki, Finland</p>
+    </div>
+
+    <!-- Intro -->
+    <div class="about-section">
+      <p>
+        I'm an expert in developing custom web solutions that precisely embody clients' visions.
+        With a sharp focus on design aesthetics and cutting-edge technology, I consistently surpass
+        project expectations. This site is a window into my world — from technical deep-dives and
+        home lab experiments to DIY projects and creative pursuits.
+      </p>
+    </div>
+
+    <!-- Skills -->
+    <div class="about-section">
+      <h2>Technical Skills</h2>
+      <div class="skills-grid">
+        <div class="skill-category">
+          <h3>Languages</h3>
+          <p>C#, TypeScript, JavaScript, Python, SQL, HTML/CSS</p>
+        </div>
+        <div class="skill-category">
+          <h3>Backend</h3>
+          <p>.NET, ASP.NET Core, Node.js, FastApi, REST APIs, GraphQL, WebSockets</p>
+        </div>
+        <div class="skill-category">
+          <h3>Frontend</h3>
+          <p>React, Angular, Blazor, Next.js, Electron</p>
+        </div>
+        <div class="skill-category">
+          <h3>Data</h3>
+          <p>PostgreSQL, SQL Server, MongoDB, Redis, Elasticsearch</p>
+        </div>
+        <div class="skill-category">
+          <h3>DevOps & Cloud</h3>
+          <p>Docker, Kubernetes, Azure, CI/CD, GitLab, Ansible</p>
+        </div>
+        <div class="skill-category">
+          <h3>AI & Emerging</h3>
+          <p>LLMs, OpenAI, RAG, Prompt Engineering, AI Agents, WebAssembly</p>
+        </div>
+      </div>
+    </div>
+
+    <!-- Expertise -->
+    <div class="about-section">
+      <h2>Expertise</h2>
+      <div class="expertise-tags">
+        <span class="tag">Software Architecture</span>
+        <span class="tag">AI Engineering</span>
+        <span class="tag">Microservices</span>
+        <span class="tag">Domain-Driven Design</span>
+        <span class="tag">Event Storming</span>
+        <span class="tag">Full-Stack Development</span>
+        <span class="tag">Distributed Systems</span>
+        <span class="tag">API Design</span>
+        <span class="tag">DevOps</span>
+        <span class="tag">Technical Leadership</span>
+      </div>
+    </div>
+
+    <!-- Experience Timeline -->
+    <div class="about-section">
+      <h2>Experience</h2>
+      <div class="timeline">
+        <div class="timeline-item">
+          <div class="timeline-date">2024 - Present</div>
+          <div class="timeline-content">
+            <h3>Founder</h3>
+            <p class="timeline-company"><a href="https://toptop.dev" target="_blank" rel="noopener">TopTop.dev</a></p>
+            <p>Custom software development, cloud solutions, and AI-powered development services for SMBs in the Nordic region.</p>
+          </div>
+        </div>
+        <div class="timeline-item">
+          <div class="timeline-date">2022 - 2025</div>
+          <div class="timeline-content">
+            <h3>Senior Software Engineer</h3>
+            <p class="timeline-company">DISQO</p>
+            <p>AI classification solutions with 95% accuracy, browser extension to 100K+ users, MV2 to MV3 migration, data pipelines with AI techniques.</p>
+          </div>
+        </div>
+        <div class="timeline-item">
+          <div class="timeline-date">2021 - 2022</div>
+          <div class="timeline-content">
+            <h3>Software Architect & Consultant</h3>
+            <p class="timeline-company">Wunderdog / iSate</p>
+            <p>EventStorming, DDD implementation, micro-frontend architecture, cloud migrations, CQRS workshops.</p>
+          </div>
+        </div>
+        <div class="timeline-item">
+          <div class="timeline-date">2019 - 2020</div>
+          <div class="timeline-content">
+            <h3>Senior Software Engineer</h3>
+            <p class="timeline-company">Exsensio</p>
+            <p>Test automation framework for electronic devices, .NET Core migration, React/Electron frontend.</p>
+          </div>
+        </div>
+        <div class="timeline-item">
+          <div class="timeline-date">2017 - 2019</div>
+          <div class="timeline-content">
+            <h3>Software Engineer</h3>
+            <p class="timeline-company">AppGear</p>
+            <p>iLobby visitor management system serving 45+ countries, Azure infrastructure for high-traffic environments.</p>
+          </div>
+        </div>
+        <div class="timeline-item">
+          <div class="timeline-date">2016 - 2017</div>
+          <div class="timeline-content">
+            <h3>Senior Developer & Team Leader</h3>
+            <p class="timeline-company">iSate</p>
+            <p>TENGRIDOK 4 redesign, microservices architecture with .NET Core, acceptance testing.</p>
+          </div>
+        </div>
+        <div class="timeline-item">
+          <div class="timeline-date">2015 - 2016</div>
+          <div class="timeline-content">
+            <h3>Chief Specialist, IS Department</h3>
+            <p class="timeline-company">eHealth Center, Ministry of Healthcare, Kazakhstan</p>
+            <p>Population register serving 17M patients, resource management for 3,000 medical institutions.</p>
+          </div>
+        </div>
+        <div class="timeline-item">
+          <div class="timeline-date">2013 - 2020</div>
+          <div class="timeline-content">
+            <h3>Founder & Developer</h3>
+            <p class="timeline-company">DYinc</p>
+            <p>Consultancy services, eHealth systems for Kazakhstan, AusumCRM development.</p>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Education -->
+    <div class="about-section">
+      <h2>Education</h2>
+      <div class="education-list">
+        <div class="education-item">
+          <div class="education-degree">Master's in Software Engineering</div>
+          <div class="education-school">Tampere University, Finland</div>
+          <div class="education-year">2021 - 2024</div>
+        </div>
+        <div class="education-item">
+          <div class="education-degree">Bachelor's in Computer Engineering</div>
+          <div class="education-school">East-Kazakhstan State Technical University</div>
+          <div class="education-year">2011 - 2014</div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Resume -->
+    <div class="about-section">
+      <h2>Resume</h2>
+      <div class="resume-download">
+        <p>Download my full resume for a detailed overview of my experience, skills, and qualifications.</p>
+        <a href="/assets/diyaz-yakubov-resume.pdf" target="_blank" rel="noopener" class="resume-btn">
+          <svg viewBox="0 0 24 24" width="20" height="20" fill="currentColor">
+            <path d="M19 9h-4V3H9v6H5l7 7 7-7zM5 18v2h14v-2H5z"/>
+          </svg>
+          Download Resume (PDF)
+        </a>
+      </div>
+    </div>
+
+    <!-- Interests -->
+    <div class="about-section">
+      <h2>Beyond Code</h2>
+      <p>
+        When I'm not coding, you'll find me drawing and painting, working out at the gym,
+        crafting things by hand, exploring architecture, or getting lost in a good book.
+        I believe creativity flows between disciplines — the patience needed for a sketch
+        is the same patience needed for debugging.
+      </p>
+    </div>
+
+    <!-- Social Links -->
+    <div class="about-section">
+      <h2>Connect</h2>
+      <div class="social-links">
+        <a href="https://github.com/{{ site.author.github }}" target="_blank" rel="noopener" class="social-link">
+          <svg viewBox="0 0 24 24" width="24" height="24" fill="currentColor">
+            <path d="M12 0c-6.626 0-12 5.373-12 12 0 5.302 3.438 9.8 8.207 11.387.599.111.793-.261.793-.577v-2.234c-3.338.726-4.033-1.416-4.033-1.416-.546-1.387-1.333-1.756-1.333-1.756-1.089-.745.083-.729.083-.729 1.205.084 1.839 1.237 1.839 1.237 1.07 1.834 2.807 1.304 3.492.997.107-.775.418-1.305.762-1.604-2.665-.305-5.467-1.334-5.467-5.931 0-1.311.469-2.381 1.236-3.221-.124-.303-.535-1.524.117-3.176 0 0 1.008-.322 3.301 1.23.957-.266 1.983-.399 3.003-.404 1.02.005 2.047.138 3.006.404 2.291-1.552 3.297-1.23 3.297-1.23.653 1.653.242 2.874.118 3.176.77.84 1.235 1.911 1.235 3.221 0 4.609-2.807 5.624-5.479 5.921.43.372.823 1.102.823 2.222v3.293c0 .319.192.694.801.576 4.765-1.589 8.199-6.086 8.199-11.386 0-6.627-5.373-12-12-12z"/>
+          </svg>
+          <span>GitHub</span>
+        </a>
+        <a href="https://linkedin.com/in/{{ site.author.linkedin }}" target="_blank" rel="noopener" class="social-link">
+          <svg viewBox="0 0 24 24" width="24" height="24" fill="currentColor">
+            <path d="M20.447 20.452h-3.554v-5.569c0-1.328-.027-3.037-1.852-3.037-1.853 0-2.136 1.445-2.136 2.939v5.667H9.351V9h3.414v1.561h.046c.477-.9 1.637-1.85 3.37-1.85 3.601 0 4.267 2.37 4.267 5.455v6.286zM5.337 7.433c-1.144 0-2.063-.926-2.063-2.065 0-1.138.92-2.063 2.063-2.063 1.14 0 2.064.925 2.064 2.063 0 1.139-.925 2.065-2.064 2.065zm1.782 13.019H3.555V9h3.564v11.452zM22.225 0H1.771C.792 0 0 .774 0 1.729v20.542C0 23.227.792 24 1.771 24h20.451C23.2 24 24 23.227 24 22.271V1.729C24 .774 23.2 0 22.222 0h.003z"/>
+          </svg>
+          <span>LinkedIn</span>
+        </a>
+        <a href="https://medium.com/@{{ site.author.medium }}" target="_blank" rel="noopener" class="social-link">
+          <svg viewBox="0 0 24 24" width="24" height="24" fill="currentColor">
+            <path d="M13.54 12a6.8 6.8 0 01-6.77 6.82A6.8 6.8 0 010 12a6.8 6.8 0 016.77-6.82A6.8 6.8 0 0113.54 12zm7.42 0c0 3.54-1.51 6.42-3.38 6.42-1.87 0-3.39-2.88-3.39-6.42s1.52-6.42 3.39-6.42 3.38 2.88 3.38 6.42M24 12c0 3.17-.53 5.75-1.19 5.75-.66 0-1.19-2.58-1.19-5.75s.53-5.75 1.19-5.75C23.47 6.25 24 8.83 24 12z"/>
+          </svg>
+          <span>Medium</span>
+        </a>
+        <a href="https://orcid.org/0009-0000-7989-4614" target="_blank" rel="noopener" class="social-link">
+          <svg viewBox="0 0 24 24" width="24" height="24" fill="currentColor">
+            <path d="M12 0C5.372 0 0 5.372 0 12s5.372 12 12 12 12-5.372 12-12S18.628 0 12 0zM7.369 4.378c.525 0 .947.431.947.947s-.422.947-.947.947a.95.95 0 01-.947-.947c0-.525.422-.947.947-.947zm-.722 3.038h1.444v10.041H6.647V7.416zm3.562 0h3.9c3.712 0 5.344 2.653 5.344 5.025 0 2.578-2.016 5.025-5.325 5.025h-3.919V7.416zm1.444 1.303v7.444h2.297c3.272 0 4.022-2.484 4.022-3.722 0-1.847-1.178-3.722-3.978-3.722h-2.341z"/>
+          </svg>
+          <span>ORCID</span>
+        </a>
+        <a href="https://toptop.dev" target="_blank" rel="noopener" class="social-link">
+          <svg width="24" height="24" viewBox="0 0 32 32" fill="none" xmlns="http://www.w3.org/2000/svg">
+            <rect width="32" height="32" rx="6" fill="currentColor" opacity="0.15"/>
+            <path d="M4 8 Q10 6, 16 8 T28 8" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" fill="none" opacity="0.5"/>
+            <path d="M4 12 Q10 10, 16 12 T28 12" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" fill="none" opacity="0.6"/>
+            <path d="M4 16 Q10 14, 16 16 T28 16" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" fill="none" opacity="0.7"/>
+            <path d="M4 20 Q10 18, 16 20 T28 20" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" fill="none" opacity="0.85"/>
+            <path d="M4 24 Q10 22, 16 24 T28 24" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" fill="none" opacity="1"/>
+          </svg>
+          <span>TopTop</span>
+        </a>
+        <a href="https://www.toptal.com/resume/diyaz-yakubov" target="_blank" rel="noopener" class="social-link">
+          <svg viewBox="0 0 24 24" width="24" height="24" fill="currentColor">
+            <path d="M20.227 10.038L10.188 0l-2.04 2.04 3.773 3.769-8.155 8.153L13.807 24l2.039-2.039-3.772-3.771 8.16-8.152h-.007zM8.301 14.269l6.27-6.268 2.207 2.203-6.269 6.27-2.208-2.205z"/>
+          </svg>
+          <span>Toptal</span>
+        </a>
+      </div>
+    </div>
+
   </div>
-  <div
-    class="item-1-3-4-1 none-mobile"
-    style="background-image: url(/assets/images/me.webp); background-size: cover"
-  ></div>
+
+  <!-- Photo sidebar (desktop) -->
+  <div class="about-photo none-mobile" style="background-image: url(/assets/images/diyaz.webp); background-size: cover; background-position: center;"></div>
 </div>

@@ -1,0 +1,42 @@
+{% if include.content %}
+{% assign headings = include.content | split: '<h2' %}
+{% if headings.size > 2 %}
+<nav class="toc" aria-label="Table of Contents">
+    <div class="toc-header">
+        <span class="toc-title">Contents</span>
+        <button class="toc-toggle" aria-expanded="true" aria-controls="toc-list">
+            <svg class="toc-icon" viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2">
+                <polyline points="6 9 12 15 18 9"></polyline>
+            </svg>
+        </button>
+    </div>
+    <ol class="toc-list" id="toc-list">
+        {% for heading in headings %}
+            {% if forloop.first == false %}
+                {% assign heading_text = heading | split: '>' | last | split: '</h2>' | first %}
+                {% assign heading_id = heading | split: 'id="' %}
+                {% if heading_id.size > 1 %}
+                    {% assign heading_id = heading_id[1] | split: '"' | first %}
+                {% else %}
+                    {% assign heading_id = heading_text | slugify %}
+                {% endif %}
+                <li><a href="#{{ heading_id }}">{{ heading_text | strip_html }}</a></li>
+            {% endif %}
+        {% endfor %}
+    </ol>
+</nav>
+<script>
+(function() {
+    const toggle = document.querySelector('.toc-toggle');
+    const list = document.querySelector('.toc-list');
+    if (toggle && list) {
+        toggle.addEventListener('click', () => {
+            const expanded = toggle.getAttribute('aria-expanded') === 'true';
+            toggle.setAttribute('aria-expanded', !expanded);
+            list.classList.toggle('collapsed');
+        });
+    }
+})();
+</script>
+{% endif %}
+{% endif %}

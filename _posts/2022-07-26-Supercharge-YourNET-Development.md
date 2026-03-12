@@ -102,4 +102,3 @@ To sum up, I reckon that tools like NDepend significantly improve the process of
 
 ![](https://cdn-images-1.medium.com/max/834/1*z4P3eTfkMz12Ra3M9pHhIg.png)
  ![](https://medium.com/_/stat?event=post.clientViewed&referrerSource=full_rss&postId=196fc810a55c)
-Originally posted on [Supercharge Your .NET Development](https://medium.com/@diyaz.yakubov/the-article-about-net-tools-196fc810a55c?source=rss-ce9f85b2b690------2)

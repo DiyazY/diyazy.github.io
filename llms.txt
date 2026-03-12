@@ -1,0 +1,40 @@
+# diyaz.
+
+> Personal portfolio and technical blog of Diyaz Yakubov — software engineer, full-stack developer, and founder based in Helsinki, Finland.
+
+## About
+
+Diyaz Yakubov is a software engineer with 10+ years of experience building scalable web applications, distributed systems, and cloud-native solutions. He holds a Master's degree in Software Engineering from Tampere University (Finland) and a Bachelor's in Computer Engineering from EKSTU (Kazakhstan). He is the founder of TopTop.dev, a software development company serving SMBs in the Nordic region.
+
+## Areas of Expertise
+
+- Software Architecture, Microservices, Domain-Driven Design
+- Full-Stack Development: C#/.NET, TypeScript, React, Angular, Node.js
+- Cloud & DevOps: Azure, Docker, Kubernetes, CI/CD
+- Data: PostgreSQL, SQL Server, MongoDB, Redis, Elasticsearch
+- AI & Emerging Tech: LLMs, OpenAI, RAG, Prompt Engineering, AI Agents, WebAssembly
+- Published researcher in edge computing (ESOCC 2025, Springer LNCS)
+
+## Projects
+
+- [TopTop.dev](https://toptop.dev): Custom software development company — cloud solutions and AI-powered services for Nordic SMBs
+- [EuroJackpot Stats](https://eurojackpotstats.eu): Lottery number generator with statistical analysis of 911+ historical draws, 6 strategies, 22 languages
+- [IoT Edge Kubernetes Research](https://github.com/DiyazY/iot-edge): Comparative analysis of lightweight Kubernetes distributions for edge computing (published in ESOCC 2025)
+
+## Blog Topics
+
+Technical deep-dives covering .NET, React, WebAssembly, memory management, cloud computing, speculative design, and DIY maker projects.
+
+## Links
+
+- Website: https://diyazy.github.io
+- GitHub: https://github.com/DiyazY
+- LinkedIn: https://linkedin.com/in/diyaz-y-4ba636116
+- Medium: https://medium.com/@diyaz.yakubov
+- ORCID: https://orcid.org/0009-0000-7989-4614
+- Toptal: https://www.toptal.com/resume/diyaz-yakubov
+- Company: https://toptop.dev
+
+## Contact
+
+For collaboration, consulting, or project inquiries, reach out via LinkedIn or through TopTop.dev.

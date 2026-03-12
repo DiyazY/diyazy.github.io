@@ -54,25 +54,43 @@
 /* Add common styles for all items */
 .panel-container > div {
 /*   padding: 20px; */
-  border-radius: 10px; /* Rounded corners like macOS */
-  background-color: rgba(
-    255,
-    255,
-    255,
-    0.7
-  ); /* White background with transparency */
-  backdrop-filter: blur(10px); /* Blur effect for the background */
-  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1); /* Optional: add a subtle shadow for depth */
+  border-radius: 10px;
+  background-color: var(--color-panel-bg, rgba(255, 255, 255, 0.95));
+  backdrop-filter: blur(10px);
+  box-shadow: var(--shadow-md, 0 4px 6px rgba(0, 0, 0, 0.1));
 }
 
+/* Tablet breakpoint */
+@media (max-width: 1024px) {
+  .panel-container {
+    grid-template-columns: 1fr 1fr;
+    gap: 8px;
+  }
+
+  .item-1-1-4-2 {
+    grid-area: 1 / 1 / 2 / 2;
+  }
+
+  .item-1-2-2-4,
+  .item-2-2-3-4 {
+    grid-area: auto;
+  }
+}
+
+/* Mobile breakpoint */
 @media (max-width: 768px) {
   .panel-container {
     display: block;
-    padding: 0px; /* Padding around the grid */
+    padding: 0px;
   }
   .panel-container > div {
     margin: 1vh 0;
     border-radius: 0px;
+    transition: transform var(--transition-fast, 0.15s ease);
+  }
+
+  .panel-container > div:active {
+    transform: scale(0.98);
   }
 
   .none-mobile {

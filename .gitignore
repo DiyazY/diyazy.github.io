@@ -133,3 +133,6 @@ _site
 .jekyll-metadata
 .DS_Store
 .todo-list
+
+# IDE
+.idea

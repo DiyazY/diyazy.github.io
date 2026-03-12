@@ -1,5 +1,17 @@
+# Site settings
+title: diyaz
+description: "Personal blog and portfolio of Diyaz Yakubov - sharing adventures in tech, DIY projects, and home lab experiments."
+url: "https://diyazy.github.io"
+baseurl: ""
+author:
+  name: Diyaz Yakubov
+  email: ""
+  github: DiyazY
+  linkedin: diyaz-y-4ba636116
+  medium: diyaz.yakubov
+
+# Build settings
 lsi: false
-safe: true
 source: ./
 incremental: false
 highlighter: rouge
@@ -8,3 +20,20 @@ gist:
 kramdown:
   math_engine: mathjax
   syntax_highlighter: rouge
+
+# Plugins
+plugins:
+  - jekyll-sitemap
+
+# Default front matter
+defaults:
+  - scope:
+      path: ""
+      type: "posts"
+    values:
+      layout: "post"
+  - scope:
+      path: ""
+      type: "pages"
+    values:
+      layout: "default"

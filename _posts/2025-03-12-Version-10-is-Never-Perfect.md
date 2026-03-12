@@ -10,7 +10,6 @@ original_link: https://medium.com/@diyaz.yakubov/version-1-0-is-never-perfect-fa
 ---
 You can still read by this link if you don’t have a Medium subscription.
 
-[Continue reading on Medium »](https://medium.com/@diyaz.yakubov/version-1-0-is-never-perfect-fa583eaaa775?source=rss-ce9f85b2b690------2)
 <!--more-->
 
 
@@ -19,4 +18,3 @@ You can still read by this link if you don’t have a Medium subscription.
 
 
 
-Originally posted on [Version 1.0 is Never Perfect](https://medium.com/@diyaz.yakubov/version-1-0-is-never-perfect-fa583eaaa775?source=rss-ce9f85b2b690------2)

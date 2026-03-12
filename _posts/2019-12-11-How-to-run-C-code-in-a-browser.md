@@ -117,4 +117,3 @@ This technology is pretty young. It has many issues but it also shows potential.
 > Thanks [Niki](https://medium.com/@nikitagavrilenko) for awesome illustration.
 
  ![](https://medium.com/_/stat?event=post.clientViewed&referrerSource=full_rss&postId=15d2c0c8bed3)
-Originally posted on [How to run C# code in a browser.](https://medium.com/@diyaz.yakubov/how-to-run-c-code-in-a-browser-15d2c0c8bed3?source=rss-ce9f85b2b690------2)

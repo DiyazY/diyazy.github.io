@@ -1,0 +1,374 @@
+/* About Page Styles */
+
+.about-container {
+  display: grid;
+  grid-template-columns: 1fr 300px;
+  gap: 10px;
+}
+
+.about-content {
+  padding: 30px;
+}
+
+.about-photo {
+  border-radius: 10px;
+  min-height: 400px;
+}
+
+/* Header */
+.about-header {
+  margin-bottom: 30px;
+}
+
+.about-header h1 {
+  margin: 0 0 5px 0;
+  font-size: 2.2em;
+  color: var(--color-primary, #2a2521);
+}
+
+.about-tagline {
+  color: var(--color-text-light, #666);
+  font-size: 1.1em;
+  margin: 0;
+}
+
+.about-location {
+  color: var(--color-text-muted, #888);
+  font-size: 0.95em;
+  margin: 5px 0 0 0;
+}
+
+.about-photo-mobile {
+  display: none;
+}
+
+/* Sections */
+.about-section {
+  margin-bottom: 30px;
+}
+
+.about-section:last-child {
+  margin-bottom: 0;
+}
+
+.about-section h2 {
+  font-size: 1.3em;
+  color: var(--color-primary, #2a2521);
+  margin: 0 0 15px 0;
+  padding-bottom: 8px;
+  border-bottom: 2px solid var(--color-border, rgba(42, 37, 33, 0.1));
+}
+
+.about-section p {
+  color: var(--color-text, #444);
+  line-height: 1.7;
+  margin: 0;
+}
+
+/* Skills Grid */
+.skills-grid {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: 15px;
+}
+
+.skill-category {
+  background-color: var(--color-bg-secondary, #f2f2f2);
+  padding: 15px;
+  border-radius: 8px;
+  border: 1px solid var(--color-border, rgba(42, 37, 33, 0.1));
+  transition: transform var(--transition-fast, 0.15s ease),
+              box-shadow var(--transition-fast, 0.15s ease);
+}
+
+.skill-category:hover {
+  transform: translateY(-2px);
+  box-shadow: var(--shadow-sm, 0 2px 4px rgba(0, 0, 0, 0.05));
+}
+
+.skill-category h3 {
+  margin: 0 0 8px 0;
+  font-size: 0.95em;
+  color: var(--color-primary, #2a2521);
+  font-weight: 600;
+}
+
+.skill-category p {
+  margin: 0;
+  font-size: 0.9em;
+  color: var(--color-text-light, #555);
+  line-height: 1.5;
+}
+
+/* Expertise Tags */
+.expertise-tags {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+}
+
+.expertise-tags .tag {
+  background-color: var(--color-primary, #2a2521);
+  color: var(--color-bg, white);
+  padding: 6px 12px;
+  border-radius: 20px;
+  font-size: 0.85em;
+}
+
+/* Timeline */
+.timeline {
+  position: relative;
+  padding-left: 30px;
+}
+
+.timeline::before {
+  content: '';
+  position: absolute;
+  left: 8px;
+  top: 5px;
+  bottom: 5px;
+  width: 2px;
+  background-color: var(--color-border-strong, rgba(42, 37, 33, 0.2));
+}
+
+.timeline-item {
+  position: relative;
+  margin-bottom: 25px;
+}
+
+.timeline-item:last-child {
+  margin-bottom: 0;
+}
+
+.timeline-item::before {
+  content: '';
+  position: absolute;
+  left: -26px;
+  top: 6px;
+  width: 10px;
+  height: 10px;
+  background-color: var(--color-accent, #c9a227);
+  border-radius: 50%;
+}
+
+.timeline-date {
+  font-size: 0.85em;
+  color: var(--color-text-muted, #888);
+  font-weight: 500;
+  margin-bottom: 5px;
+}
+
+.timeline-content h3 {
+  margin: 0 0 3px 0;
+  font-size: 1em;
+  color: var(--color-primary, #2a2521);
+  font-weight: 600;
+}
+
+.timeline-company {
+  color: var(--color-text-light, #666);
+  font-size: 0.9em;
+  margin: 0 0 5px 0;
+  font-weight: 500;
+}
+
+.timeline-company a {
+  color: var(--color-primary, #2a2521);
+  text-decoration: none;
+  border-bottom: 1px solid var(--color-border-strong, rgba(42, 37, 33, 0.3));
+  transition: border-color 0.2s;
+}
+
+.timeline-company a:hover {
+  border-color: var(--color-accent, #c9a227);
+}
+
+.timeline-content p:last-child {
+  margin: 0;
+  font-size: 0.9em;
+  color: var(--color-text-light, #555);
+  line-height: 1.5;
+}
+
+/* Education */
+.education-list {
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+}
+
+.education-item {
+  background-color: var(--color-bg-secondary, #f2f2f2);
+  padding: 15px;
+  border-radius: 8px;
+  border: 1px solid var(--color-border, rgba(42, 37, 33, 0.1));
+}
+
+.education-degree {
+  font-weight: 600;
+  color: var(--color-primary, #2a2521);
+  margin-bottom: 3px;
+}
+
+.education-school {
+  color: var(--color-text-light, #555);
+  font-size: 0.95em;
+}
+
+.education-year {
+  color: var(--color-text-muted, #888);
+  font-size: 0.85em;
+  margin-top: 5px;
+}
+
+/* Social Links */
+.social-links {
+  display: flex;
+  gap: 15px;
+  flex-wrap: wrap;
+}
+
+.social-link {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  padding: 10px 20px;
+  background-color: var(--color-bg-secondary, #f2f2f2);
+  border-radius: 8px;
+  border: 1px solid var(--color-border, rgba(42, 37, 33, 0.1));
+  color: var(--color-text, #333);
+  text-decoration: none;
+  transition: all var(--transition-base, 0.2s ease);
+  box-shadow: var(--shadow-sm, 0 1px 2px rgba(0, 0, 0, 0.05));
+}
+
+.social-link:hover {
+  background-color: var(--color-bg-tertiary, #eee);
+  transform: translateY(-3px);
+  text-decoration: none;
+  color: var(--color-text, #333);
+  box-shadow: var(--shadow-md, 0 4px 6px rgba(0, 0, 0, 0.1));
+}
+
+.social-link:active {
+  transform: translateY(-1px);
+}
+
+.social-link svg {
+  flex-shrink: 0;
+}
+
+.social-link span {
+  font-weight: 500;
+}
+
+/* Resume Download */
+.resume-download p {
+  margin: 0 0 15px 0;
+  color: var(--color-text-light, #555);
+}
+
+.resume-btn {
+  display: inline-flex;
+  align-items: center;
+  gap: 10px;
+  padding: 12px 24px;
+  background-color: var(--color-accent, #c9a227);
+  color: white;
+  text-decoration: none;
+  border-radius: 8px;
+  font-weight: 600;
+  font-size: 1em;
+  transition: background-color 0.2s, transform 0.2s;
+}
+
+.resume-btn:hover {
+  background-color: var(--color-accent-dark, #a8861f);
+  transform: translateY(-2px);
+  text-decoration: none;
+  color: white;
+}
+
+.resume-btn svg {
+  flex-shrink: 0;
+}
+
+
+/* Responsive - Tablet */
+@media (max-width: 1024px) {
+  .about-container {
+    grid-template-columns: 1fr 250px;
+  }
+
+  .skills-grid {
+    gap: 12px;
+  }
+}
+
+/* Responsive - Mobile */
+@media (max-width: 768px) {
+  .about-container {
+    display: block;
+  }
+
+  .about-content {
+    padding: 20px;
+  }
+
+  .about-photo-mobile {
+    display: block;
+    margin-bottom: 20px;
+  }
+
+  .about-photo-mobile img {
+    width: 120px;
+    height: 120px;
+    border-radius: 50%;
+    object-fit: cover;
+  }
+
+  .about-header h1 {
+    font-size: 1.8em;
+  }
+
+  .skills-grid {
+    grid-template-columns: 1fr;
+  }
+
+  .skill-category:hover {
+    transform: none;
+  }
+
+  .social-links {
+    flex-direction: column;
+  }
+
+  .social-link {
+    justify-content: center;
+    min-height: 44px;
+  }
+
+  .social-link:hover {
+    transform: none;
+  }
+
+  .social-link:active {
+    transform: scale(0.98);
+  }
+
+  .timeline {
+    padding-left: 25px;
+  }
+
+  .timeline-item::before {
+    left: -21px;
+    width: 8px;
+    height: 8px;
+  }
+
+  .resume-btn {
+    width: 100%;
+    justify-content: center;
+    min-height: 44px;
+  }
+}

@@ -1,21 +1,42 @@
 ---
 layout: default
-title: Home page
+title: Home
+description: "Personal blog and portfolio of Diyaz Yakubov - adventures in tech, DIY projects, and home lab experiments."
 ---
 
 <link rel="stylesheet" href="{{ site.baseurl }}/assets/css/index-page.css" />
 
-<div class="panel-container">
-  <div class="item-1-1-4-2 mob-h-12vh">tbd</div>
-  <div class="item-1-2-2-3 diy mob-h-12vh" onclick="">
-    <h2 class="title"><a href="/diy.html">Do It Yourself</a></h2>
+<div class="panel-container home-grid">
+  <div class="item-latest-post mob-h-auto">
+    <h2 class="section-title">Latest Posts</h2>
+    {% for post in site.posts limit:2 %}
+    <article class="featured-post">
+      <a href="{{ post.url }}" class="post-link">
+        <h3>{{ post.title }}</h3>
+      </a>
+      <p class="post-meta">{{ post.date | date: "%B %d, %Y" }}</p>
+      <p class="post-excerpt">{{ post.excerpt | strip_html | truncate: 150 }}</p>
+      <a href="{{ post.url }}" class="read-more">Read more &rarr;</a>
+    </article>
+    {% endfor %}
   </div>
-  <div class="item-1-3-1-4 homelab mob-h-12vh">
-    <h2 class="title">HomeLab</h2>
+
+  <div class="item-diy diy mob-h-12vh" onclick="location.href='/blog.html?tag=diy'">
+    <h2 class="title"><a href="/blog.html?tag=diy">Do It Yourself</a></h2>
   </div>
-  <div class="item-2-2-3-4 mob-h-12vh">
-    
+
+  <div class="item-homelab homelab mob-h-12vh" onclick="location.href='/blog.html?tag=homelab'">
+    <h2 class="title"><a href="/blog.html?tag=homelab">HomeLab</a></h2>
   </div>
-  <div class="item-fishing mob-h-12vh">tbd</div>
-  <div class="item-science mob-h-12vh">tbd</div>
+
+  <div class="item-art art mob-h-12vh" onclick="location.href='/blog.html?tag=art'">
+    <h2 class="title"><a href="/blog.html?tag=art">Art</a></h2>
+  </div>
+
+  <div class="item-about mob-h-auto">
+    <h2 class="section-title">About Me</h2>
+    <p>Welcome to my corner of the internet. I'm Diyaz, and I share my adventures in tech, DIY projects, and experiments from my home lab.</p>
+    <a href="/about.html" class="read-more">Learn more &rarr;</a>
+    {% include particles.html %}
+  </div>
 </div>

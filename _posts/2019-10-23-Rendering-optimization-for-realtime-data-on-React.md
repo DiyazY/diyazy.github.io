@@ -105,4 +105,3 @@ My suggestion is to use this technique when you need to represent real-time data
 > Thanks [Niki](https://medium.com/@nikitagavrilenko) for awesome illustration.
 
  ![](https://medium.com/_/stat?event=post.clientViewed&referrerSource=full_rss&postId=5db758951560)
-Originally posted on [Rendering optimization for real-time data on React](https://medium.com/@diyaz.yakubov/rendering-optimization-for-real-time-data-on-react-5db758951560?source=rss-ce9f85b2b690------2)

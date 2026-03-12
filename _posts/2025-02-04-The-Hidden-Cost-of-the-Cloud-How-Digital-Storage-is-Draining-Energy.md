@@ -18,4 +18,3 @@ Unveiling the Energy Cost of Cloud Storage: What Keeps Your Data Alive?
 
 
 
-Originally posted on [The Hidden Cost of the Cloud: How Digital Storage is Draining Energy](https://medium.com/aimonks/the-hidden-cost-of-the-cloud-how-digital-storage-is-draining-energy-ccc1bd0ad783?source=rss-ce9f85b2b690------2)

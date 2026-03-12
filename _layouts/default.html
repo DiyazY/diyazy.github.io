@@ -3,24 +3,109 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>{{page.title}}</title>
-    <link rel="stylesheet" href="{{ site.baseurl }}/assets/css/main.css"> 
-    <link rel="stylesheet" href="{{ site.baseurl }}/assets/css/panels.css"> 
-    <link rel="stylesheet" href="{{ site.baseurl }}/assets/css/blog.css"> 
+    <title>{% if page.title %}{{ page.title }} | {{ site.title }}{% else %}{{ site.title }}{% endif %}</title>
+
+    <!-- Meta Description -->
+    <meta name="description" content="{% if page.description %}{{ page.description }}{% elsif page.excerpt %}{{ page.excerpt | strip_html | truncate: 160 }}{% else %}{{ site.description }}{% endif %}">
+    <meta name="author" content="{{ site.author.name }}">
+
+    <!-- Canonical URL -->
+    <link rel="canonical" href="{{ page.url | absolute_url }}">
+
+    <!-- Open Graph / Facebook -->
+    <meta property="og:type" content="{% if page.layout == 'post' %}article{% else %}website{% endif %}">
+    <meta property="og:url" content="{{ page.url | absolute_url }}">
+    <meta property="og:title" content="{% if page.title %}{{ page.title }}{% else %}{{ site.title }}{% endif %}">
+    <meta property="og:description" content="{% if page.description %}{{ page.description }}{% elsif page.excerpt %}{{ page.excerpt | strip_html | truncate: 160 }}{% else %}{{ site.description }}{% endif %}">
+    <meta property="og:image" content="{% if page.image %}{{ page.image | absolute_url }}{% else %}{{ '/assets/images/og-default.png' | absolute_url }}{% endif %}">
+    <meta property="og:site_name" content="{{ site.title }}">
+
+    <!-- Twitter Card -->
+    <meta name="twitter:card" content="summary_large_image">
+    <meta name="twitter:title" content="{% if page.title %}{{ page.title }}{% else %}{{ site.title }}{% endif %}">
+    <meta name="twitter:description" content="{% if page.description %}{{ page.description }}{% elsif page.excerpt %}{{ page.excerpt | strip_html | truncate: 160 }}{% else %}{{ site.description }}{% endif %}">
+    <meta name="twitter:image" content="{% if page.image %}{{ page.image | absolute_url }}{% else %}{{ '/assets/images/og-default.png' | absolute_url }}{% endif %}">
+
+    <!-- RSS Feed -->
+    <link rel="alternate" type="application/rss+xml" title="{{ site.title }}" href="{{ '/feed.xml' | absolute_url }}">
+
+    <!-- LLMs.txt - machine-readable site summary for AI models -->
+    <link rel="alternate" type="text/plain" title="LLMs.txt" href="{{ '/llms.txt' | absolute_url }}">
+
+    <!-- Preload critical resources -->
+    <link rel="preload" href="{{ site.baseurl }}/assets/css/variables.css" as="style">
+    <link rel="preload" href="{{ site.baseurl }}/assets/css/main.css" as="style">
+    <link rel="preload" href="{{ site.baseurl }}/assets/js/theme-toggle.js" as="script">
+
+    <!-- Stylesheets -->
+    <link rel="stylesheet" href="{{ site.baseurl }}/assets/css/variables.css">
+    <link rel="stylesheet" href="{{ site.baseurl }}/assets/css/main.css">
+    <link rel="stylesheet" href="{{ site.baseurl }}/assets/css/panels.css">
+    <link rel="stylesheet" href="{{ site.baseurl }}/assets/css/blog.css">
+    <link rel="stylesheet" href="{{ site.baseurl }}/assets/css/search.css">
+
+    <!-- Favicons -->
     <link rel="apple-touch-icon" sizes="180x180" href="{{ site.baseurl }}/apple-touch-icon.png">
     <link rel="icon" type="image/png" sizes="32x32" href="{{ site.baseurl }}/assets/favicon-32x32.png">
     <link rel="icon" type="image/png" sizes="16x16" href="{{ site.baseurl }}/assets/favicon-16x16.png">
     <link rel="manifest" href="{{ site.baseurl }}/assets/site.webmanifest">
+
+    <!-- Theme Toggle (load early to prevent flash) -->
+    <script src="{{ site.baseurl }}/assets/js/theme-toggle.js"></script>
+
+    <!-- Structured Data (JSON-LD) -->
+    <script type="application/ld+json">
+    {
+        "@context": "https://schema.org",
+        "@type": "WebSite",
+        "name": "{{ site.title }}",
+        "url": "{{ site.url }}",
+        "author": {
+            "@type": "Person",
+            "name": "{{ site.author.name }}",
+            "url": "{{ site.url }}/about"
+        },
+        "description": "{{ site.description | escape }}"
+    }
+    </script>
+    {% if page.layout == 'post' %}
+    <script type="application/ld+json">
+    {
+        "@context": "https://schema.org",
+        "@type": "BlogPosting",
+        "headline": "{{ page.title | escape }}",
+        "datePublished": "{{ page.date | date_to_xmlschema }}",
+        "dateModified": "{{ page.date | date_to_xmlschema }}",
+        "author": {
+            "@type": "Person",
+            "name": "{{ site.author.name }}"
+        },
+        "publisher": {
+            "@type": "Person",
+            "name": "{{ site.author.name }}"
+        },
+        "description": "{{ page.excerpt | strip_html | truncate: 160 | escape }}",
+        "mainEntityOfPage": {
+            "@type": "WebPage",
+            "@id": "{{ page.url | absolute_url }}"
+        }
+    }
+    </script>
+    {% endif %}
 </head>
 <body>
+    <!-- Skip to content link (accessibility) -->
+    <a href="#content-wrap" class="skip-link">Skip to content</a>
+
     <div id="page-container">
         {% include header.html %}
 
-        <main id="content-wrap">
+        <main id="content-wrap" role="main">
             {{content}}
         </main>
 
-        {% include footer.html %}
+        {% include footer.html role="contentinfo" %}
     </div>
+    <script src="{{ site.baseurl }}/assets/js/search.js"></script>
 </body>
 </html>

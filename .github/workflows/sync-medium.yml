@@ -8,6 +8,7 @@ on:
 
 permissions:
   contents: write
+  pull-requests: write
 
 jobs:
   sync:
@@ -38,11 +39,12 @@ jobs:
             echo "has_changes=false" >> "$GITHUB_OUTPUT"
           fi
 
-      - name: Commit and push new posts
+      - name: Create pull request with new posts
         if: steps.changes.outputs.has_changes == 'true'
-        run: |
-          git config user.name "github-actions[bot]"
-          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
-          git add _posts/
-          git commit -m "Sync new posts from Medium"
-          git push
+        uses: peter-evans/create-pull-request@v7
+        with:
+          commit-message: "Sync new posts from Medium"
+          branch: sync-medium-posts
+          title: "Sync new posts from Medium"
+          body: "Automated sync of new posts from Medium RSS feed."
+          delete-branch: true

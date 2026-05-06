@@ -85,6 +85,9 @@ DayWatch is the piece I had to build because it didn’t&nbsp;exist.
 
 It’s a system tray app (800 lines of Python) that watches my daily plan file and sends native desktop notifications when time blocks are about to start. Click the tray icon and you see your day at a&nbsp;glance:
 
+![](https://cdn-images-1.medium.com/max/751/1*eNmJbkZhn6TGeI06vI8ytg.png)
+_Example of a daily plan. (PS: My Saturdays don’t look like this 😅.)_
+
 Five minutes before each block starts: a notification. When the block starts: another notification. If I launch the app mid-block: an immediate “you should be doing X right now” notification. If I edit the plan in Obsidian: instant reload, rescheduled notifications.
 
 It’s built with Claude Code, which is ironic and appropriate — Claude plans my day, and Claude built the tool that enforces the&nbsp;plan.

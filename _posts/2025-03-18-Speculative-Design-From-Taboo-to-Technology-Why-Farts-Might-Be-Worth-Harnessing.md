@@ -28,6 +28,29 @@ Farting is often the punchline of a joke — an embarrassing, smelly fact of
 
 ### Challenging a Cultural&nbsp;Taboo
 
+![](https://cdn-images-1.medium.com/max/1024/1*qaei5Yt8ilp-Vccw-8ug7A.png)
+_He-Gassen (屁合戦) — A humorous 19th-century Japanese scroll illustrating “fart battles,” showing that some cultures have approached flatulence with comedic artwork rather than strict taboo._
+
+In most contemporary Western societies, flatulence is considered impolite or embarrassing. However, attitudes vary historically and globally. For example, in **19th-century Japan** , comedic artwork like the _He-Gassen_ (“Fart Battle”) scroll depicted people using flatulence as a playful weapon. While not a full endorsement of farting in every context, it shows that certain art forms openly joked about or depicted flatulence without the same level of taboo. Similarly, **Le Pétomane** (Joseph Pujol) became a famous French stage performer in the late 19th century by entertaining audiences with his “art” of controlled flatulence — a reminder that, in some comedic traditions, passing gas could be a central attraction rather than a forbidden topic.
+
+These examples don’t necessarily mean entire cultures fully “approve” of public farting, but they demonstrate that the strict hush-hush treatment so common in many parts of the world isn’t universal. **Speculative design**  — a practice that encourages us to see everyday objects and systems in radically new ways — prods us to imagine: what if we looked at our own bodies’ by-products as a resource rather than an inconvenience?
+
+By reframing something culturally off-limits into a design challenge, we spark conversations on broader themes: the value of human waste, the quest for eco-friendly solutions, and the willingness of society to embrace unconventional ideas. **Speculative design** takes note of these pockets of acceptance (or at least humour) and asks: if we can talk about it, maybe we can harness&nbsp;it.
+
+### Hidden Energy Potential
+
+Despite its comedic reputation, a fart is a small but tangible emission of gas. It often contains methane, hydrogen, carbon dioxide, and other compounds that — if collected in large quantities — can be combusted or used in chemical reactions to produce electricity. Indeed, capturing methane is standard practice on farms and in landfills, where organic matter decomposes to form&nbsp;biogas.
+
+![](https://cdn-images-1.medium.com/max/1024/1*TWUhtYV1eWXJeWL6UkayOw.png)
+_Ieropoulos, I. A., Greenman, J., & Melhuish, C. (2013). “Urinal tryst: how microbial fuel cells can harness urine to generate electricity.” Bioinspiration & Biomimetics, 8(4)._
+
+Shifting that large-scale approach to personal flatulence might seem outlandish, but speculative design invites us to consider how tiny individual contributions, taken together, could power small electronics or sensors. The crucial idea is transforming bodily waste from an object of laughter or shame into a resource that fits within larger sustainability goals.
+
+In _Dune_, Frank Herbert envisions a harsh desert world where survival hinges on conserving every drop of moisture. The Fremen — inhabitants of the sandy planet Arrakis — rely on “stillsuits,” specialized desert overalls designed to reclaim bodily fluids like sweat and exhaled vapour. These suits are a fusion of practicality and ingenuity, capturing and filtering moisture so that even in an arid, life-threatening environment, its wearers can remain hydrated. The stillsuits not only reflect the Fremen’s deep respect for water as a precious resource but also emphasize the broader theme of ecological balance that runs throughout the&nbsp;story.
+
+![](https://cdn-images-1.medium.com/max/1024/1*2qlOv-6oBmh1FoukAD8GlA.png)
+_Herbert, F. (1965). Dune. Chilton Books. (Concept of stillsuits as moisture-recycling garments.)_
+
 This idea parallels how speculative designs might one day harness other bodily by-products, including flatulence, to create energy in resource-limited environments. Much like the stillsuit’s water-recycling function, a “fart reactor” concept seeks to transform what we ordinarily dismiss as waste into a vital, sustainable resource. Both examples illustrate how necessity and ingenuity can merge to reshape our relationship with our own bodies’ outputs — and potentially redefine survival in extreme conditions.
 
 ### Why Now?

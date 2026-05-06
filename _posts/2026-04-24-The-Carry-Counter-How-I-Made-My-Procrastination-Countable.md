@@ -138,4 +138,5 @@ That is what a productivity system is&nbsp;for.
 
 _If you run something similar, or something better, I’d love to hear how you handle the carry. Writing about it is, in itself, one of the items that kept getting carried on my list. This post is a 3× that finally&nbsp;shipped._
 
+![](https://cdn-images-1.medium.com/max/1024/1*ZQ0XTWL81UC9khuOrsmYZg.jpeg)
  ![](https://medium.com/_/stat?event=post.clientViewed&referrerSource=full_rss&postId=fcc78ae18b60)

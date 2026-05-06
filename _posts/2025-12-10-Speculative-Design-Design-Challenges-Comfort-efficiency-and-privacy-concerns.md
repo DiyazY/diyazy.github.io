@@ -42,6 +42,9 @@ To address this, experts urge strict safeguards. Workers should be allowed to op
 
 Harnessing human power is a poetic idea: every step, every heartbeat, every breath could keep our devices alive. But until designers solve the “big three” — comfort, efficiency, and privacy — these gadgets risk being novelties rather than necessities. The future will likely come not from squeezing out one more microwatt, but from _rethinking the contract between humans and machines_: how much energy we can give, how much data we should share, and how much discomfort we’re willing to endure. Speculative design reminds us that technology is never just technical — it’s also ethical, social, and deeply&nbsp;human.
 
+![](https://cdn-images-1.medium.com/max/1024/1*qzSsBjTRbVTx5ZVqVbnJxg.png)
+_Speculative Design | Design Challenges: Comfort, efficiency, and privacy concerns_
+
 ### References
 
 [1]: “[Stretchable thermoelectric generators with enhanced output by infrared&nbsp;…](https://www.sciencedirect.com/science/article/pii/S1385894722052287)”

@@ -75,6 +75,9 @@ If a “fart reactor” ever gained commercial traction, it might be championed 
 
 In some speculative futures, a personal biogas device could become a badge of environmental commitment. Much like driving a hybrid car can signal one’s values, wearing a body-powered device might project eco-savviness. Alternatively, it might remain niche, only championed by sustainability hobbyists or outliers comfortable challenging social&nbsp;norms.
 
+![](https://cdn-images-1.medium.com/max/1024/1*bIO4bo0dVtS7gVhmOCb7og.png)
+_It became a norm_
+
 ### 5. Looking&nbsp;Ahead
 
 Body-powered devices will likely provoke a broad spectrum of responses — from humour and acceptance to mockery or outright rejection. Yet, by leaning into comedy, emphasizing privacy, and highlighting genuine environmental benefits, designers can carve a path toward **mainstream understanding**  — if not universal adoption. The more we talk openly about these concepts, the easier it becomes to break down cultural barriers and spark creative thinking about renewable energy at the most personal&nbsp;level.

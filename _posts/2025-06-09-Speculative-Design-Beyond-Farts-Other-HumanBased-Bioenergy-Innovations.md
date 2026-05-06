@@ -78,6 +78,8 @@ Piezoelectric devices convert mechanical energy, such as footsteps or muscle mov
 **Impact**  
 Piezoelectric energy capture integrates seamlessly into daily routines, providing passive, continuous energy to support urban infrastructure and wearable technology.
 
+![](https://cdn-images-1.medium.com/max/1024/1*_j8Wwj1i5xYxQeS5hh8hvw.png)
+
 ### Why These Innovations Matter
 
 Human-based bioenergy innovations, while initially strange or speculative, underline a crucial shift: what we consider waste or mere bodily functions can become valuable renewable resources. Such innovations:

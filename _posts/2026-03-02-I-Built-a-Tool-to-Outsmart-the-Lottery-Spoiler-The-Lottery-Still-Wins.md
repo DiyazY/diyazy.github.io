@@ -24,6 +24,9 @@ I wasn’t trying to crack some code. I know the math. Every draw is independent
 
 But here’s the thing — even if you can’t predict the future, you can make more **_informed_** choices. And honestly? It’s just way more fun to play when you have data backing your picks instead of your birthday.
 
+![](https://cdn-images-1.medium.com/max/1024/1*IsGud7qrukygv_DyuoZoHw.png)
+_So far, I am negative 18e 😅_
+
 ### **From Curiosity to a Full&nbsp;Product**
 
 What started as a weekend experiment turned into something I actually use every week. And then I thought — if I find this useful, maybe other players would&nbsp;too.

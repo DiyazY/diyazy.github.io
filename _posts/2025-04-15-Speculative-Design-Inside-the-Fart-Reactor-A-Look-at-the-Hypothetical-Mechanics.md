@@ -36,6 +36,9 @@ Welcome to the second article in our series on speculative bioenergy design. In 
 **Why This Matters**  
  Human flatulence isn’t high in volume or pressure, so capturing every small emission is crucial. A tight seal and efficient odor control ensure minimal leakage while keeping the device discreet.
 
+![](https://cdn-images-1.medium.com/max/1024/1*K2eXp7JBsxQPHWCtaePXug.png)
+_Concept of a Fart Reactor wearable device_
+
 ### Converting Gas to Electricity
 
 Since the pressure and volume of human flatulence are quite low, **traditional mechanical methods** (like spinning turbines) are largely impractical. Instead, we look to the following well-researched avenues:

@@ -62,6 +62,9 @@ The lesson is one I’ve now relearned three or four times in my career, and it 
 
 After the incident, the first thing I did was promote that counter to the dashboard. The second thing I did was add four others I’d noticed during the diagnosis but had similarly never bothered to chart. The third thing I did was accept that I will probably do this again next quarter, because incidents teach you about the metrics you should have had, and there is no shortcut to knowing which ones those&nbsp;are.
 
+![](https://cdn-images-1.medium.com/max/1024/1*hW8EPRd1a54OArFdPGE0-w.png)
+_metrics from busypipe.com_
+
 ### The temptation to&nbsp;rewrite
 
 I want to spend a moment on this, because it’s the part most postmortems leave&nbsp;out.

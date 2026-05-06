@@ -86,6 +86,9 @@ The immediate difference: I can now ask Claude “what’s the relationship betw
 
 But the deeper change is philosophical. My notes used to be write-only — useful the day I wrote them, then slowly decaying into noise. Now every note, every conversation, every web clip feeds into a living knowledge base that gets richer over time. Karpathy’s phrase captures it perfectly: explorations and queries always “add&nbsp;up.”
 
+![](https://cdn-images-1.medium.com/max/818/1*eAGRyk4DuhhPUURapDFGsw.png)
+_wiki graph_
+
 ### How You Can Do&nbsp;This
 
 You don’t need anything fancy. Here’s the&nbsp;minimum:

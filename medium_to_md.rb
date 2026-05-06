@@ -35,9 +35,6 @@ feed.entries.each do |e|
 
 	tags = e.categories.join(', ')
 	original_link = e.url
-	
-	# Medium feed includes the hero image in the `content` field. Since Jekyll and other systems will probably render the hero image separately, remove it from the HTML before generating the Markdown
-	content.sub!(/<figure><img\salt="([\w\.\-])?"\ssrc="https:\/\/cdn-images-1.medium.com\/max\/[0-9]+\/[0-9]\*[0-9a-zA-Z._-]+"\s\/>(\<figcaption\>.*\<\/figcaption\>)?<\/figure>/, '')
 
 	result = ReverseMarkdown.convert(content).gsub(/\\n/,"\n")
 

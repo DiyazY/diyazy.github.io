@@ -13,17 +13,28 @@ Diyaz Yakubov is a software engineer with 10+ years of experience building scala
 - Cloud & DevOps: Azure, Docker, Kubernetes, CI/CD
 - Data: PostgreSQL, SQL Server, MongoDB, Redis, Elasticsearch
 - AI & Emerging Tech: LLMs, OpenAI, RAG, Prompt Engineering, AI Agents, WebAssembly
-- Published researcher in edge computing (ESOCC 2025, Springer LNCS)
+- Published researcher in edge and cloud computing (Cluster Computing 2026; ESOCC 2025, Springer LNCS)
 
 ## Projects
 
 - [TopTop.dev](https://toptop.dev): Custom software development company — cloud solutions and AI-powered services for Nordic SMBs
-- [EuroJackpot Stats](https://eurojackpotstats.eu): Lottery number generator with statistical analysis of 911+ historical draws, 6 strategies, 22 languages
-- [IoT Edge Kubernetes Research](https://github.com/DiyazY/iot-edge): Comparative analysis of lightweight Kubernetes distributions for edge computing (published in ESOCC 2025)
+- [busypipe](https://busypipe.com): Social intelligence platform for TikTok — track portfolios of competitors, influencers, hashtags, and sounds with growth, engagement, and regional performance analytics. Instagram and YouTube next
+- [EuroJackpot Stats](https://eurojackpotstats.eu): Lottery number generator with statistical analysis of every draw since 2012, 6 strategies, 22 languages
+- [DayWatch](https://github.com/DiyazY/daywatch): Open-source cross-platform tray app that reads time-blocked markdown plans and sends native task-switch notifications (Python, MIT)
+
+## Research
+
+- [Di-Select](https://doi.org/10.1007/s10586-026-06269-5): Criteria-driven framework for selecting container orchestration distributions in cloud and edge computing — seven evaluation constructs and fifteen causal propositions, derived via structured literature review and grounded theory. Cluster Computing 29(8), 2026, open access
+- [IoT Edge Kubernetes](https://github.com/DiyazY/iot-edge): Comparative analysis of five lightweight Kubernetes distributions on edge hardware, covering performance, resource efficiency, security, resilience, and maintainability. Published as two chapters in ESOCC 2025 (Springer LNCS)
+- [di-agent](https://github.com/DiyazY/di-agent): Context-aware autonomous orchestration agent for resource-constrained edge nodes, making scheduling and offloading decisions without a central control plane. Doctoral research at Tampere University
+
+## In Development
+
+Salpon (salpon.com), ScandiCity (scandicity.com), mdfi (mdfi.ai)
 
 ## Blog Topics
 
-Technical deep-dives covering .NET, React, WebAssembly, memory management, cloud computing, speculative design, and DIY maker projects.
+Technical deep-dives covering AI engineering and LLM tooling, developer productivity systems, .NET and React, WebAssembly, memory management, cloud and edge computing, speculative design, and DIY maker projects.
 
 ## Links
 

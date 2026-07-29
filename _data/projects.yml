@@ -1,0 +1,164 @@
+# Projects page content.
+#
+# Rendered by projects.html via _includes/project-card.html.
+#
+# Per item:
+#   name         required
+#   image        filename in assets/images/projects/. Omit for a compact,
+#                image-less card (see .project-card--compact in projects.css).
+#   badge        text + style; style maps to the CSS class badge-{style}
+#                (live, research, soon, tool, wip)
+#   description  required
+#   tech         list of tag labels
+#   post_slug    substring of a post URL. Resolved against site.posts at build
+#                time; renders a "Read the story" link only if a post matches,
+#                so a renamed post degrades to no link rather than a 404.
+#   links        list of { label, url, icon }; icon is globe | github | paper
+#
+# Section layout is "cards" by default; "grid" renders the compact tile grid.
+
+- section: Live
+  items:
+    - name: TopTop.dev
+      image: toptop.webp
+      badge:
+        text: Live
+        style: live
+      description: >
+        My software development company offering custom solutions, cloud architecture,
+        and AI-powered development services for SMBs in the Nordic region.
+        Specializing in rapid delivery with modern tech stacks.
+      tech: [React, Node.js, Python, .NET, Cloudflare, AI/LLMs]
+      links:
+        - label: Website
+          url: https://toptop.dev
+          icon: globe
+
+    - name: busypipe
+      badge:
+        text: Live
+        style: live
+      description: >
+        Social intelligence for the accounts you don't own. Drop competitors, influencers,
+        hashtags, and sounds into a portfolio and track them continuously — follower growth,
+        engagement rate, posting cadence, regional performance, and trending audio.
+        TikTok today, Instagram and YouTube next. Flat per-workspace pricing and a free plan.
+      tech: [TikTok, Social Analytics, SaaS]
+      post_slug: Why-Im-building-busypipe
+      links:
+        - label: Website
+          url: https://busypipe.com
+          icon: globe
+
+    - name: EuroJackpot Stats
+      image: eurojackpotstats.webp
+      badge:
+        text: Live
+        style: live
+      description: >
+        A lottery number generator powered by statistical analysis of every EuroJackpot
+        draw since 2012. Features 6 generation strategies including Hot Numbers, Cold Numbers,
+        and Frequency Weighted. Supports 22 languages.
+      tech: [Python, Pico CSS, Statistics, i18n]
+      post_slug: Outsmart-the-Lottery
+      links:
+        - label: Website
+          url: https://eurojackpotstats.eu
+          icon: globe
+
+- section: Tools & Systems
+  items:
+    - name: DayWatch
+      badge:
+        text: Open Source
+        style: tool
+      description: >
+        A cross-platform tray app that reads time-blocked markdown plans and sends a native
+        notification when it's time to switch tasks. Plans stay plain markdown, so it works
+        with Obsidian, any editor, or none at all. Ships as a standalone binary for macOS,
+        Linux, and Windows.
+      tech: [Python, CLI, Markdown, MIT]
+      post_slug: ClosedLoop-AI-Planning-System
+      links:
+        - label: GitHub
+          url: https://github.com/DiyazY/daywatch
+          icon: github
+
+- section: Research
+  items:
+    - name: Di-Select
+      badge:
+        text: Published
+        style: research
+      description: >
+        A criteria-driven framework for choosing container orchestration distributions across
+        cloud and edge. Built from a structured literature review followed by grounded-theory
+        coding, producing seven evaluation constructs and fifteen causal propositions that
+        formalise the trade-offs between them. Published open access in Cluster Computing 29(8)
+        with Sergio Moreschini and David Hästbacka.
+      tech: [Grounded Theory, Edge Computing, Orchestration]
+      links:
+        - label: Paper
+          url: https://doi.org/10.1007/s10586-026-06269-5
+          icon: paper
+        - label: GitHub
+          url: https://github.com/DiyazY/di-select
+          icon: github
+
+    - name: IoT Edge Kubernetes
+      image: iot-edge.webp
+      badge:
+        text: Published
+        style: research
+      description: >
+        Comparative analysis of five lightweight Kubernetes distributions on Raspberry Pi
+        hardware, covering performance, resource efficiency, security, resilience, and
+        maintainability. Published as two chapters in ESOCC 2025 (Springer, Lecture Notes
+        in Computer Science).
+      tech: [Kubernetes, Python, Shell, Edge Computing]
+      links:
+        - label: GitHub
+          url: https://github.com/DiyazY/iot-edge
+          icon: github
+        - label: Performance
+          url: https://doi.org/10.1007/978-3-031-84617-5_7
+          icon: paper
+        - label: Security
+          url: https://doi.org/10.1007/978-3-031-84617-5_8
+          icon: paper
+
+    - name: di-agent
+      badge:
+        text: In Progress
+        style: wip
+      description: >
+        An autonomous orchestration agent for resource-constrained edge nodes that makes
+        context-aware scheduling and offloading decisions without a central control plane.
+        Its Semantic Map starts from priors drawn from earlier publications and refines them
+        with live deployment telemetry. Dissertation work at Tampere University.
+      tech: [Go, Edge Computing, Agents, Kubernetes]
+      links:
+        - label: GitHub
+          url: https://github.com/DiyazY/di-agent
+          icon: github
+
+- section: Coming Soon
+  layout: grid
+  items:
+    - name: Salpon
+      description: salpon.com
+      badge:
+        text: In Development
+        style: soon
+
+    - name: ScandiCity
+      description: scandicity.com
+      badge:
+        text: In Development
+        style: soon
+
+    - name: mdfi
+      description: mdfi.ai
+      badge:
+        text: In Progress
+        style: soon

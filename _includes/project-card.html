@@ -1,0 +1,61 @@
+{%- comment -%}
+Renders a single project card from a _data/projects.yml entry.
+
+Usage: {% include project-card.html item=item %}
+
+Two variants, chosen by whether item.image is set:
+  - with image    -> two-column grid, badge overlaid on the image
+  - without image -> .project-card--compact, badge inline above the title
+{%- endcomment -%}
+{%- assign item = include.item -%}
+<div class="project-card{% unless item.image %} project-card--compact{% endunless %}">
+  {%- if item.image %}
+  <div class="project-image" style="background-image: url('{{ site.baseurl }}/assets/images/projects/{{ item.image }}');">
+    {%- if item.badge %}
+    <span class="project-badge badge-{{ item.badge.style }}">{{ item.badge.text }}</span>
+    {%- endif %}
+  </div>
+  {%- endif %}
+  <div class="project-info">
+    {%- if item.badge and item.image == nil %}
+    <span class="project-badge badge-{{ item.badge.style }}">{{ item.badge.text }}</span>
+    {%- endif %}
+    <h3>{{ item.name }}</h3>
+    <p class="project-description">{{ item.description }}</p>
+    {%- if item.tech %}
+    <div class="project-tech">
+      {%- for tag in item.tech %}
+      <span>{{ tag }}</span>
+      {%- endfor %}
+    </div>
+    {%- endif %}
+
+    {%- comment -%}
+      Resolve the write-up by matching a slug fragment against post URLs. If no
+      post matches — e.g. the Medium sync renamed it — the link is simply
+      omitted rather than rendering a dead href.
+    {%- endcomment -%}
+    {%- assign related = nil -%}
+    {%- if item.post_slug -%}
+      {%- assign slug = item.post_slug -%}
+      {%- assign related = site.posts | where_exp: "post", "post.url contains slug" | first -%}
+    {%- endif -%}
+
+    {%- if item.links or related %}
+    <div class="project-links">
+      {%- for link in item.links %}
+      <a href="{{ link.url }}" target="_blank" rel="noopener" class="project-link">
+        {%- include project-icon.html type=link.icon -%}
+        {{ link.label }}
+      </a>
+      {%- endfor %}
+      {%- if related %}
+      <a href="{{ related.url }}" class="project-link">
+        {%- include project-icon.html type="post" -%}
+        Read the story
+      </a>
+      {%- endif %}
+    </div>
+    {%- endif %}
+  </div>
+</div>

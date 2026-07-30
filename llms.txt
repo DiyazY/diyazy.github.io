@@ -1,3 +1,6 @@
+---
+layout: null
+---
 # diyaz.
 
 > Personal portfolio and technical blog of Diyaz Yakubov — software engineer, full-stack developer, and founder based in Helsinki, Finland.
@@ -15,22 +18,22 @@ Diyaz Yakubov is a software engineer with 10+ years of experience building scala
 - AI & Emerging Tech: LLMs, OpenAI, RAG, Prompt Engineering, AI Agents, WebAssembly
 - Published researcher in edge and cloud computing (Cluster Computing 2026; ESOCC 2025, Springer LNCS)
 
+{% comment %}
+Project sections below are generated from _data/projects.yml, the same source
+projects.html renders. Each item uses its `summary` field (the terse one-liner)
+rather than `description` (the long page copy), and links to its first entry.
+{% endcomment -%}
 ## Projects
-
-- [TopTop.dev](https://toptop.dev): Custom software development company — cloud solutions and AI-powered services for Nordic SMBs
-- [busypipe](https://busypipe.com): Social intelligence platform for TikTok — track portfolios of competitors, influencers, hashtags, and sounds with growth, engagement, and regional performance analytics. Instagram and YouTube next
-- [EuroJackpot Stats](https://eurojackpotstats.eu): Lottery number generator with statistical analysis of every draw since 2012, 6 strategies, 22 languages
-- [DayWatch](https://github.com/DiyazY/daywatch): Open-source cross-platform tray app that reads time-blocked markdown plans and sends native task-switch notifications (Python, MIT)
+{% for group in site.data.projects %}{% if group.llms_section == 'Projects' %}{% for item in group.items %}
+- [{{ item.name }}]({{ item.links.first.url }}): {{ item.summary }}{% endfor %}{% endif %}{% endfor %}
 
 ## Research
-
-- [Di-Select](https://doi.org/10.1007/s10586-026-06269-5): Criteria-driven framework for selecting container orchestration distributions in cloud and edge computing — seven evaluation constructs and fifteen causal propositions, derived via structured literature review and grounded theory. Cluster Computing 29(8), 2026, open access
-- [IoT Edge Kubernetes](https://github.com/DiyazY/iot-edge): Comparative analysis of five lightweight Kubernetes distributions on edge hardware, covering performance, resource efficiency, security, resilience, and maintainability. Published as two chapters in ESOCC 2025 (Springer LNCS)
-- [di-agent](https://github.com/DiyazY/di-agent): Context-aware autonomous orchestration agent for resource-constrained edge nodes, making scheduling and offloading decisions without a central control plane. Doctoral research at Tampere University
+{% for group in site.data.projects %}{% if group.llms_section == 'Research' %}{% for item in group.items %}
+- [{{ item.name }}]({{ item.links.first.url }}): {{ item.summary }}{% endfor %}{% endif %}{% endfor %}
 
 ## In Development
-
-Salpon (salpon.com), ScandiCity (scandicity.com), mdfi (mdfi.ai)
+{% for group in site.data.projects %}{% if group.llms_format == 'inline' %}
+{% for item in group.items %}{{ item.name }} ({{ item.description }}){% unless forloop.last %}, {% endunless %}{% endfor %}{% endif %}{% endfor %}
 
 ## Blog Topics
 

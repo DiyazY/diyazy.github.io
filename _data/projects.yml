@@ -1,6 +1,16 @@
-# Projects page content.
+# Projects content. Single source for both projects.html and llms.txt.
 #
-# Rendered by projects.html via _includes/project-card.html.
+# Rendered by projects.html via _includes/project-card.html, and by llms.txt
+# (which has front matter and loops over this same file).
+#
+# Per group:
+#   section       heading shown on the projects page
+#   layout        "cards" (default) or "grid" for the compact tile grid
+#   llms_section  which llms.txt heading these items belong under. The page's
+#                 four sections collapse into llms.txt's three — Live and
+#                 "Tools & Systems" both land under "Projects".
+#   llms_format   "inline" renders items as one comma-joined line instead of
+#                 bullets. Only used by "In Development".
 #
 # Per item:
 #   name         required
@@ -8,16 +18,19 @@
 #                image-less card (see .project-card--compact in projects.css).
 #   badge        text + style; style maps to the CSS class badge-{style}
 #                (live, research, soon, tool, wip)
-#   description  required
-#   tech         list of tag labels
+#   description  long form, shown on the projects page
+#   summary      one line, used by llms.txt. Deliberately separate: the page
+#                is for humans browsing, llms.txt is a compact machine summary
+#                and must stay terse.
+#   tech         list of tag labels (page only)
 #   post_slug    substring of a post URL. Resolved against site.posts at build
 #                time; renders a "Read the story" link only if a post matches,
 #                so a renamed post degrades to no link rather than a 404.
-#   links        list of { label, url, icon }; icon is globe | github | paper
-#
-# Section layout is "cards" by default; "grid" renders the compact tile grid.
+#   links        list of { label, url, icon }; icon is globe | github | paper.
+#                llms.txt links to the first entry.
 
 - section: Live
+  llms_section: Projects
   items:
     - name: TopTop.dev
       image: toptop.webp
@@ -28,6 +41,9 @@
         My software development company offering custom solutions, cloud architecture,
         and AI-powered development services for SMBs in the Nordic region.
         Specializing in rapid delivery with modern tech stacks.
+      summary: >-
+        Custom software development company — cloud solutions and AI-powered services
+        for Nordic SMBs
       tech: [React, Node.js, Python, .NET, Cloudflare, AI/LLMs]
       links:
         - label: Website
@@ -43,6 +59,10 @@
         hashtags, and sounds into a portfolio and track them continuously — follower growth,
         engagement rate, posting cadence, regional performance, and trending audio.
         TikTok today, Instagram and YouTube next. Flat per-workspace pricing and a free plan.
+      summary: >-
+        Social intelligence platform for TikTok — track portfolios of competitors,
+        influencers, hashtags, and sounds with growth, engagement, and regional performance
+        analytics. Instagram and YouTube next
       tech: [TikTok, Social Analytics, SaaS]
       post_slug: Why-Im-building-busypipe
       links:
@@ -59,6 +79,9 @@
         A lottery number generator powered by statistical analysis of every EuroJackpot
         draw since 2012. Features 6 generation strategies including Hot Numbers, Cold Numbers,
         and Frequency Weighted. Supports 22 languages.
+      summary: >-
+        Lottery number generator with statistical analysis of every draw since 2012,
+        6 strategies, 22 languages
       tech: [Python, Pico CSS, Statistics, i18n]
       post_slug: Outsmart-the-Lottery
       links:
@@ -67,6 +90,7 @@
           icon: globe
 
 - section: Tools & Systems
+  llms_section: Projects
   items:
     - name: DayWatch
       badge:
@@ -77,6 +101,9 @@
         notification when it's time to switch tasks. Plans stay plain markdown, so it works
         with Obsidian, any editor, or none at all. Ships as a standalone binary for macOS,
         Linux, and Windows.
+      summary: >-
+        Open-source cross-platform tray app that reads time-blocked markdown plans and sends
+        native task-switch notifications (Python, MIT)
       tech: [Python, CLI, Markdown, MIT]
       post_slug: ClosedLoop-AI-Planning-System
       links:
@@ -85,6 +112,7 @@
           icon: github
 
 - section: Research
+  llms_section: Research
   items:
     - name: Di-Select
       badge:
@@ -96,6 +124,11 @@
         coding, producing seven evaluation constructs and fifteen causal propositions that
         formalise the trade-offs between them. Published open access in Cluster Computing 29(8)
         with Sergio Moreschini and David Hästbacka.
+      summary: >-
+        Criteria-driven framework for selecting container orchestration distributions in cloud
+        and edge computing — seven evaluation constructs and fifteen causal propositions,
+        derived via structured literature review and grounded theory. Cluster Computing 29(8),
+        2026, open access
       tech: [Grounded Theory, Edge Computing, Orchestration]
       links:
         - label: Paper
@@ -115,6 +148,10 @@
         hardware, covering performance, resource efficiency, security, resilience, and
         maintainability. Published as two chapters in ESOCC 2025 (Springer, Lecture Notes
         in Computer Science).
+      summary: >-
+        Comparative analysis of five lightweight Kubernetes distributions on edge hardware,
+        covering performance, resource efficiency, security, resilience, and maintainability.
+        Published as two chapters in ESOCC 2025 (Springer LNCS)
       tech: [Kubernetes, Python, Shell, Edge Computing]
       links:
         - label: GitHub
@@ -136,6 +173,10 @@
         context-aware scheduling and offloading decisions without a central control plane.
         Its Semantic Map starts from priors drawn from earlier publications and refines them
         with live deployment telemetry. Dissertation work at Tampere University.
+      summary: >-
+        Context-aware autonomous orchestration agent for resource-constrained edge nodes,
+        making scheduling and offloading decisions without a central control plane.
+        Doctoral research at Tampere University
       tech: [Go, Edge Computing, Agents, Kubernetes]
       links:
         - label: GitHub
@@ -144,6 +185,8 @@
 
 - section: Coming Soon
   layout: grid
+  llms_section: In Development
+  llms_format: inline
   items:
     - name: Salpon
       description: salpon.com

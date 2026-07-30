@@ -6,16 +6,20 @@
 # Per group:
 #   section       heading shown on the projects page
 #   layout        "cards" (default) or "grid" for the compact tile grid
-#   llms_section  which llms.txt heading these items belong under. The page's
-#                 four sections collapse into llms.txt's three — Live and
+#   llms_section  which llms.txt heading these items belong under, and the sole
+#                 selector for it. llms.txt derives its headings from these
+#                 values in data order, so a new one appears there
+#                 automatically rather than silently vanishing. The page's four
+#                 sections collapse into llms.txt's three — Live and
 #                 "Tools & Systems" both land under "Projects".
-#   llms_format   "inline" renders items as one comma-joined line instead of
-#                 bullets. Only used by "In Development".
+#                 Omit to exclude a group from llms.txt entirely.
+#   llms_format   rendering only, never selection. "inline" emits one
+#                 comma-joined line instead of bullets.
 #
 # Per item:
 #   name         required
-#   image        filename in assets/images/projects/. Omit for a compact,
-#                image-less card (see .project-card--compact in projects.css).
+#   image        filename in assets/images/projects/. Omit, or set to null or
+#                "", for a compact image-less card (.project-card--compact).
 #   badge        text + style; style maps to the CSS class badge-{style}
 #                (live, research, soon, tool, wip)
 #   description  long form, shown on the projects page
@@ -27,7 +31,8 @@
 #                time; renders a "Read the story" link only if a post matches,
 #                so a renamed post degrades to no link rather than a 404.
 #   links        list of { label, url, icon }; icon is globe | github | paper.
-#                llms.txt links to the first entry.
+#                llms.txt links to the first entry, or emits a bare name if
+#                there are none. summary is likewise optional there.
 
 - section: Live
   llms_section: Projects

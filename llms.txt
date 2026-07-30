@@ -27,19 +27,18 @@ long after about.html listed them.
 Project sections below are generated from _data/projects.yml, the same source
 projects.html renders. Each item uses its `summary` field (the terse one-liner)
 rather than `description` (the long page copy), and links to its first entry.
+
+Headings are derived from the data rather than hardcoded, so a group with a new
+llms_section shows up here automatically instead of silently vanishing. A group
+with no llms_section is deliberately excluded.
 {% endcomment -%}
-## Projects
-{% for group in site.data.projects %}{% if group.llms_section == 'Projects' %}{% for item in group.items %}
-- [{{ item.name }}]({{ item.links.first.url }}): {{ item.summary }}{% endfor %}{% endif %}{% endfor %}
+{%- assign llms_sections = site.data.projects | map: "llms_section" | compact | uniq -%}
+{%- for ls in llms_sections %}## {{ ls }}
+{% for group in site.data.projects %}{% if group.llms_section == ls %}{% if group.llms_format == 'inline' %}
+{% for item in group.items %}{{ item.name }} ({{ item.description }}){% unless forloop.last %}, {% endunless %}{% endfor %}{% else %}{% for item in group.items %}
+- {% if item.links %}[{{ item.name }}]({{ item.links.first.url }}){% else %}{{ item.name }}{% endif %}{% if item.summary %}: {{ item.summary }}{% endif %}{% endfor %}{% endif %}{% endif %}{% endfor %}
 
-## Research
-{% for group in site.data.projects %}{% if group.llms_section == 'Research' %}{% for item in group.items %}
-- [{{ item.name }}]({{ item.links.first.url }}): {{ item.summary }}{% endfor %}{% endif %}{% endfor %}
-
-## In Development
-{% for group in site.data.projects %}{% if group.llms_format == 'inline' %}
-{% for item in group.items %}{{ item.name }} ({{ item.description }}){% unless forloop.last %}, {% endunless %}{% endfor %}{% endif %}{% endfor %}
-
+{% endfor -%}
 ## Blog Topics
 
 Technical deep-dives covering AI engineering and LLM tooling, developer productivity systems, .NET and React, WebAssembly, memory management, cloud and edge computing, speculative design, and DIY maker projects.

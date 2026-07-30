@@ -8,8 +8,14 @@ Two variants, chosen by whether item.image is set:
   - without image -> .project-card--compact, badge inline above the title
 {%- endcomment -%}
 {%- assign item = include.item -%}
-<div class="project-card{% unless item.image %} project-card--compact{% endunless %}">
-  {%- if item.image %}
+{%- comment -%}
+  Computed once. Liquid treats "" as truthy, so `item.image` alone would send
+  image: "" down the with-image path and emit url('.../projects/').
+{%- endcomment -%}
+{%- assign has_image = false -%}
+{%- if item.image and item.image != "" -%}{%- assign has_image = true -%}{%- endif -%}
+<div class="project-card{% unless has_image %} project-card--compact{% endunless %}">
+  {%- if has_image %}
   <div class="project-image" style="background-image: url('{{ site.baseurl }}/assets/images/projects/{{ item.image }}');">
     {%- if item.badge %}
     <span class="project-badge badge-{{ item.badge.style }}">{{ item.badge.text }}</span>
@@ -17,7 +23,7 @@ Two variants, chosen by whether item.image is set:
   </div>
   {%- endif %}
   <div class="project-info">
-    {%- if item.badge and item.image == nil %}
+    {%- if item.badge and has_image == false %}
     <span class="project-badge badge-{{ item.badge.style }}">{{ item.badge.text }}</span>
     {%- endif %}
     <h3>{{ item.name }}</h3>

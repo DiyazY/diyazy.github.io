@@ -1,0 +1,49 @@
+# Skills and expertise. Single source for about.html and llms.txt.
+#
+# Consumed by:
+#   about.html  visible skills grid, expertise tags, and the JSON-LD
+#               `knowsAbout` array (generated as the union of everything below)
+#   llms.txt    "Areas of Expertise" bullets
+#
+# Before this file existed the same data was maintained in four places and had
+# already drifted: the March 2026 commit that added AI Engineering, Event
+# Storming and FastAPI to about.html never reached llms.txt.
+#
+# `skills` renders as one grid category / one llms.txt bullet per entry.
+# `expertise` renders as the tag cloud on the About page.
+# `knows_about_extra` is for JSON-LD terms that aren't skills or expertise tags.
+
+skills:
+  - name: Languages
+    items: [C#, TypeScript, JavaScript, Python, SQL, HTML/CSS]
+  - name: Backend
+    items: [.NET, ASP.NET Core, Node.js, FastAPI, REST APIs, GraphQL, WebSockets]
+  - name: Frontend
+    items: [React, Angular, Blazor, Next.js, Electron]
+  - name: Data
+    items: [PostgreSQL, SQL Server, MongoDB, Redis, Elasticsearch]
+  - name: DevOps & Cloud
+    items: [Docker, Kubernetes, Azure, CI/CD, GitLab, Ansible]
+  - name: AI & Emerging
+    items: [LLMs, OpenAI, RAG, Prompt Engineering, AI Agents, WebAssembly]
+
+expertise:
+  - Software Architecture
+  - AI Engineering
+  - Microservices
+  - Domain-Driven Design
+  - Event Storming
+  - Full-Stack Development
+  - Distributed Systems
+  - API Design
+  - DevOps
+  - Technical Leadership
+
+# Research-domain terms that belong in structured data but are not listed as a
+# skill category or an expertise tag.
+knows_about_extra: [Edge Computing, IoT, Container Orchestration]
+
+# One-line research standing, used by llms.txt. Update when a paper lands.
+research: >-
+  Published researcher in edge and cloud computing (Cluster Computing 2026;
+  ESOCC 2025, Springer LNCS)

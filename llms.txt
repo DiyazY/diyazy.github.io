@@ -9,14 +9,19 @@ layout: null
 
 Diyaz Yakubov is a software engineer with 10+ years of experience building scalable web applications, distributed systems, and cloud-native solutions. He holds a Master's degree in Software Engineering from Tampere University (Finland) and a Bachelor's in Computer Engineering from EKSTU (Kazakhstan). He is the founder of TopTop.dev, a software development company serving SMBs in the Nordic region.
 
+{% comment %}
+Expertise below is generated from _data/profile.yml, the same source about.html
+renders its skills grid and expertise tags from. Previously maintained by hand
+here and drifted — it omitted AI Engineering, Event Storming, Python and FastAPI
+long after about.html listed them.
+{% endcomment -%}
 ## Areas of Expertise
 
-- Software Architecture, Microservices, Domain-Driven Design
-- Full-Stack Development: C#/.NET, TypeScript, React, Angular, Node.js
-- Cloud & DevOps: Azure, Docker, Kubernetes, CI/CD
-- Data: PostgreSQL, SQL Server, MongoDB, Redis, Elasticsearch
-- AI & Emerging Tech: LLMs, OpenAI, RAG, Prompt Engineering, AI Agents, WebAssembly
-- Published researcher in edge and cloud computing (Cluster Computing 2026; ESOCC 2025, Springer LNCS)
+- {{ site.data.profile.expertise | join: ", " }}
+{%- for cat in site.data.profile.skills %}
+- {{ cat.name }}: {{ cat.items | join: ", " }}
+{%- endfor %}
+- {{ site.data.profile.research }}
 
 {% comment %}
 Project sections below are generated from _data/projects.yml, the same source
@@ -41,12 +46,12 @@ Technical deep-dives covering AI engineering and LLM tooling, developer producti
 
 ## Links
 
-- Website: https://diyazy.github.io
-- GitHub: https://github.com/DiyazY
-- LinkedIn: https://linkedin.com/in/diyaz-y-4ba636116
-- Medium: https://medium.com/@diyaz.yakubov
-- ORCID: https://orcid.org/0009-0000-7989-4614
-- Toptal: https://www.toptal.com/resume/diyaz-yakubov
+- Website: {{ site.url }}
+- GitHub: https://github.com/{{ site.author.github }}
+- LinkedIn: https://linkedin.com/in/{{ site.author.linkedin }}
+- Medium: https://medium.com/@{{ site.author.medium }}
+- ORCID: https://orcid.org/{{ site.author.orcid }}
+- Toptal: https://www.toptal.com/resume/{{ site.author.toptal }}
 - Company: https://toptop.dev
 
 ## Contact

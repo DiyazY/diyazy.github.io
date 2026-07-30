@@ -50,15 +50,17 @@ description: "Learn more about Diyaz Yakubov - software engineer, tech enthusias
       "recognizedBy": { "@type": "CollegeOrUniversity", "name": "East-Kazakhstan State Technical University" }
     }
   ],
+  {%- comment -%}
+    Union of expertise tags, every skill category, and the research-only terms
+    in _data/profile.yml. Generated so adding a skill reaches structured data.
+  {%- endcomment -%}
+  {%- assign terms = site.data.profile.expertise -%}
+  {%- for cat in site.data.profile.skills -%}
+    {%- assign terms = terms | concat: cat.items -%}
+  {%- endfor -%}
+  {%- assign terms = terms | concat: site.data.profile.knows_about_extra | uniq %}
   "knowsAbout": [
-    "Software Architecture", "AI Engineering", "Microservices", "Domain-Driven Design",
-    "Event Storming", "Full-Stack Development", "Distributed Systems", "API Design",
-    "C#", ".NET", "ASP.NET Core", "TypeScript", "JavaScript", "Python", "FastAPI",
-    "React", "Angular", "Blazor", "Node.js", "Next.js",
-    "PostgreSQL", "SQL Server", "MongoDB", "Redis", "Elasticsearch",
-    "Docker", "Kubernetes", "Azure", "CI/CD",
-    "LLMs", "OpenAI", "RAG", "Prompt Engineering", "AI Agents", "WebAssembly",
-    "Edge Computing", "IoT"
+    {% for t in terms %}{{ t | jsonify }}{% unless forloop.last %}, {% endunless %}{% endfor %}
   ],
   "worksFor": {
     "@type": "Organization",
@@ -122,30 +124,12 @@ description: "Learn more about Diyaz Yakubov - software engineer, tech enthusias
     <div class="about-section">
       <h2>Technical Skills</h2>
       <div class="skills-grid">
+        {%- for cat in site.data.profile.skills %}
         <div class="skill-category">
-          <h3>Languages</h3>
-          <p>C#, TypeScript, JavaScript, Python, SQL, HTML/CSS</p>
+          <h3>{{ cat.name }}</h3>
+          <p>{{ cat.items | join: ", " }}</p>
         </div>
-        <div class="skill-category">
-          <h3>Backend</h3>
-          <p>.NET, ASP.NET Core, Node.js, FastApi, REST APIs, GraphQL, WebSockets</p>
-        </div>
-        <div class="skill-category">
-          <h3>Frontend</h3>
-          <p>React, Angular, Blazor, Next.js, Electron</p>
-        </div>
-        <div class="skill-category">
-          <h3>Data</h3>
-          <p>PostgreSQL, SQL Server, MongoDB, Redis, Elasticsearch</p>
-        </div>
-        <div class="skill-category">
-          <h3>DevOps & Cloud</h3>
-          <p>Docker, Kubernetes, Azure, CI/CD, GitLab, Ansible</p>
-        </div>
-        <div class="skill-category">
-          <h3>AI & Emerging</h3>
-          <p>LLMs, OpenAI, RAG, Prompt Engineering, AI Agents, WebAssembly</p>
-        </div>
+        {%- endfor %}
       </div>
     </div>
 
@@ -153,16 +137,9 @@ description: "Learn more about Diyaz Yakubov - software engineer, tech enthusias
     <div class="about-section">
       <h2>Expertise</h2>
       <div class="expertise-tags">
-        <span class="tag">Software Architecture</span>
-        <span class="tag">AI Engineering</span>
-        <span class="tag">Microservices</span>
-        <span class="tag">Domain-Driven Design</span>
-        <span class="tag">Event Storming</span>
-        <span class="tag">Full-Stack Development</span>
-        <span class="tag">Distributed Systems</span>
-        <span class="tag">API Design</span>
-        <span class="tag">DevOps</span>
-        <span class="tag">Technical Leadership</span>
+        {%- for tag in site.data.profile.expertise %}
+        <span class="tag">{{ tag }}</span>
+        {%- endfor %}
       </div>
     </div>
 
@@ -301,7 +278,7 @@ description: "Learn more about Diyaz Yakubov - software engineer, tech enthusias
           </svg>
           <span>Medium</span>
         </a>
-        <a href="https://orcid.org/0009-0000-7989-4614" target="_blank" rel="noopener" class="social-link">
+        <a href="https://orcid.org/{{ site.author.orcid }}" target="_blank" rel="noopener" class="social-link">
           <svg viewBox="0 0 24 24" width="24" height="24" fill="currentColor">
             <path d="M12 0C5.372 0 0 5.372 0 12s5.372 12 12 12 12-5.372 12-12S18.628 0 12 0zM7.369 4.378c.525 0 .947.431.947.947s-.422.947-.947.947a.95.95 0 01-.947-.947c0-.525.422-.947.947-.947zm-.722 3.038h1.444v10.041H6.647V7.416zm3.562 0h3.9c3.712 0 5.344 2.653 5.344 5.025 0 2.578-2.016 5.025-5.325 5.025h-3.919V7.416zm1.444 1.303v7.444h2.297c3.272 0 4.022-2.484 4.022-3.722 0-1.847-1.178-3.722-3.978-3.722h-2.341z"/>
           </svg>
@@ -318,7 +295,7 @@ description: "Learn more about Diyaz Yakubov - software engineer, tech enthusias
           </svg>
           <span>TopTop</span>
         </a>
-        <a href="https://www.toptal.com/resume/diyaz-yakubov" target="_blank" rel="noopener" class="social-link">
+        <a href="https://www.toptal.com/resume/{{ site.author.toptal }}" target="_blank" rel="noopener" class="social-link">
           <svg viewBox="0 0 24 24" width="24" height="24" fill="currentColor">
             <path d="M20.227 10.038L10.188 0l-2.04 2.04 3.773 3.769-8.155 8.153L13.807 24l2.039-2.039-3.772-3.771 8.16-8.152h-.007zM8.301 14.269l6.27-6.268 2.207 2.203-6.269 6.27-2.208-2.205z"/>
           </svg>

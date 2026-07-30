@@ -13,6 +13,11 @@ author:
   toptal: diyaz-yakubov
 
 # Build settings
+# Pinned so post permalinks don't depend on the build machine's clock. Post
+# dates carry UTC timestamps; without this, anything stamped 21:00-24:00 UTC
+# resolves to a different day (and a different URL) when built east of
+# Greenwich. UTC matches every URL published so far.
+timezone: UTC
 lsi: false
 source: ./
 incremental: false
@@ -22,6 +27,13 @@ gist:
 kramdown:
   math_engine: mathjax
   syntax_highlighter: rouge
+
+# Kept in the repo, not published. The legacy Pages builder rendered
+# ROADMAP.md to /ROADMAP.html and listed it in the sitemap; it is an internal
+# planning document, so it is now excluded outright rather than shipped as raw
+# markdown. Merged with Jekyll's default excludes, not replacing them.
+exclude:
+  - ROADMAP.md
 
 # Plugins
 plugins:

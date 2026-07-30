@@ -1,0 +1,73 @@
+name: Build and deploy
+
+# Builds on every PR, and builds + deploys on main.
+#
+# The site previously deployed through the legacy Pages builder, which pins the
+# github-pages gem (Jekyll 3.x) while this repo's Gemfile resolves Jekyll 4.
+# That meant production ran a different renderer than anything under test.
+# Deploying from here closes the gap: the artifact that ships is the one the
+# checks ran against.
+#
+# Requires the repository's Pages build type to be "workflow" rather than
+# "legacy". With build_type: legacy this workflow builds but never publishes.
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+# Supersede in-flight PR builds, but never cancel a deploy that is mid-flight.
+concurrency:
+  group: pages-${{ github.ref }}
+  cancel-in-progress: ${{ github.ref != 'refs/heads/main' }}
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Set up Ruby
+        uses: ruby/setup-ruby@v1
+        with:
+          ruby-version: '3.4'
+          bundler-cache: true
+
+      - name: Build site
+        run: bundle exec jekyll build --trace --strict_front_matter
+        env:
+          JEKYLL_ENV: production
+
+      - name: Check generated output
+        run: ./.github/scripts/check-build.sh _site
+
+      # Only main produces a publishable artifact; PR runs stop at the checks.
+      - name: Upload Pages artifact
+        if: github.ref == 'refs/heads/main'
+        uses: actions/upload-pages-artifact@v3
+        with:
+          path: _site
+
+  deploy:
+    if: github.ref == 'refs/heads/main'
+    needs: build
+    runs-on: ubuntu-latest
+
+    permissions:
+      pages: write
+      id-token: write
+
+    environment:
+      name: github-pages
+      url: ${{ steps.deployment.outputs.page_url }}
+
+    steps:
+      - name: Deploy to GitHub Pages
+        id: deployment
+        uses: actions/deploy-pages@v4

@@ -75,6 +75,26 @@
   background-position: center;
 }
 
+/* Compact variant - projects without a cover image.
+   Drops the image column so the card doesn't render an empty grey block. */
+.project-card--compact {
+  grid-template-columns: 1fr;
+}
+
+/* .project-info sets padding-left: 0 because the image normally fills the
+   left column. With no image, restore padding on all four sides. */
+.project-card--compact .project-info {
+  padding: 20px;
+}
+
+/* The badge is absolutely positioned over the image by default; with no
+   image it sits inline above the title instead. */
+.project-card--compact .project-badge {
+  position: static;
+  align-self: flex-start;
+  margin-bottom: 10px;
+}
+
 .project-badge {
   position: absolute;
   top: 12px;
@@ -99,6 +119,18 @@
 
 .badge-soon {
   background-color: #f59e0b;
+  color: white;
+}
+
+/* Badge text renders at 12px/600, below WCAG's large-text threshold, so these
+   need 4.5:1 against white rather than 3:1. #8b5cf6 measured 4.23:1. */
+.badge-tool {
+  background-color: #7c3aed;
+  color: white;
+}
+
+.badge-wip {
+  background-color: #64748b;
   color: white;
 }
 

@@ -33,12 +33,24 @@ llms_section shows up here automatically instead of silently vanishing. A group
 with no llms_section is deliberately excluded.
 {% endcomment -%}
 {%- assign llms_sections = site.data.projects | map: "llms_section" | compact | uniq -%}
-{%- for ls in llms_sections %}## {{ ls }}
+{%- for ls in llms_sections -%}
+{%- comment -%}
+  Count first. Emitting the heading before knowing whether any item follows
+  leaves a bare "## Section" behind when a group is scaffolded with items: [].
+{%- endcomment -%}
+{%- assign section_items = 0 -%}
+{%- for group in site.data.projects -%}
+{%- if group.llms_section == ls and group.items -%}
+{%- assign section_items = section_items | plus: group.items.size -%}
+{%- endif -%}
+{%- endfor -%}
+{%- if section_items > 0 %}## {{ ls }}
 {% for group in site.data.projects %}{% if group.llms_section == ls %}{% if group.llms_format == 'inline' %}
 {% for item in group.items %}{{ item.name }} ({{ item.description }}){% unless forloop.last %}, {% endunless %}{% endfor %}{% else %}{% for item in group.items %}
 - {% if item.links %}[{{ item.name }}]({{ item.links.first.url }}){% else %}{{ item.name }}{% endif %}{% if item.summary %}: {{ item.summary }}{% endif %}{% endfor %}{% endif %}{% endif %}{% endfor %}
 
-{% endfor -%}
+{% endif -%}
+{%- endfor -%}
 ## Blog Topics
 
 Technical deep-dives covering AI engineering and LLM tooling, developer productivity systems, .NET and React, WebAssembly, memory management, cloud and edge computing, speculative design, and DIY maker projects.

@@ -10,9 +10,14 @@
 
 set -uo pipefail
 
-SITE="${1:-_site}"
-fails=0
+REPO="$(cd "$(dirname "${BASH_SOURCE[0]}")/../.." && pwd)"
+SITE="${1:-$REPO/_site}"
+PROJECTS_DATA="$REPO/_data/projects.yml"
 
+tmp="$(mktemp)"
+trap 'rm -f "$tmp"' EXIT
+
+fails=0
 fail() { printf '  FAIL  %s\n' "$1"; fails=$((fails + 1)); }
 pass() { printf '  ok    %s\n' "$1"; }
 
@@ -58,6 +63,54 @@ if [ -f "$SITE/llms.txt" ]; then
   else
     pass "llms.txt bullets are well-formed"
   fi
+
+  # A section heading with nothing under it means a group was scaffolded empty.
+  if awk '/^## /{h=$0; getline; if ($0=="") {getline; if ($0=="" || $0 ~ /^## /) print h}}' \
+       "$SITE/llms.txt" | grep -q .; then
+    fail "llms.txt has a section heading with no content:"
+    awk '/^## /{h=$0; getline; if ($0=="") {getline; if ($0=="" || $0 ~ /^## /) print "          "h}}' "$SITE/llms.txt"
+  else
+    pass "llms.txt has no empty sections"
+  fi
+fi
+
+# --- projects.html and llms.txt agree with _data/projects.yml ------------
+# This is the invariant the whole _data refactor exists to provide: one edit
+# updates both outputs. Without this check, deleting projects from the YAML
+# still passes CI.
+if [ -f "$PROJECTS_DATA" ] && [ -f "$SITE/projects.html" ] && [ -f "$SITE/llms.txt" ]; then
+  if ruby -ryaml -e '
+      site, data_file = ARGV
+      groups = YAML.load_file(data_file)
+      page = File.read(File.join(site, "projects.html"))
+      llms = File.read(File.join(site, "llms.txt"))
+      errs, total, expected_in_llms = [], 0, 0
+
+      groups.each do |g|
+        (g["items"] || []).each do |item|
+          name = item["name"]
+          total += 1
+          errs << "#{name.inspect} missing from projects.html" unless page.include?(name)
+          if g["llms_section"]
+            expected_in_llms += 1
+            errs << "#{name.inspect} missing from llms.txt (llms_section: #{g["llms_section"]})" unless llms.include?(name)
+          end
+        end
+      end
+
+      rendered = page.scan(/class="project-card/).size + page.scan(/class="coming-soon-card/).size
+      errs << "projects.html rendered #{rendered} card/tile(s) but the data has #{total} item(s)" unless rendered == total
+
+      abort errs.join("\n") unless errs.empty?
+      puts "#{total} item(s) on the page, #{expected_in_llms} mirrored in llms.txt"
+    ' "$SITE" "$PROJECTS_DATA" >"$tmp" 2>&1; then
+    pass "page/llms.txt match _data/projects.yml ($(cat "$tmp"))"
+  else
+    fail "page/llms.txt disagree with _data/projects.yml:"
+    sed 's/^/          /' "$tmp"
+  fi
+else
+  fail "cannot run parity check (missing $PROJECTS_DATA or build output)"
 fi
 
 # --- no unrendered Liquid in the files we generate ----------------------
@@ -73,16 +126,8 @@ for f in llms.txt projects.html about.html; do
   fi
 done
 
-# --- projects page rendered actual cards --------------------------------
+# --- an item with image: "" used to emit url('.../projects/') -----------
 if [ -f "$SITE/projects.html" ]; then
-  cards=$(grep -c 'class="project-card' "$SITE/projects.html" || true)
-  if [ "${cards:-0}" -ge 1 ]; then
-    pass "projects.html rendered $cards card(s)"
-  else
-    fail "projects.html rendered no cards (empty _data/projects.yml?)"
-  fi
-
-  # An item with image: "" used to emit url('.../projects/') - a broken request.
   if grep -qE "projects/'\)" "$SITE/projects.html"; then
     fail "projects.html has an empty project image URL"
   else
@@ -101,10 +146,10 @@ if [ -f "$SITE/about.html" ]; then
       abort "no Person block with knowsAbout" unless person
       abort "knowsAbout is empty" if person["knowsAbout"].empty?
       puts "#{blocks.size} block(s), knowsAbout=#{person["knowsAbout"].size}"
-    ' "$SITE/about.html" >/tmp/ldjson.out 2>&1; then
-    pass "about.html JSON-LD valid ($(cat /tmp/ldjson.out))"
+    ' "$SITE/about.html" >"$tmp" 2>&1; then
+    pass "about.html JSON-LD valid ($(cat "$tmp"))"
   else
-    fail "about.html JSON-LD invalid: $(cat /tmp/ldjson.out)"
+    fail "about.html JSON-LD invalid: $(cat "$tmp")"
   fi
 fi
 

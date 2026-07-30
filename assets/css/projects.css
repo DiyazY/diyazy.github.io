@@ -122,8 +122,10 @@
   color: white;
 }
 
+/* Badge text renders at 12px/600, below WCAG's large-text threshold, so these
+   need 4.5:1 against white rather than 3:1. #8b5cf6 measured 4.23:1. */
 .badge-tool {
-  background-color: #8b5cf6;
+  background-color: #7c3aed;
   color: white;
 }
 

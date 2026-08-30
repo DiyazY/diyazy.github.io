@@ -1,0 +1,24 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<rss xmlns:dc="http://purl.org/dc/elements/1.1/" xmlns:content="http://purl.org/rss/1.0/modules/content/" version="2.0">
+  <channel>
+    <title><![CDATA[Stories by Test User on Medium]]></title>
+    <description><![CDATA[Fixture feed with one broken entry]]></description>
+    <link>https://medium.com/@test-user</link>
+    <item>
+      <title><![CDATA[Broken Entry No PubDate]]></title>
+      <link>https://medium.com/@test-user/broken-entry-ddd444</link>
+      <guid isPermaLink="false">https://medium.com/p/ddd444</guid>
+      <dc:creator><![CDATA[Test User]]></dc:creator>
+      <content:encoded><![CDATA[<p>This entry has no pubDate, so e.published is nil.</p>]]></content:encoded>
+    </item>
+    <item>
+      <title><![CDATA[Good Entry After Broken One]]></title>
+      <link>https://medium.com/@test-user/good-entry-eee555</link>
+      <guid isPermaLink="false">https://medium.com/p/eee555</guid>
+      <category><![CDATA[testing]]></category>
+      <dc:creator><![CDATA[Test User]]></dc:creator>
+      <pubDate>Thu, 06 Aug 2026 10:00:00 GMT</pubDate>
+      <content:encoded><![CDATA[<figure><img alt="" src="https://cdn-images-1.medium.com/max/1024/1*good.png" /></figure><p>Good entry.</p>]]></content:encoded>
+    </item>
+  </channel>
+</rss>

@@ -65,6 +65,60 @@ else
   fail "no post exposes its cover image as og:image"
 fi
 
+# --- document outline: exactly one h1 per page ---------------------------
+# The header brand is an h1 only on the homepage; every other page supplies
+# its own. Zero means a page lost its heading, two means the banner regressed.
+# diy.html is a bare meta-refresh stub with no page chrome, so it's exempt.
+bad_h1=0
+while IFS= read -r f; do
+  n=$(grep -c '<h1' "$f")
+  if [ "$n" -ne 1 ]; then
+    fail "$(basename "$f"): expected exactly one h1, found $n (${f#"$SITE"/})"
+    bad_h1=$((bad_h1 + 1))
+  fi
+done < <(find "$SITE" -name '*.html' -not -name 'diy.html')
+[ "$bad_h1" -eq 0 ] && pass "every page has exactly one h1"
+
+# --- homepage targets the author's name ----------------------------------
+# seo_title exists so the homepage <title> can say who this site belongs to
+# instead of "Home | diyaz". Losing it silently reverts the front matter win.
+if grep -qE '<title>[^<]*Diyaz Yakubov[^<]*</title>' "$SITE/index.html"; then
+  pass "homepage <title> contains 'Diyaz Yakubov'"
+else
+  fail "homepage <title> no longer targets 'Diyaz Yakubov'"
+fi
+
+# --- diy.html stays out of the sitemap -----------------------------------
+if [ -f "$SITE/sitemap.xml" ] && grep -q 'diy\.html' "$SITE/sitemap.xml"; then
+  fail "diy.html (a redirect stub) is back in sitemap.xml"
+else
+  pass "sitemap.xml omits diy.html"
+fi
+
+# --- post-page JSON-LD parses and carries the expected blocks -------------
+# The about.html check below predates this one; posts render different blocks
+# (BlogPosting with a multi-line excerpt, BreadcrumbList) and once shipped
+# invalid JSON for years because nothing parsed them.
+post_html=$(find "$SITE" -path "$SITE/2*" -name '*.html' | head -1)
+if [ -n "$post_html" ]; then
+  if ruby -rjson -e '
+      html = File.read(ARGV[0])
+      blocks = html.scan(%r{<script type="application/ld\+json">(.*?)</script>}m).flatten
+      abort "no ld+json blocks found" if blocks.empty?
+      types = blocks.each_with_index.map { |b, i|
+        (JSON.parse(b)["@type"] rescue abort("block #{i} invalid: #{$!.message}"))
+      }
+      %w[BlogPosting BreadcrumbList].each { |t| abort "missing #{t}" unless types.include?(t) }
+      puts types.join(", ")
+    ' "$post_html" >"$tmp" 2>&1; then
+    pass "post JSON-LD valid ($(cat "$tmp")) — ${post_html#"$SITE"/}"
+  else
+    fail "post JSON-LD invalid (${post_html#"$SITE"/}): $(cat "$tmp")"
+  fi
+else
+  fail "no built post found to JSON-LD-check"
+fi
+
 # --- llms.txt is plain text, not a rendered page -------------------------
 # robots.txt advertises this path via `LLMs-Txt:`, so a wrapped or empty file
 # breaks a URL we tell crawlers to fetch.

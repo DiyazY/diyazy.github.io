@@ -4,6 +4,10 @@ title: Blog
 description: "Articles about software development, DIY projects, home lab experiments, and tech insights."
 ---
 <div class="panel-container blog-grid">
+    <!-- The header brand is only an h1 on the homepage; this page's own h1
+         is visually redundant with the nav, so it is screen-reader-only. -->
+    <h1 class="sr-only">Blog</h1>
+
     <!-- Tag Filter (full width) -->
     <div class="blog-tags-panel text-panel">
         {% assign all_tags = "" | split: "" %}

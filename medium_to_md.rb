@@ -35,8 +35,9 @@ feed.entries.each do |e|
 
 	# Medium's RSS repeats the post title as the first heading; the post layout
 	# already renders the title as the page h1, so drop the duplicate.
-	# The \u00A0 in the class matters: Medium peppers headings with non-breaking spaces.
-	normalize = ->(s) { s.to_s.gsub(/[[:space:]\u{00A0}]+/, ' ').strip.downcase }
+	# POSIX [[:space:]] rather than \s: unlike \s it matches the non-breaking
+	# spaces Medium peppers its headings with.
+	normalize = ->(s) { s.to_s.gsub(/[[:space:]]+/, ' ').strip.downcase }
 	first_heading = parseHTML.at_css('h1, h2, h3, h4')
 	first_heading.remove if first_heading && normalize.(first_heading.text) == normalize.(e.title)
 

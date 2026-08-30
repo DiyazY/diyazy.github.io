@@ -32,6 +32,39 @@ for f in llms.txt projects.html about.html index.html feed.xml search.json; do
   fi
 done
 
+# --- share images --------------------------------------------------------
+# The layout's og:image chain is page.image -> page.background -> og-default.
+# A missing default 404s the social preview of every page that has neither,
+# and an empty content="" means the chain itself broke.
+if [ -s "$SITE/assets/images/og-default.png" ]; then
+  pass "og-default.png exists and is non-empty"
+else
+  fail "og-default.png missing or empty"
+fi
+
+if grep -rlE 'property="og:image" content=""' "$SITE" --include='*.html' >"$tmp"; then
+  fail "page(s) with an empty og:image:"
+  sed 's/^/          /' "$tmp"
+else
+  pass "no page has an empty og:image"
+fi
+
+# Posts synced from Medium carry a cover as `background`; at least one built
+# post must surface it as og:image, or the background wiring regressed.
+covers=0
+for f in "$SITE"/2*/*/*/*.html; do
+  [ -f "$f" ] || continue
+  if grep -qE 'property="og:image" content="[^"]+"' "$f" \
+     && ! grep -qE 'property="og:image" content="[^"]*og-default' "$f"; then
+    covers=$((covers + 1))
+  fi
+done
+if [ "$covers" -gt 0 ]; then
+  pass "post cover images flow into og:image ($covers post(s))"
+else
+  fail "no post exposes its cover image as og:image"
+fi
+
 # --- llms.txt is plain text, not a rendered page -------------------------
 # robots.txt advertises this path via `LLMs-Txt:`, so a wrapped or empty file
 # breaks a URL we tell crawlers to fetch.

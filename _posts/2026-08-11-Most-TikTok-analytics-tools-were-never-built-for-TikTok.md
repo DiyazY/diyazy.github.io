@@ -5,7 +5,7 @@ title: "Most “TikTok analytics” tools were never built for TikTok"
 date: 2026-08-11 09:56:43 UTC
 background: https://cdn-images-1.medium.com/max/1024/1*1CQ0p_UsJJarl4gNVc18sQ.png
 excerpt_separator: <!--more-->
-tags: [saas, ti̇ktok, creator-economy, analytics, marketing]
+tags: [saas, tiktok, creator-economy, analytics, marketing]
 original_link: https://medium.com/@diyaz.yakubov/most-tiktok-analytics-tools-were-never-built-for-tiktok-67abcd710e70?source=rss-ce9f85b2b690------2
 ---
 ![](https://cdn-images-1.medium.com/max/1024/1*1CQ0p_UsJJarl4gNVc18sQ.png)

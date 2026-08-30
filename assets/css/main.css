@@ -117,9 +117,13 @@ header .container {
     gap: 12px;
 }
 
-header h1 {
+/* Brand heading — an h1 on the homepage, a p elsewhere, styled identically */
+header .site-heading {
     margin: 0;
     font-size: 2em;
+    font-weight: var(--font-weight-bold, 700);
+    line-height: var(--line-height-tight, 1.25);
+    letter-spacing: var(--letter-spacing-tight, -0.025em);
     color: var(--color-primary, #2a2521);
 }
 

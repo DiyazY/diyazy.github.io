@@ -1,3 +1,28 @@
+{%- comment -%}
+  BreadcrumbList mirrors the visible trail below — same branches, same names.
+  The last ListItem omits "item" (the current page), which schema.org allows.
+{%- endcomment -%}
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "BreadcrumbList",
+  "itemListElement": [
+    { "@type": "ListItem", "position": 1, "name": "Home", "item": "{{ '/' | absolute_url }}" }
+    {%- if page.layout == 'post' -%}
+    ,{ "@type": "ListItem", "position": 2, "name": "Blog", "item": "{{ '/blog.html' | absolute_url }}" },
+    { "@type": "ListItem", "position": 3, "name": {{ page.title | jsonify }} }
+    {%- elsif page.url contains '/blog' -%}
+    ,{ "@type": "ListItem", "position": 2, "name": "Blog" }
+    {%- elsif page.url contains '/projects' -%}
+    ,{ "@type": "ListItem", "position": 2, "name": "Projects" }
+    {%- elsif page.url contains '/about' -%}
+    ,{ "@type": "ListItem", "position": 2, "name": "About" }
+    {%- elsif page.url contains '/diy' -%}
+    ,{ "@type": "ListItem", "position": 2, "name": "DIY" }
+    {%- endif %}
+  ]
+}
+</script>
 <nav class="breadcrumbs" aria-label="Breadcrumb">
   <ol>
     <li><a href="/">Home</a></li>

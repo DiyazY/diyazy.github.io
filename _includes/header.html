@@ -1,7 +1,17 @@
 <header role="banner">
     <div class="container">
         <div class="header-top">
-            <h1><a href="/" class="site-title brand-logo" aria-label="diyaz - Home">diyaz</a></h1>
+            {%- comment -%}
+              The brand is the page's h1 only on the homepage. Everywhere else
+              the page supplies its own h1 (post title, "Projects", ...), and a
+              second h1 in the banner muddies the document outline for search
+              engines and screen readers alike.
+            {%- endcomment -%}
+            {% if page.url == "/" %}
+            <h1 class="site-heading"><a href="/" class="site-title brand-logo" aria-label="diyaz - Home">diyaz</a></h1>
+            {% else %}
+            <p class="site-heading"><a href="/" class="site-title brand-logo" aria-label="diyaz - Home">diyaz</a></p>
+            {% endif %}
             <div class="header-actions">
                 {% include search.html %}
                 <button id="theme-toggle" class="theme-toggle" aria-label="Switch to dark mode" type="button">

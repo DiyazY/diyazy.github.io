@@ -1,0 +1,35 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<rss xmlns:dc="http://purl.org/dc/elements/1.1/" xmlns:content="http://purl.org/rss/1.0/modules/content/" xmlns:atom="http://www.w3.org/2005/Atom" version="2.0">
+  <channel>
+    <title><![CDATA[Stories by Test User on Medium]]></title>
+    <description><![CDATA[Fixture feed]]></description>
+    <link>https://medium.com/@test-user</link>
+    <item>
+      <title><![CDATA[Post With Image]]></title>
+      <link>https://medium.com/@test-user/post-with-image-aaa111</link>
+      <guid isPermaLink="false">https://medium.com/p/aaa111</guid>
+      <category><![CDATA[testing]]></category>
+      <dc:creator><![CDATA[Test User]]></dc:creator>
+      <pubDate>Mon, 03 Aug 2026 10:00:00 GMT</pubDate>
+      <content:encoded><![CDATA[<h3>Post With Image</h3><figure><img alt="" src="https://cdn-images-1.medium.com/max/1024/1*withimage.png" /><figcaption>A cover image</figcaption></figure><p>Body of the post with an image.</p>]]></content:encoded>
+    </item>
+    <item>
+      <title><![CDATA[Post Without Image]]></title>
+      <link>https://medium.com/@test-user/post-without-image-bbb222</link>
+      <guid isPermaLink="false">https://medium.com/p/bbb222</guid>
+      <category><![CDATA[testing]]></category>
+      <dc:creator><![CDATA[Test User]]></dc:creator>
+      <pubDate>Tue, 04 Aug 2026 10:00:00 GMT</pubDate>
+      <content:encoded><![CDATA[<h3>Post Without Image</h3><p>This post has no image at all, only text.</p>]]></content:encoded>
+    </item>
+    <item>
+      <title><![CDATA[Post With Protocol Relative Image]]></title>
+      <link>https://medium.com/@test-user/post-with-protocol-relative-image-ccc333</link>
+      <guid isPermaLink="false">https://medium.com/p/ccc333</guid>
+      <category><![CDATA[testing]]></category>
+      <dc:creator><![CDATA[Test User]]></dc:creator>
+      <pubDate>Wed, 05 Aug 2026 10:00:00 GMT</pubDate>
+      <content:encoded><![CDATA[<h3>Post With Protocol Relative Image</h3><figure><img alt="" src="//cdn-images-1.medium.com/max/1024/1*protorel.png" /></figure><p>This post's image src has no protocol.</p>]]></content:encoded>
+    </item>
+  </channel>
+</rss>

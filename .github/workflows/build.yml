@@ -39,6 +39,9 @@ jobs:
           ruby-version: '3.4'
           bundler-cache: true
 
+      - name: Test Medium sync script
+        run: bundle exec ruby ./.github/scripts/medium-sync-test/run_tests.rb
+
       - name: Build site
         run: bundle exec jekyll build --trace --strict_front_matter
         env:

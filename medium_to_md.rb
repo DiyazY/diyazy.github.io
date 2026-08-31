@@ -18,6 +18,7 @@ FileUtils.mkdir_p(output_dir)
 xml = HTTParty.get("https://medium.com/feed/@#{medium_user}").body
 feed = Feedjira.parse(xml)
 
+failed_titles = []
 feed.entries.each do |e|
 	# normalise `title` to arrive at a reasonable filename
 	published_date = e.published.strftime("%Y-%m-%d")
@@ -31,7 +32,11 @@ feed.entries.each do |e|
 	
 	content = e.content || e.summary # if article is behind paywall, content will be nil
 	parseHTML = Nokogiri::HTML(content)
-	img = parseHTML.xpath("//img")[0]['src'].sub!(/http(s)?:/,'')
+	# The cover is optional: with no `background` in the front matter the
+	# layouts fall back to the default OG image. `sub`, not `sub!` — sub!
+	# returns nil when the src is already protocol-relative.
+	img = parseHTML.at_xpath("//img[@src]")
+	cover_line = img ? "background: https:#{img['src'].sub(/\Ahttp(s)?:/, '')}\n" : ''
 
 	# Medium's RSS repeats the post title as the first heading; the post layout
 	# already renders the title as the page h1, so drop the duplicate.
@@ -76,12 +81,19 @@ layout: post
 author: #{e.author}
 title: "#{e.title.gsub('"', '\\"')}"
 date: #{e.published}
-background: https:#{img}
-excerpt_separator: <!--more-->
+#{cover_line}excerpt_separator: <!--more-->
 tags: [#{tags}]
 original_link: #{original_link}
 ---
 	META
 
 	File.write(filename, meta + result)
+rescue => err
+	warn "Failed to sync \"#{e.title}\": #{err.class}: #{err.message}"
+	failed_titles << e.title
+end
+
+unless failed_titles.empty?
+	warn "Failed to sync #{failed_titles.length} of #{feed.entries.length} entries."
+	exit 1
 end

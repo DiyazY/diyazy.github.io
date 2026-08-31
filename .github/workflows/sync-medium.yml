@@ -27,6 +27,12 @@ jobs:
         run: |
           gem install feedjira httparty nokogiri reverse_markdown
 
+      # Pre-flight gate: run the script against local fixtures before the
+      # live sync, so a regression (or a breaking release of the unpinned
+      # gems above) fails loudly here instead of half-syncing the feed.
+      - name: Test sync script against fixtures
+        run: ruby ./.github/scripts/medium-sync-test/run_tests.rb
+
       - name: Sync posts from Medium
         run: ruby ./medium_to_md.rb diyaz.yakubov ./_posts
 

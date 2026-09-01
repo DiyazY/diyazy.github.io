@@ -10,7 +10,7 @@ original_link: https://medium.com/@diyaz.yakubov/speculative-design-design-chall
 ---
 Harnessing **human-powered energy** sounds exciting — until you have to wear the hardware all day. Whether we are talking about a sweat-fuelled patch, a body-heat generator, or our tongue-in-cheek “fart reactor,” all body-centric devices run up against three stubborn hurdles: **comfort** , **energy efficiency** and **data/privacy**. Below is a snapshot of the biggest obstacles researchers and designers face, together with recent evidence and emerging workarounds.
 
-> [Speculative Design | Fart&nbsp;Reactor](https://medium.com/@diyaz.yakubov/speculative-design-fart-reactor-35c1d7b6ef5b)
+> [Speculative Design \| Fart&nbsp;Reactor](https://medium.com/@diyaz.yakubov/speculative-design-fart-reactor-35c1d7b6ef5b)
 
 > [**1.From Taboo to Technology** : Why farts might be worth harnessing.](https://medium.com/@diyaz.yakubov/speculative-design-from-taboo-to-technology-why-farts-might-be-worth-harnessing-42b71ec5aeb0)
 

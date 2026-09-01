@@ -3,7 +3,7 @@ layout: post
 author: Diyaz Yakubov
 title: Understanding Memory Management - The Key to Efficient Programming in Any Language
 date: 2023-04-01 18:34:05 UTC
-background: https://cdn-images-1.medium.com/max/1024/1*XKWruMmafS0Zah-f-TiS_w.png
+background: /assets/images/posts/2023-04-01-Understanding-Memory-Management-The-Key-to-Efficient-Programming-in-Any-Language/img-01.png
 excerpt_separator: <!--more-->
 tags: [chatgpt, memory-improvement, programming, garbage-collection, memory-management]
 original_link: https://medium.com/@diyaz.yakubov/understanding-memory-management-the-key-to-efficient-programming-in-any-language-2f21ee1d7569?source=rss-ce9f85b2b690------2
@@ -17,11 +17,11 @@ Memory management is a critical aspect of programming languages that involves al
 4. Pointers: In low-level programming languages such as C and C++, memory is managed using pointers. These are variables that store memory addresses, allowing the program to manipulate memory directly. However, incorrect use of pointers can lead to memory leaks and other&nbsp;errors.
 5. Memory safety: Memory safety refers to the prevention of memory-related errors such as buffer overflows, null pointer dereferences, and use-after-free errors. Programming languages that prioritize memory safety, such as Rust and Swift, use techniques such as ownership and borrow checking to ensure that memory is used correctly.
 
-![hero image](https://cdn-images-1.medium.com/max/1024/1*XKWruMmafS0Zah-f-TiS_w.png)
+![hero image](/assets/images/posts/2023-04-01-Understanding-Memory-Management-The-Key-to-Efficient-Programming-in-Any-Language/img-01.png)
 
 **What is the main idea behind garbage collection? How does it&nbsp;work?**
 
-![](https://cdn-images-1.medium.com/max/1024/1*fjv9Xh0ikztA2JsRivRL_Q.png)
+![Illustration of a robot sweeping with a push broom, like a garbage collector tidying memory](/assets/images/posts/2023-04-01-Understanding-Memory-Management-The-Key-to-Efficient-Programming-in-Any-Language/img-02.png)
 
 The main idea behind garbage collection is to automate the process of memory management in programming languages by automatically detecting and freeing memory that is no longer in use. This eliminates the need for programmers to manually allocate and deallocate memory, which can be error-prone and time-consuming.
 
@@ -33,7 +33,7 @@ There are various algorithms that can be used for garbage collection, such as ma
 
 **What is the main idea behind pointers? How does it&nbsp;work?**
 
-![](https://cdn-images-1.medium.com/max/512/1*V4WUmwXnkabJ20_lvGSD5A.jpeg)
+![Do you know what to do with pointers? 😉](/assets/images/posts/2023-04-01-Understanding-Memory-Management-The-Key-to-Efficient-Programming-in-Any-Language/img-03.jpeg)
 _Do you know what to do with pointers? 😉_
 
 The main idea behind pointers in programming is to allow direct manipulation and referencing of memory locations in a program. A pointer is a variable that stores the memory address of another variable, allowing the programmer to access and modify the contents of that memory location.
@@ -55,7 +55,7 @@ Pointers are particularly useful in low-level programming languages such as C an
 
 **What is the main idea behind memory safety? How does it&nbsp;work?**
 
-![](https://cdn-images-1.medium.com/max/512/1*tZm0OpSlhwynl2k_-E6rsA.jpeg)
+![Abstract illustration of a long pink textured wall stretching into the distance](/assets/images/posts/2023-04-01-Understanding-Memory-Management-The-Key-to-Efficient-Programming-in-Any-Language/img-04.jpeg)
 
 The main idea behind memory safety in programming is to prevent errors related to memory management, such as buffer overflows, null pointer dereferences, use-after-free errors, and other security vulnerabilities. Memory safety ensures that programs do not access memory in a way that is unintended or unsafe, which can cause crashes or allow attackers to exploit vulnerabilities.
 
@@ -83,7 +83,7 @@ These are just a few examples of programming languages that use generational gar
 
 **Is the garbage collection process blocking operation?**
 
-![](https://cdn-images-1.medium.com/max/512/1*AmdkgiOzXRhCciAQ4Tk2JA.jpeg)
+![Dark cartoon of a suited figure hauling a stack of crates through a gloomy city street](/assets/images/posts/2023-04-01-Understanding-Memory-Management-The-Key-to-Efficient-Programming-in-Any-Language/img-05.jpeg)
 
 Whether or not the garbage collection process is a blocking operation depends on the implementation of the garbage collector and the programming language or runtime environment in&nbsp;use.
 
@@ -97,7 +97,7 @@ In summary, whether or not garbage collection is a blocking operation depends on
 
 **What is an incremental garbage collector?**
 
-![](https://cdn-images-1.medium.com/max/512/1*84AfNf74ppvcz2FAEtvUjQ.jpeg)
+![Cartoon of a worker clambering over stacks of oversized containers](/assets/images/posts/2023-04-01-Understanding-Memory-Management-The-Key-to-Efficient-Programming-in-Any-Language/img-06.jpeg)
 
 An incremental garbage collector is a type of garbage collector that allows a program to continue executing while garbage collection is performed in the background. This is in contrast to “stop-the-world” garbage collectors, which pause the program during garbage collection.
 
@@ -111,7 +111,7 @@ Many programming languages and runtime environments support incremental garbage 
 
 **Trilemma: throughput, pauses, resources (CPU/Memory)?**
 
-![](https://cdn-images-1.medium.com/max/512/1*kGFUnq2ubbIg62hORk8xcQ.jpeg)
+![Stylized diagram of interlocking gears and pipes feeding a red machine](/assets/images/posts/2023-04-01-Understanding-Memory-Management-The-Key-to-Efficient-Programming-in-Any-Language/img-07.jpeg)
 
 The garbage collection trilemma refers to the challenge of balancing three competing goals in garbage collection: throughput, pauses, and resource utilization (CPU and memory&nbsp;usage).
 
@@ -131,7 +131,7 @@ Overall, tuning garbage collection requires a careful balance of throughput, pau
 
 **What can an application achieve by tuning the garbage collector?**
 
-![](https://cdn-images-1.medium.com/max/512/1*gZGWCk2NeG3TjZNkmfuA3Q.jpeg)
+![Illustration of a man tidying items on crowded warehouse shelves](/assets/images/posts/2023-04-01-Understanding-Memory-Management-The-Key-to-Efficient-Programming-in-Any-Language/img-08.jpeg)
 
 Tuning the garbage collector can help applications achieve several benefits, such&nbsp;as:
 
@@ -155,4 +155,3 @@ Moreover, understanding memory management is particularly important in the conte
 
 Overall, having memory awareness and an understanding of how data structures work and how memory is managed in a particular language is critical for building efficient, scalable, and robust applications. It can help developers avoid memory-related issues, optimize performance, and improve user experience in a variety of computing environments.
 
- ![](https://medium.com/_/stat?event=post.clientViewed&referrerSource=full_rss&postId=2f21ee1d7569)

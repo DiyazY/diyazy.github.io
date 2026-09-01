@@ -3,7 +3,7 @@ layout: post
 author: Diyaz Yakubov
 title: My conclusions after using Blazor on a real project.
 date: 2020-04-19 18:46:33 UTC
-background: https://cdn-images-1.medium.com/max/1024/1*Klw3oYkkhK5eGzoLEAWTqQ.png
+background: /assets/images/posts/2020-04-19-My-conclusions-after-using-Blazor-on-a-real-project/img-01.png
 excerpt_separator: <!--more-->
 tags: [net-core, blazor, single-page-applications, csharp, javascript]
 original_link: https://medium.com/@diyaz.yakubov/my-conclusions-after-using-blazor-on-a-real-project-993234bdc7b0?source=rss-ce9f85b2b690------2
@@ -13,7 +13,7 @@ C# and&nbsp;.Net Core have significantly improved in everything (architecture, p
 
 The Blazor framework has cons and pros as any other framework, but I want to share drawbacks that I noticed during my&nbsp;project.
 
-![hero image](https://cdn-images-1.medium.com/max/1024/1*Klw3oYkkhK5eGzoLEAWTqQ.png)
+![hero image](/assets/images/posts/2020-04-19-My-conclusions-after-using-Blazor-on-a-real-project/img-01.png)
 
 > Nov 2022&nbsp;Updates:
 
@@ -33,4 +33,3 @@ In conclusion, the Blazor team has been doing a great job, they made **another f
 
 > Note: I used the Blazor SSR template. The client-side version is not released yet. Furthermore, the framework extends to mobile development and desktop part. It’s interesting, right? I still keep looking at&nbsp;it.
 
- ![](https://medium.com/_/stat?event=post.clientViewed&referrerSource=full_rss&postId=993234bdc7b0)

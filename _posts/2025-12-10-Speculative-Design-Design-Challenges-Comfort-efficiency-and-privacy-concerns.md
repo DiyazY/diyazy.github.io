@@ -3,7 +3,7 @@ layout: post
 author: Diyaz Yakubov
 title: "Speculative Design | Design Challenges: Comfort, efficiency, and privacy concerns"
 date: 2025-12-10 19:58:10 UTC
-background: https://cdn-images-1.medium.com/max/1024/1*qzSsBjTRbVTx5ZVqVbnJxg.png
+background: /assets/images/posts/2025-12-10-Speculative-Design-Design-Challenges-Comfort-efficiency-and-privacy-concerns/img-01.png
 excerpt_separator: <!--more-->
 tags: [future, speculative-design, technology, biogas, fun]
 original_link: https://medium.com/@diyaz.yakubov/speculative-design-design-challenges-comfort-efficiency-and-privacy-concerns-47f6de83befd?source=rss-ce9f85b2b690------2
@@ -42,7 +42,7 @@ To address this, experts urge strict safeguards. Workers should be allowed to op
 
 Harnessing human power is a poetic idea: every step, every heartbeat, every breath could keep our devices alive. But until designers solve the “big three” — comfort, efficiency, and privacy — these gadgets risk being novelties rather than necessities. The future will likely come not from squeezing out one more microwatt, but from _rethinking the contract between humans and machines_: how much energy we can give, how much data we should share, and how much discomfort we’re willing to endure. Speculative design reminds us that technology is never just technical — it’s also ethical, social, and deeply&nbsp;human.
 
-![](https://cdn-images-1.medium.com/max/1024/1*qzSsBjTRbVTx5ZVqVbnJxg.png)
+![Speculative Design | Design Challenges: Comfort, efficiency, and privacy concerns](/assets/images/posts/2025-12-10-Speculative-Design-Design-Challenges-Comfort-efficiency-and-privacy-concerns/img-01.png)
 _Speculative Design | Design Challenges: Comfort, efficiency, and privacy concerns_
 
 ### References
@@ -59,4 +59,3 @@ _Speculative Design | Design Challenges: Comfort, efficiency, and privacy conce
 
 [6] [Sensors can read your sweat and predict overheating. Here’s why privacy advocates care](https://apnews.com/article/wearable-tech-extreme-heat-worker-safety-9948cbdb608e1716f554d8263c81b2c)
 
- ![](https://medium.com/_/stat?event=post.clientViewed&referrerSource=full_rss&postId=47f6de83befd)

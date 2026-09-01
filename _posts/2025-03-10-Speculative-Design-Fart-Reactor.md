@@ -3,7 +3,7 @@ layout: post
 author: Diyaz Yakubov
 title: "Speculative Design | Fart Reactor"
 date: 2025-03-10 16:07:14 UTC
-background: https://cdn-images-1.medium.com/max/1024/1*E_nkzkmAJ9f362qPpsYxUg.png
+background: /assets/images/posts/2025-03-10-Speculative-Design-Fart-Reactor/img-01.png
 excerpt_separator: <!--more-->
 tags: [speculative-design, technology, fun, biogas, future]
 original_link: https://medium.com/@diyaz.yakubov/speculative-design-fart-reactor-35c1d7b6ef5b?source=rss-ce9f85b2b690------2
@@ -22,7 +22,7 @@ Patrons come and go, plugging in their phones and sipping lattes as data streams
 
 ### **Welcome to Our Speculative Design Series on the “Fart Reactor”!**
 
-![](https://cdn-images-1.medium.com/max/1024/1*K2eXp7JBsxQPHWCtaePXug.png)
+![Concept of a Fart Reactor wearable device](/assets/images/posts/2025-03-10-Speculative-Design-Fart-Reactor/img-02.png)
 _Concept of a Fart Reactor wearable device_
 
 This seven-part exploration turns a playful idea — capturing flatulence for clean energy — into a springboard for rethinking how we harness human biowaste. Using **speculative design** , we challenge taboos and pose fresh questions about technology, culture, and sustainability.
@@ -39,4 +39,3 @@ This seven-part exploration turns a playful idea — capturing flatulence fo
 
 Seem far-fetched? Join us as we dive deeper into how this oddball concept of a “fart reactor” could transform not only our perceptions of human waste, but also our approach to sustainable design and the future of everyday&nbsp;living.
 
- ![](https://medium.com/_/stat?event=post.clientViewed&referrerSource=full_rss&postId=35c1d7b6ef5b)

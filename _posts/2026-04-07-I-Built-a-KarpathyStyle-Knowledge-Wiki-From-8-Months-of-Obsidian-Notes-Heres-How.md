@@ -3,7 +3,7 @@ layout: post
 author: Diyaz Yakubov
 title: "I Built a Karpathy-Style Knowledge Wiki From 8 Months of Obsidian Notes — Here’s How"
 date: 2026-04-07 19:24:32 UTC
-background: https://cdn-images-1.medium.com/max/818/1*eAGRyk4DuhhPUURapDFGsw.png
+background: /assets/images/posts/2026-04-07-I-Built-a-KarpathyStyle-Knowledge-Wiki-From-8-Months-of-Obsidian-Notes-Heres-How/img-01.png
 excerpt_separator: <!--more-->
 tags: [ai, knowledge, claude, obsidian, wiki]
 original_link: https://medium.com/@diyaz.yakubov/i-built-a-karpathy-style-knowledge-wiki-from-8-months-of-obsidian-notes-heres-how-af532d23f05f?source=rss-ce9f85b2b690------2
@@ -86,7 +86,7 @@ The immediate difference: I can now ask Claude “what’s the relationship betw
 
 But the deeper change is philosophical. My notes used to be write-only — useful the day I wrote them, then slowly decaying into noise. Now every note, every conversation, every web clip feeds into a living knowledge base that gets richer over time. Karpathy’s phrase captures it perfectly: explorations and queries always “add&nbsp;up.”
 
-![](https://cdn-images-1.medium.com/max/818/1*eAGRyk4DuhhPUURapDFGsw.png)
+![wiki graph](/assets/images/posts/2026-04-07-I-Built-a-KarpathyStyle-Knowledge-Wiki-From-8-Months-of-Obsidian-Notes-Heres-How/img-01.png)
 _wiki graph_
 
 ### How You Can Do&nbsp;This
@@ -107,4 +107,3 @@ _I built this using Claude in Cowork mode with an Obsidian vault mounted as a wo
 
 In fact, I had been thinking about this for a long time, but like any engineer, I didn’t have the time. [https://www.linkedin.com/posts/activity-7400255931525271552-eknz](https://www.linkedin.com/posts/activity-7400255931525271552-eknz)
 
- ![](https://medium.com/_/stat?event=post.clientViewed&referrerSource=full_rss&postId=af532d23f05f)

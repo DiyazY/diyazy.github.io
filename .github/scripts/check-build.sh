@@ -65,6 +65,17 @@ else
   fail "no post exposes its cover image as og:image"
 fi
 
+# --- no third-party Medium assets in the build ----------------------------
+# Post images are self-hosted under assets/images/posts/; a Medium CDN URL
+# or an RSS stat-tracking pixel in the output means the sync pipeline (or a
+# hand edit) reintroduced the dependency.
+if grep -rlE 'cdn-images-1\.medium\.com|medium\.com/_/stat' "$SITE" --include='*.html' --include='*.xml' >"$tmp"; then
+  fail "built file(s) reference Medium CDN images or tracking pixels:"
+  sed 's/^/          /' "$tmp"
+else
+  pass "no Medium CDN images or tracking pixels in the build"
+fi
+
 # --- custom domain wiring -------------------------------------------------
 # The site lives at diyaz.dev; GitHub 301s the old *.github.io URLs to it.
 # CNAME must ship in the artifact, and no generated URL may still point at

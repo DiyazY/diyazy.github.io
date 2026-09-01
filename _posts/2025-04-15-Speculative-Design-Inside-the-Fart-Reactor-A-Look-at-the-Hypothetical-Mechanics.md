@@ -3,7 +3,7 @@ layout: post
 author: Diyaz Yakubov
 title: "Speculative Design | Inside the Fart Reactor: A Look at the Hypothetical Mechanics"
 date: 2025-04-15 15:01:40 UTC
-background: https://cdn-images-1.medium.com/max/1024/1*K2eXp7JBsxQPHWCtaePXug.png
+background: /assets/images/posts/2025-04-15-Speculative-Design-Inside-the-Fart-Reactor-A-Look-at-the-Hypothetical-Mechanics/img-01.png
 excerpt_separator: <!--more-->
 tags: [future, biogas, speculative-design, fun, technology]
 original_link: https://medium.com/@diyaz.yakubov/speculative-design-inside-the-fart-reactor-a-look-at-the-hypothetical-mechanics-e30a887da940?source=rss-ce9f85b2b690------2
@@ -36,7 +36,7 @@ Welcome to the second article in our series on speculative bioenergy design. In 
 **Why This Matters**  
  Human flatulence isn’t high in volume or pressure, so capturing every small emission is crucial. A tight seal and efficient odor control ensure minimal leakage while keeping the device discreet.
 
-![](https://cdn-images-1.medium.com/max/1024/1*K2eXp7JBsxQPHWCtaePXug.png)
+![Concept of a Fart Reactor wearable device](/assets/images/posts/2025-04-15-Speculative-Design-Inside-the-Fart-Reactor-A-Look-at-the-Hypothetical-Mechanics/img-01.png)
 _Concept of a Fart Reactor wearable device_
 
 ### Converting Gas to Electricity
@@ -60,7 +60,7 @@ Since the pressure and volume of human flatulence are quite low, **traditional m
 - **Environmental Control** : Bacteria require optimal temperature, pH, and nutrients to&nbsp;thrive.
 - **Varying Gas Composition** : Individual diets can alter the amount and type of gas produced, affecting MFC efficiency.
 
-![](https://cdn-images-1.medium.com/max/1024/1*2dPi6L-HDqNjGUXLxoAeOw.png)
+![Concept render of a sealed microbial fuel cell capturing flatulence gas, with labeled methane inlets](/assets/images/posts/2025-04-15-Speculative-Design-Inside-the-Fart-Reactor-A-Look-at-the-Hypothetical-Mechanics/img-02.png)
 
 ### B. Chemical or Catalytic Conversion
 
@@ -79,7 +79,7 @@ Since the pressure and volume of human flatulence are quite low, **traditional m
 - **Engineering Complexity** : Reducing large-scale chemical reactors to a wearable format is a major technical hurdle.
 - **Catalyst Sensitivity** : Impurities (such as sulfur compounds in farts) can degrade some catalysts quickly.
 
-![](https://cdn-images-1.medium.com/max/1024/1*PP_f1N1D0REGI9dZflyq1g.png)
+![Concept render of a methane-to-hydrogen conversion cell with a bioreactor feeding a fuel cell stack](/assets/images/posts/2025-04-15-Speculative-Design-Inside-the-Fart-Reactor-A-Look-at-the-Hypothetical-Mechanics/img-03.png)
 
 ### Storing and Utilizing the Captured&nbsp;Energy
 
@@ -103,4 +103,3 @@ Even the most efficient conversion will generate **small amounts** of electricit
 
 Nonetheless, exploring these pathways — microbial and chemical conversion — sparks broader questions about how humans might harness any and all forms of waste in a resource-scarce future. Even if a personal fart reactor remains niche or purely conceptual, the **underlying technologies** have real implications for biogas utilization[[2](https://www.proquest.com/docview/1762303468?accountid=14242&parentSessionId=b%2BZRagPc%2FoATsKxNS7YMKdfOYq2UJoKU%2BIpsg%2FScuD8%3D&pq-origsite=primo&sourcetype=Trade%20Journals)], micro-scale fuel cells, and body-powered innovations.
 
- ![](https://medium.com/_/stat?event=post.clientViewed&referrerSource=full_rss&postId=e30a887da940)

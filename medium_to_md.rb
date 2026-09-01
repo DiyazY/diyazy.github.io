@@ -32,11 +32,6 @@ feed.entries.each do |e|
 	
 	content = e.content || e.summary # if article is behind paywall, content will be nil
 	parseHTML = Nokogiri::HTML(content)
-	# The cover is optional: with no `background` in the front matter the
-	# layouts fall back to the default OG image. `sub`, not `sub!` — sub!
-	# returns nil when the src is already protocol-relative.
-	img = parseHTML.at_xpath("//img[@src]")
-	cover_line = img ? "background: https:#{img['src'].sub(/\Ahttp(s)?:/, '')}\n" : ''
 
 	# Medium's RSS repeats the post title as the first heading; the post layout
 	# already renders the title as the page h1, so drop the duplicate.
@@ -61,6 +56,47 @@ feed.entries.each do |e|
 		caption = fig.at_css('figcaption')
 		next unless fig_img && caption
 		fig_img['alt'] = caption.text.strip if fig_img['alt'].to_s.strip.empty?
+	end
+
+	# Self-host images: Medium's CDN is a third-party dependency the posts
+	# outlive, so download each image next to the post and point the markdown
+	# at the local copy. A failed download keeps the remote URL rather than
+	# failing the entry. Medium's RSS also appends a stat-tracking pixel —
+	# dropped, not hosted. Paths are cwd-relative; CI runs from the repo root.
+	post_stem = File.basename(filename, '.md')
+	img_dir_rel = "assets/images/posts/#{post_stem}"
+	parseHTML.css('img[src]').each { |n| n.remove if n['src'].include?('medium.com/_/stat') }
+	parseHTML.css('img[src]').each_with_index do |node, idx|
+		src = node['src'].sub(/\A\/\//, 'https://')
+		next unless src.start_with?('http')
+		begin
+			resp = HTTParty.get(src, timeout: 30)
+			raise "HTTP #{resp.code}" unless resp.code == 200
+			ext = File.extname(URI(src).path)
+			if ext.empty? || ext.length > 5
+				ext = { 'image/png' => '.png', 'image/jpeg' => '.jpg', 'image/gif' => '.gif',
+					'image/webp' => '.webp' }[resp.headers['content-type'].to_s.split(';').first] || '.png'
+			end
+			FileUtils.mkdir_p(img_dir_rel)
+			local = "/#{img_dir_rel}/img-#{format('%02d', idx + 1)}#{ext}"
+			File.binwrite(local.delete_prefix('/'), resp.body)
+			node['src'] = local
+		rescue => img_err
+			warn "  image kept remote (#{img_err.message}): #{src}"
+		end
+	end
+
+	# The cover is optional: with no `background` in the front matter the
+	# layouts fall back to the default OG image. Runs after localization so a
+	# downloaded cover is referenced by its local path.
+	img = parseHTML.at_xpath("//img[@src]")
+	cover_line = if img.nil?
+		''
+	elsif img['src'].start_with?('/')
+		"background: #{img['src']}\n"
+	else
+		# `sub`, not `sub!` — sub! returns nil when the src is already protocol-relative.
+		"background: https:#{img['src'].sub(/\Ahttp(s)?:/, '')}\n"
 	end
 
 	# Strip combining marks (Medium once tagged a post "ti̇ktok", dotted i and

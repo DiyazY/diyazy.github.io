@@ -3,12 +3,12 @@ layout: post
 author: Diyaz Yakubov
 title: "Version 1.0 is Never Perfect"
 date: 2025-03-12 16:22:30 UTC
-background: https://cdn-images-1.medium.com/max/1024/1*qaI8k0MhJ7z2FwfrlmwMEQ@2x.jpeg
+background: /assets/images/posts/2025-03-12-Version-10-is-Never-Perfect/img-01.jpeg
 excerpt_separator: <!--more-->
 tags: [inspirational, learning, business, failure-to-success, art]
 original_link: https://medium.com/@diyaz.yakubov/version-1-0-is-never-perfect-fa583eaaa775?source=rss-ce9f85b2b690------2
 ---
-![](https://cdn-images-1.medium.com/max/1024/1*qaI8k0MhJ7z2FwfrlmwMEQ@2x.jpeg)
+![Some of my drawings](/assets/images/posts/2025-03-12-Version-10-is-Never-Perfect/img-01.jpeg)
 _Some of my drawings_
 
 In December, I decided to take up drawing as a hobby. I enrolled in a few basic online courses and started sketching. One evening, my daughter saw me drawing and said, ‘I want to try that too!’ And that’s how we started having 30–40 minute evening drawing sessions.
@@ -21,7 +21,7 @@ I showed her how to approach drawing: First, you draw a light outline, without p
 
 I am very proud of her. She started playing with shades, and her drawings are becoming more and more interesting. Indeed, **children are more artistic than&nbsp;adults**.
 
-![](https://cdn-images-1.medium.com/max/1024/1*ch_gwErm5qpPMiG4ep0CIQ@2x.jpeg)
+![One of my daughter drawings](/assets/images/posts/2025-03-12-Version-10-is-Never-Perfect/img-02.jpeg)
 _One of my daughter drawings_
 
 **This process mirrors so much of what we do in life and work**. We want to start perfect. We get frustrated when things don’t go the way we expect. But the truth is — whether it’s drawing, starting a business, or learning a new skill —  **Version 1.0 is never&nbsp;perfect**.
@@ -36,6 +36,5 @@ Looking back, the biggest lesson I learned was: **fail early, adapt quickly**. P
 
 So, just like with drawing, the most important step is not to get it perfect but to keep going, keep learning, and keep iterating. **Version 1.0 is never perfect… but it’s the only way to get to Version&nbsp;2.0**.
 
-![](https://cdn-images-1.medium.com/max/1024/1*k8S3ih9UJT-zBPh_MfVpJA@2x.jpeg)
+![I miserably failed drawing a human body…The proportions are wrong. But this is Version 1.0](/assets/images/posts/2025-03-12-Version-10-is-Never-Perfect/img-03.jpeg)
 _I miserably failed drawing a human body…The proportions are wrong. But this is Version 1.0_
- ![](https://medium.com/_/stat?event=post.clientViewed&referrerSource=full_rss&postId=fa583eaaa775)

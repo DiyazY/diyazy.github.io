@@ -3,7 +3,7 @@ layout: post
 author: Diyaz Yakubov
 title: How to run C# code in a browser.
 date: 2019-12-11 20:03:01 UTC
-background: https://cdn-images-1.medium.com/max/1024/1*7ShYHmJbf7W3HZ7Q09KV8Q.png
+background: /assets/images/posts/2019-12-11-How-to-run-C-code-in-a-browser/img-01.png
 excerpt_separator: <!--more-->
 tags: [webassembly, wasm, csharp, javascript, dotnet]
 original_link: https://medium.com/@diyaz.yakubov/how-to-run-c-code-in-a-browser-15d2c0c8bed3?source=rss-ce9f85b2b690------2
@@ -11,7 +11,7 @@ original_link: https://medium.com/@diyaz.yakubov/how-to-run-c-code-in-a-browser-
 
 Nowadays, there are a lot of talks about WebAssembly and how it would penetrate the front-end world. In fact, it has not yet. There are tons of articles about web assembly and how it works. I want to show you a use-case of running C# code in<!--more--> a&nbsp;browser.
 
-![hero image](https://cdn-images-1.medium.com/max/1024/1*7ShYHmJbf7W3HZ7Q09KV8Q.png)
+![hero image](/assets/images/posts/2019-12-11-How-to-run-C-code-in-a-browser/img-01.png)
 
 > Nov 2022&nbsp;Updates:
 
@@ -29,7 +29,7 @@ Another question is: “Do we really need it?”. The 3rd scenario might be usef
 
 Here is an example of how to use this approach. There is a react-based front-end application, which is hosted by NodeJs (of course, there are no talks about Blazor). Users can load any&nbsp;.Net standard modules(library assemblies) and retrieve metadata from them or even call some methods and use results for configuring higher modules. Assemblies represent small modules with some logic and certain responsibility (Ex.: calculation of material strength). There are some dynamic behaviours and reflections that’s why developers can’t use AOT compilation for it. Passing and retrieving assemblies, and relative data through HTTP is a heavy payload. Assemblies shouldn’t be saved somewhere, they should be extracted and executed, and that’s&nbsp;it.
 
-![](https://cdn-images-1.medium.com/max/1024/1*BR9WEOncgbtyIV2nbH4vFw.png)
+![Cartoon: a purple WebAssembly block does push-ups while JavaScript characters with sword and shield decide to make him a guard](/assets/images/posts/2019-12-11-How-to-run-C-code-in-a-browser/img-02.png)
 
 Before going forward I want to define a task: Recreate the example case mentioned above.
 
@@ -39,7 +39,7 @@ Let’s create a web application:
 
 Next, create the “wwwroot” folder within index.html file, and modify the Startup.cs file as shown&nbsp;below.
 
-![](https://cdn-images-1.medium.com/max/749/1*lhtWuu5rppi4mrxjkmXzJQ.png)
+![Startup.cs](/assets/images/posts/2019-12-11-How-to-run-C-code-in-a-browser/img-03.png)
 _Startup.cs_
 
 Furthermore, We need to add precompiled WASM&nbsp;.Net runtime (mono-wasm) and the mono script (mono.js) to run it. You can get them from the [mono-wasm GitHub](https://github.com/migueldeicaza/mono-wasm) page. There is also a link to [Binary releases](https://github.com/migueldeicaza/mono-wasm/releases). Get a [packager](https://github.com/mono/mono/blob/master/sdks/wasm/docs/packager.md) and use it to generate the whole bunch of libraries for running the&nbsp;.NET module. I have done all of these, but here is my suggestion: if you want to play around and not kill yourself, you can easily clone this [demo project&nbsp;repo](https://github.com/DiyazY/CSharpToWasm).
@@ -48,12 +48,12 @@ Furthermore, We need to add precompiled WASM&nbsp;.Net runtime (mono-wasm) and t
 
 After that, let’s create a “managed” folder which will contain all&nbsp;.Net assemblies. Put there the first and the most important assembly — “mscorlib.dll”. We need it to run assemblies because it is a Multilanguage Standard Common Object Runtime Library. Go forward and add an index.html file to the “wwwroot” folder and modify it as it is shown&nbsp;below.
 
-![](https://cdn-images-1.medium.com/max/695/1*1mjK8dREEvftdGn98btzoQ.png)
+![index.html](/assets/images/posts/2019-12-11-How-to-run-C-code-in-a-browser/img-04.png)
 _index.html_
 
 What does the code above? The first script tag creates an empty object “Module” and declares only one method where we can place calls to the MONO instance. Through the MONO instance, developers can configure and act with the&nbsp;.Net world. The second script tag loads mono.js file that contains commands which load and run mono.wasm. In addition, it triggers “onRuntimeInitialized” when everything is initialized (for ex.: MONO instance)and prepared to work. Run and see what it&nbsp;does.
 
-![](https://cdn-images-1.medium.com/max/632/1*B1OWoEfQuDSKIRQQ7JOSJA.png)
+![The first running.](/assets/images/posts/2019-12-11-How-to-run-C-code-in-a-browser/img-05.png)
 _The first running._
 
 It shows only “Hello world!”. However, if you open a dev console you’ll see some logs from the mono. It tells us that the runtime environment is ready which consequently shows that we can continue the development.
@@ -64,17 +64,17 @@ Next, we need to create our first, but not last,&nbsp;.Net standard module and r
 
 There will be only one class with the code&nbsp;below:
 
-![](https://cdn-images-1.medium.com/max/583/1*7CcvCVxIWM15gljcnWg5ow.png)
+![TestComputing.cs](/assets/images/posts/2019-12-11-How-to-run-C-code-in-a-browser/img-06.png)
 _TestComputing.cs_
 
 Index.html should be modified. Now it needs some extra libraries to be able to point what to call, and of course our “SomeComputing” library. Check out the&nbsp;changes:
 
-![](https://cdn-images-1.medium.com/max/1024/1*f37mCQ4qvEmEiHD4zzmCfg.png)
+![Part of index.html](/assets/images/posts/2019-12-11-How-to-run-C-code-in-a-browser/img-07.png)
 _Part of index.html_
 
 The function above initializes&nbsp;.Net WebAssembly bindings and points to a method which should be called. If it runs, the dev console will show you the result of the method execution.
 
-![](https://cdn-images-1.medium.com/max/628/1*iUcwN3ujbe9cyP2FLlkECw.png)
+![The result of calling the Execute method from C# TestCompution class.](/assets/images/posts/2019-12-11-How-to-run-C-code-in-a-browser/img-08.png)
 _The result of calling the Execute method from C# TestCompution class._
 
 A common way of calling some&nbsp;.Net functionality was implemented above. It could be done by mono-wasm AoT compilation and got only one WASM file, without any&nbsp;.Net assembly dependencies. For continuing the development, the front-end needs some extra libraries. Create several new netstandard projects:
@@ -85,35 +85,34 @@ A common way of calling some&nbsp;.Net functionality was implemented above. It c
 
 A “CommonLibrary” project has only one&nbsp;.cs file with an interface.
 
-![](https://cdn-images-1.medium.com/max/454/1*Bwm8zPbR5bvF0XfJHUH4ZQ.png)
+![IExecutable interface.](/assets/images/posts/2019-12-11-How-to-run-C-code-in-a-browser/img-09.png)
 _IExecutable interface._
 
 The “IExecutable” interface is an assembly’s entry point. The “Execute” method is a common declaration of methods that will be executed on a front-end side. “ComputeFibonacci” and “ComputeDateTimes” projects will depend on the “CommonLibrary” project. Next, add a new class to SomeComputing project that will load assemblies and run&nbsp;them.
 
-![](https://cdn-images-1.medium.com/max/835/1*FEZWtY7mfr4b64Cb2zI1Dw.png)
+![Computing.cs](/assets/images/posts/2019-12-11-How-to-run-C-code-in-a-browser/img-10.png)
 _Computing.cs_
 
 WebAssembly can’t pass any complex data structures. In addition, we can not pass assemblies or bytes. Javascript itself writes bytes in an allocated buffer and sends a pointer to the&nbsp;.NET module.&nbsp;.Net module, in its turn, will take care of reading this buffer, converting bytes to some structure (in our case it’s an assembly) and processing a certain&nbsp;job.
 
-![](https://cdn-images-1.medium.com/max/1024/1*I3Xpv4XVRl_8Xrvw4daAgg.png)
+![Part of index.html](/assets/images/posts/2019-12-11-How-to-run-C-code-in-a-browser/img-11.png)
 _Part of index.html_
 
 > A response can be written in some buffer and retrieved as a pointer. After that, this buffer can be read in JavaScript directly. Nevertheless, I’m a lazy person and I think you got the main idea of passing and retrieving. That’s why the “executeMethod” returns a string value. Simple and crutch&nbsp;;).
 
 ComputeFibonacci and ComputeDateTimes contain only one class that implements the“IExecutable” interface.
 
-![](https://cdn-images-1.medium.com/max/1024/1*teKwXjQ9k7VWRVfmKHuM8w.png)
+![DateTimeComputing.cs (left side) and FibonacciComputing.cs (right side).](/assets/images/posts/2019-12-11-How-to-run-C-code-in-a-browser/img-12.png)
 _DateTimeComputing.cs (left side) and FibonacciComputing.cs (right side)._
 
 These two projects should be built and their assemblies should be taken for loading and execution. Ohh right, I think it’s time for a&nbsp;demo.
 
-![](https://cdn-images-1.medium.com/max/951/1*bR9dR-quNwGcpEiCXxCVFQ.gif)
+![Demo!](/assets/images/posts/2019-12-11-How-to-run-C-code-in-a-browser/img-13.gif)
 _Demo!_
 
-![](https://cdn-images-1.medium.com/max/1024/1*UJIK_l2lXdLLs7gW-AbzPQ.png)
+![Cartoon: the WebAssembly mascot powers up, sprouting Rust, C, C++, and C# limbs](/assets/images/posts/2019-12-11-How-to-run-C-code-in-a-browser/img-14.png)
 
 This technology is pretty young. It has many issues but it also shows potential. It is a fast, safe, light, portable and open standard. In this article, I wanted to show one of the “use cases” of this technology. This article is more about encouraging. In my opinion, we will see some new libraries or even frameworks which will be based on WASM. There is also good news about the fourth language for the Web. So, don’t waste time, jump on a train&nbsp;:).
 
 > Thanks [Niki](https://medium.com/@nikitagavrilenko) for awesome illustration.
 
- ![](https://medium.com/_/stat?event=post.clientViewed&referrerSource=full_rss&postId=15d2c0c8bed3)

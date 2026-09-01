@@ -3,7 +3,7 @@ layout: post
 author: Diyaz Yakubov
 title: "The Quiet Outage"
 date: 2026-05-04 18:34:41 UTC
-background: https://cdn-images-1.medium.com/max/1024/1*hW8EPRd1a54OArFdPGE0-w.png
+background: /assets/images/posts/2026-05-04-The-Quiet-Outage/img-01.png
 excerpt_separator: <!--more-->
 tags: [monitoring, short-story, maintenance, distributed-systems, bugs]
 original_link: https://medium.com/@diyaz.yakubov/the-quiet-outage-0d7c031c2174?source=rss-ce9f85b2b690------2
@@ -62,7 +62,7 @@ The lesson is one I’ve now relearned three or four times in my career, and it 
 
 After the incident, the first thing I did was promote that counter to the dashboard. The second thing I did was add four others I’d noticed during the diagnosis but had similarly never bothered to chart. The third thing I did was accept that I will probably do this again next quarter, because incidents teach you about the metrics you should have had, and there is no shortcut to knowing which ones those&nbsp;are.
 
-![](https://cdn-images-1.medium.com/max/1024/1*hW8EPRd1a54OArFdPGE0-w.png)
+![metrics from busypipe.com](/assets/images/posts/2026-05-04-The-Quiet-Outage/img-01.png)
 _metrics from busypipe.com_
 
 ### The temptation to&nbsp;rewrite
@@ -127,4 +127,3 @@ The system has recovered. The numbers are bumped. The tests are pinned. The runb
 
 Next time it goes quiet, I’ll know how to&nbsp;listen.
 
- ![](https://medium.com/_/stat?event=post.clientViewed&referrerSource=full_rss&postId=0d7c031c2174)

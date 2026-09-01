@@ -3,7 +3,7 @@ layout: post
 author: Diyaz Yakubov
 title: "I Built a Tool to Outsmart the Lottery (Spoiler: The Lottery Still Wins)"
 date: 2026-03-02 12:18:59 UTC
-background: https://cdn-images-1.medium.com/max/1024/1*IsGud7qrukygv_DyuoZoHw.png
+background: /assets/images/posts/2026-03-02-I-Built-a-Tool-to-Outsmart-the-Lottery-Spoiler-The-Lottery-Still-Wins/img-01.png
 excerpt_separator: <!--more-->
 tags: [eurojackpottickets, gambling, fun, eurojackpot, statistics]
 original_link: https://medium.com/@diyaz.yakubov/i-built-a-tool-to-outsmart-the-lottery-spoiler-the-lottery-still-wins-024843dfa5ec?source=rss-ce9f85b2b690------2
@@ -24,7 +24,7 @@ I wasn’t trying to crack some code. I know the math. Every draw is independent
 
 But here’s the thing — even if you can’t predict the future, you can make more **_informed_** choices. And honestly? It’s just way more fun to play when you have data backing your picks instead of your birthday.
 
-![](https://cdn-images-1.medium.com/max/1024/1*IsGud7qrukygv_DyuoZoHw.png)
+![So far, I am negative 18e 😅](/assets/images/posts/2026-03-02-I-Built-a-Tool-to-Outsmart-the-Lottery-Spoiler-The-Lottery-Still-Wins/img-01.png)
 _So far, I am negative 18e 😅_
 
 ### **From Curiosity to a Full&nbsp;Product**
@@ -67,4 +67,3 @@ _I’m a solo builder shipping tools I actually use. If you’re into building i
 
 _Please gamble responsibly. This is a statistical analysis tool for entertainment purposes — not a guarantee of&nbsp;winning._
 
- ![](https://medium.com/_/stat?event=post.clientViewed&referrerSource=full_rss&postId=024843dfa5ec)

@@ -3,7 +3,7 @@ layout: post
 author: Diyaz Yakubov
 title: "When Your Whole Team Ships at Light Speed and You’re Still Reading the README"
 date: 2026-05-19 07:17:25 UTC
-background: https://cdn-images-1.medium.com/max/1024/1*7PL4AVq8TBYsnHYfqh-5IQ.png
+background: /assets/images/posts/2026-05-19-When-Your-Whole-Team-Ships-at-Light-Speed-and-Youre-Still-Reading-the-README/img-01.png
 excerpt_separator: <!--more-->
 tags: [programming, new-hire, productivity, generative-ai-tools, ai]
 original_link: https://medium.com/@diyaz.yakubov/when-your-whole-team-ships-at-light-speed-and-youre-still-reading-the-readme-d92a533286a1?source=rss-ce9f85b2b690------2
@@ -80,7 +80,7 @@ And the inverse is also true. Sometimes the model spots an edge case you never w
 
 **Track your own incidents — silently.** Keep a private note of every bug you ship in the first three months. What was the cause? Did you understand the code? Did the AI generate the broken part? Did you skip a test you should have written? After ten entries, your pattern is in front of you. It will tell you, more honestly than any retro, where you can safely run fast and where you need to slow&nbsp;down.
 
-![](https://cdn-images-1.medium.com/max/1024/1*7PL4AVq8TBYsnHYfqh-5IQ.png)
+![Cartoon: a developer anxiously studies a README while teammates ship code at light speed around them](/assets/images/posts/2026-05-19-When-Your-Whole-Team-Ships-at-Light-Speed-and-Youre-Still-Reading-the-README/img-01.png)
 
 ### What the discomfort actually&nbsp;means
 
@@ -92,4 +92,3 @@ It’s the engineer who knows which one they’re in at any given hour and&nbsp;
 
 _If you’ve joined an AI-native team recently, I’d love to hear how you handled the first three months. The honest version, not the LinkedIn&nbsp;version._
 
- ![](https://medium.com/_/stat?event=post.clientViewed&referrerSource=full_rss&postId=d92a533286a1)

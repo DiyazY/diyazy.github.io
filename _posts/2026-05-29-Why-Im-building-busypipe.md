@@ -3,7 +3,7 @@ layout: post
 author: Diyaz Yakubov
 title: "Why I’m building busypipe"
 date: 2026-05-29 21:29:03 UTC
-background: https://cdn-images-1.medium.com/max/1024/1*jSzGKnTD1nqEStQr5klFxQ.png
+background: /assets/images/posts/2026-05-29-Why-Im-building-busypipe/img-01.png
 excerpt_separator: <!--more-->
 tags: [social-media-marketing, saas, startup, building-in-public, tiktok]
 original_link: https://medium.com/@diyaz.yakubov/why-im-building-busypipe-e55d0562fbbb?source=rss-ce9f85b2b690------2
@@ -62,5 +62,4 @@ If you want to follow along, or kick the tyres, [busypipe.com](https://busypipe.
 
 If you’re a researcher with a use case I should know about, I’d like to hear from&nbsp;you.
 
-![](https://cdn-images-1.medium.com/max/1024/1*jSzGKnTD1nqEStQr5klFxQ.png)
- ![](https://medium.com/_/stat?event=post.clientViewed&referrerSource=full_rss&postId=e55d0562fbbb)
+![busypipe.com landing page: Know what is trending. Act before others. — with TikTok analytics dashboards](/assets/images/posts/2026-05-29-Why-Im-building-busypipe/img-01.png)

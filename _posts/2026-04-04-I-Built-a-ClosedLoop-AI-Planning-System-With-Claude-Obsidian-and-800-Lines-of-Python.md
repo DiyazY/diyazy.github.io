@@ -3,7 +3,7 @@ layout: post
 author: Diyaz Yakubov
 title: "I Built a Closed-Loop AI Planning System With Claude, Obsidian, and 800 Lines of Python"
 date: 2026-04-04 10:42:16 UTC
-background: https://cdn-images-1.medium.com/max/751/1*eNmJbkZhn6TGeI06vI8ytg.png
+background: /assets/images/posts/2026-04-04-I-Built-a-ClosedLoop-AI-Planning-System-With-Claude-Obsidian-and-800-Lines-of-Python/img-01.png
 excerpt_separator: <!--more-->
 tags: [tools, ai, planner, claude, productivity]
 original_link: https://medium.com/@diyaz.yakubov/i-built-a-closed-loop-ai-planning-system-with-claude-obsidian-and-800-lines-of-python-685264ab41d0?source=rss-ce9f85b2b690------2
@@ -85,7 +85,7 @@ DayWatch is the piece I had to build because it didn’t&nbsp;exist.
 
 It’s a system tray app (800 lines of Python) that watches my daily plan file and sends native desktop notifications when time blocks are about to start. Click the tray icon and you see your day at a&nbsp;glance:
 
-![](https://cdn-images-1.medium.com/max/751/1*eNmJbkZhn6TGeI06vI8ytg.png)
+![Example of a daily plan. (PS: My Saturdays don’t look like this 😅.)](/assets/images/posts/2026-04-04-I-Built-a-ClosedLoop-AI-Planning-System-With-Claude-Obsidian-and-800-Lines-of-Python/img-01.png)
 _Example of a daily plan. (PS: My Saturdays don’t look like this 😅.)_
 
 Five minutes before each block starts: a notification. When the block starts: another notification. If I launch the app mid-block: an immediate “you should be doing X right now” notification. If I edit the plan in Obsidian: instant reload, rescheduled notifications.
@@ -174,4 +174,3 @@ _DayWatch is open source under MIT. It works with any markdown editor, not just 
 
 [_GitHub: [github.com/DiyazY/daywatch]_](https://github.com/DiyazY/daywatch)
 
- ![](https://medium.com/_/stat?event=post.clientViewed&referrerSource=full_rss&postId=685264ab41d0)

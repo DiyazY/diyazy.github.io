@@ -3,12 +3,12 @@ layout: post
 author: Diyaz Yakubov
 title: "Most “TikTok analytics” tools were never built for TikTok"
 date: 2026-08-11 09:56:43 UTC
-background: https://cdn-images-1.medium.com/max/1024/1*1CQ0p_UsJJarl4gNVc18sQ.png
+background: /assets/images/posts/2026-08-11-Most-TikTok-analytics-tools-were-never-built-for-TikTok/img-01.png
 excerpt_separator: <!--more-->
 tags: [saas, tiktok, creator-economy, analytics, marketing]
 original_link: https://medium.com/@diyaz.yakubov/most-tiktok-analytics-tools-were-never-built-for-tiktok-67abcd710e70?source=rss-ce9f85b2b690------2
 ---
-![](https://cdn-images-1.medium.com/max/1024/1*1CQ0p_UsJJarl4gNVc18sQ.png)
+![busypipe.com](/assets/images/posts/2026-08-11-Most-TikTok-analytics-tools-were-never-built-for-TikTok/img-01.png)
 _busypipe.com_
 
 ### Most “TikTok analytics” tools were never built for&nbsp;TikTok
@@ -55,4 +55,3 @@ The uncomfortable truth about the TikTok analytics market is that a lot of it is
 
 Want to see what’s gaining momentum in your niche instead of guessing at a snapshot? [Start for free](https://app.busypipe.com/sign-up) with busypipe.
 
- ![](https://medium.com/_/stat?event=post.clientViewed&referrerSource=full_rss&postId=67abcd710e70)

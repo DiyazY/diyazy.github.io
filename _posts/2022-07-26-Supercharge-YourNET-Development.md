@@ -3,7 +3,7 @@ layout: post
 author: Diyaz Yakubov
 title: Supercharge Your .NET Development
 date: 2022-07-26 07:03:05 UTC
-background: https://cdn-images-1.medium.com/max/1024/1*ybjCt0sZ0tyKg0UiP0AYsw.png
+background: /assets/images/posts/2022-07-26-Supercharge-YourNET-Development/img-01.png
 excerpt_separator: <!--more-->
 tags: [system-architecture, ndepend, c4-model, architecture, dotnet]
 original_link: https://medium.com/@diyaz.yakubov/the-article-about-net-tools-196fc810a55c?source=rss-ce9f85b2b690------2
@@ -11,7 +11,7 @@ original_link: https://medium.com/@diyaz.yakubov/the-article-about-net-tools-196
 
 Usually, in small companies, people wear several roles. And quite often, among technical people, there is a person or group of people who is responsible for designing and evaluating the system architecture. <!--more-->Commonly, they share architecture and development activities (to some extent), hence, they have to zoom out/in on a system again and again to design the right abstractions on the right level. Of course, it is highly possible to miss the context between switching modes, especially, betwixt switching high-level design (services, modules, contracts, etc.) and low-level design (components, interfaces, classes, etc.). However, it is possible to be efficient on both sides if you reduce the inter switchings’ “mental payloads”. Modes are different, and they need different ways of thinking, e.g. fast/slow, profound/cherry-picking, etc. In this article, I will show my battle-tested set of tools that help me to cope with the problem of designing high-level architecture and low-level engineering stuff for&nbsp;.NET projects.
 
-![hero image](https://cdn-images-1.medium.com/max/1024/1*ybjCt0sZ0tyKg0UiP0AYsw.png)
+![hero image](/assets/images/posts/2022-07-26-Supercharge-YourNET-Development/img-01.png)
 
 Particularly, I want to cover the following questions:
 
@@ -29,14 +29,14 @@ Practically, the majority of developers are familiar with a dependency graph whe
 
 > I am sorry for the readability of the diagram, it was taken from an actual project, and I tried to make it ‘anonymous’. However, I wanted to show how it can cluster projects, and there are various relationship types, which are shown on the right-side panel. To get a better grasp I recommend watching [this 6 minutes&nbsp;video](https://youtu.be/23fBxM2v22k).
 
-![](https://cdn-images-1.medium.com/max/1024/1*TZr-P8QK3fleoDFY5CX3LA.png)
+![NDepend — Dependency Graph](/assets/images/posts/2022-07-26-Supercharge-YourNET-Development/img-02.png)
 _NDepend — Dependency Graph_
 
 ### How to build complex checks that may evaluate some specific&nbsp;cases?
 
 Another very powerful feature of NDepend is its query language [CQLinq](https://www.ndepend.com/docs/cqlinq-features), which allows querying the code with [C#](https://docs.microsoft.com/en-us/dotnet/csharp/) and [LINQ](https://docs.microsoft.com/en-us/dotnet/csharp/programming-guide/concepts/linq/). Basically, it doesn’t have a steep learning curve, every C#/.NET developer should easily start leveraging it. With that people are capable to build their own specific requirements for the code via creating queries, rules, and quality gates. For example, imagine that our team was practising [DDD](https://en.wikipedia.org/wiki/Domain-driven_design) concepts, and we wanted to be sure that in an application, [aggregates](https://martinfowler.com/bliki/DDD_Aggregate.html) are light, that they have a depth of fewer than 3 objects. If that rule was violated, NDepend would show a warning message to indicate the issue. Then the team would consider refactoring that aggregate to prevent it from bloating and smelling. An example below shows how to implement a simple WARN rule in CQLinq that notifies if a type name that ends with the “Agg” suffix and its [cyclomatic complexity](https://www.ndepend.com/docs/code-metrics#CC) is more than 15 (Note: we assume that a team agreed to mark all aggregates within an application with “Agg”&nbsp;suffix).
 
-![](https://cdn-images-1.medium.com/max/411/1*-lj1gt92nd48Adkzg1yEvw.png)
+![NDepend — Custom rule in CQLinq](/assets/images/posts/2022-07-26-Supercharge-YourNET-Development/img-03.png)
 _NDepend — Custom rule in CQLinq_
 
 As we can see from the code example above, the syntax is simple and doesn’t require much effort from devs. Consequently, devs have a solid tool that opens the possibility to build comprehensive checkers of any complexity.
@@ -47,12 +47,12 @@ Moreover, NDepend logic is prevalently based on [Rules](https://www.ndepend.com/
 
 Controlling the code quality is an important part of any development process, it requires a significant amount of seniority level from its participants and the most valuable thing is **time**. Nevertheless, sometimes due to constraints and time pressure we may omit this part or do it superficially. Although some basic quality checks can be verified by static code analyzing tools and even be extended by custom directives, unfortunately, it is still not enough. What if we can combine the power of CQLinq, run its rules on a regular base via [CICD](https://en.wikipedia.org/wiki/CI/CD) and produce a report where you can see the quality of the code-base in a convenient graphical view. Indeed, we can do that, there is an assembly “/net5.0/NDepend.Console.MultiOS.dll” that could be executed on Linux machines via terminal. Accordingly, if we can execute it in the terminal, we can do that in CICD pipelines, and here is [the link](https://www.ndepend.com/docs/getting-started-with-ndepend-linux-macos#ci-cd-integration) to how to do that with a more profound description. The resultant of it would be a report, which comprises HTML and Javascript files.
 
-![](https://cdn-images-1.medium.com/max/1024/1*nWQ4cnUFTcXmO-8EOqdJig.png)
+![NDepend — generated report](/assets/images/posts/2022-07-26-Supercharge-YourNET-Development/img-04.png)
 _NDepend — generated report_
 
 First of all, the report is sort of interactive, so that, a specialist is able to observe many different diagrams, charts, metrics, etc. By navigating, clicking links, and hovering the mouse on some types of elements, the specialist may get concise information about the state of the system. The picture below illustrates the Abstractness vs. Instability diagram that shows which assembly could be potentially difficult to maintain. Dots represent assemblies, by hovering the mouse it is possible to see more&nbsp;details.
 
-![](https://cdn-images-1.medium.com/max/1024/1*t7iTQcD7PTTZC-jYurCTfg.png)
+![NDepend — Abstractness vs. Instability diagram](/assets/images/posts/2022-07-26-Supercharge-YourNET-Development/img-05.png)
 _NDepend — Abstractness vs. Instability diagram_
 
 In addition, the report provides a technical debt estimation in human hours format with a level of severity. This might be useful for risk analysis, or simply for planning the debt compensation work. However, this is just an estimation which is made by an algorithm, so, it shouldn’t reflect reality. Rather than that, it might be good to consider it as a complementary indicator that shows the complexity of a particular issue.
@@ -63,7 +63,7 @@ Unfortunately, the world is not a perfect place, and NDepend like any other soft
 
 As usual, various groups are eager to pursue their interests, and all of them have different backgrounds and knowledge. Based on these facts, we can target the information to a specific group of people and convey our ideas and design more concisely. There are different methods how to do that, but I found one very simple method. It is [the C4 model for visualizing software architecture](https://c4model.com/) by Simon Brown. The C4 represents four levels of abstractions, such as Context, Container, Component and Code where each type has its semantic payload. The picture below depicts the hierarchy of these diagrams.
 
-![](https://cdn-images-1.medium.com/max/1024/0*3cgw2FjUhO1SgbhW.png)
+![C4–4 levels of the C4 model](/assets/images/posts/2022-07-26-Supercharge-YourNET-Development/img-06.png)
 _C4–4 levels of the C4 model_
 
 - The first diagram is the Context Diagram that shows the big picture, how the system fits in an existing world, what it does, and its relationships with other external systems and users. This type of diagram could be shown to a broad audience including non-technical people, and it can be shared with external participants.
@@ -81,7 +81,7 @@ The notation of the C4 model is not described here intentionally because they ar
 
 From time to time, I have to write high performant code for some specific areas. To know what has been affected by my changes, I need to test and measure it. In fact, there is a vast range of diagnosing tools that can be used, but I want to show what I have been using for years. The very first is an amazing [BenchmarkDotNet](https://github.com/dotnet/BenchmarkDotNet)&nbsp;.NET library that does all the heavy work when you do micro benchmarking (testing classes and methods). The library may help to optimize some subtle things. Besides that, for a very quick investigation, there is another tool that can help to evaluate the&nbsp;.NET code and [LINQ](https://docs.microsoft.com/en-us/dotnet/csharp/programming-guide/concepts/linq/) queries as well, by presenting the intermediate results of code compilation, its name is [LINQPad](https://www.linqpad.net/). It has GUI but it is only a Windows tool, which is a downside of it. And quite recently, I discovered for myself a very useful&nbsp;.NET playground website [SharpLab](https://sharplab.io/) by [Andrey Shchekin](https://github.com/ashmind). Although it doesn’t measure the performance of a code, it is a great resource for learning the internals of&nbsp;.NET and new language features. In the example below, we do an inspection of memory graphs of a newly created array of strings and array of chars. On the right side, we can see how they are allocated in memory, what is on a stack or heap, and their references. As you see, it is a very explanatory visualization of the complex memory management aspect.
 
-![](https://cdn-images-1.medium.com/max/1024/1*ol4Hw1Wua8xZTIdMOWtB_w.png)
+![SharpLab — Inspection of a memory graph](/assets/images/posts/2022-07-26-Supercharge-YourNET-Development/img-07.png)
 _SharpLab — Inspection of a memory graph_
 
 Apart from these appliances, there is also a good set of growing [dotnet tools](https://docs.microsoft.com/en-us/dotnet/core/tools/global-tools) that helps to diagnose the application and do precise investigations. There is a great deal of them, but it is worth mentioning the most well-known dotnet&nbsp;tools:
@@ -100,5 +100,4 @@ All of these tools oblige profound&nbsp;.NET knowledge and some practice around 
 
 To sum up, I reckon that tools like NDepend significantly improve the process of designing complex&nbsp;.NET applications. Specifically, NDepend reduces the time spent on observing the application’s architecture, introduces new ways of checking (querying) the code, and gathers and shows important key indicators related to the code quality. Moreover, all checks can be done on a regular base by integrating NDepend into CICD pipelines. In the same way, the C4 modelling offloads our heads from keeping many details. It splits up the system architecture into several self-descriptive and concise diagrams that effectively convey the information to people with different backgrounds. And finally, the most sophisticated system’s parts require deliberate and precise engineering. And those listed tools are capable to do it very well. All these instruments do excellent jobs, but it could be even better if they would work together more coherently. In the nearest future, I am wondering to see more cross-platform tools that will extend each other’s capabilities through integrations. Maybe, we are going to see new standards for visualising, profiling and diagnosing that will facilitate different tools to work together and give an all-round experience.
 
-![](https://cdn-images-1.medium.com/max/834/1*z4P3eTfkMz12Ra3M9pHhIg.png)
- ![](https://medium.com/_/stat?event=post.clientViewed&referrerSource=full_rss&postId=196fc810a55c)
+![Teal energy spark divider](/assets/images/posts/2022-07-26-Supercharge-YourNET-Development/img-08.png)

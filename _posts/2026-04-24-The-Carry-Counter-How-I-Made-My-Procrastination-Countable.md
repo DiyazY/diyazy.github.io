@@ -3,7 +3,7 @@ layout: post
 author: Diyaz Yakubov
 title: "The Carry Counter: How I Made My Procrastination Countable"
 date: 2026-04-24 14:40:53 UTC
-background: https://cdn-images-1.medium.com/max/1024/1*ZQ0XTWL81UC9khuOrsmYZg.jpeg
+background: /assets/images/posts/2026-04-24-The-Carry-Counter-How-I-Made-My-Procrastination-Countable/img-01.jpeg
 excerpt_separator: <!--more-->
 tags: [productivity, efficiency, to-do-list, procrastination, planning]
 original_link: https://medium.com/@diyaz.yakubov/the-carry-counter-how-i-made-my-procrastination-countable-fcc78ae18b60?source=rss-ce9f85b2b690------2
@@ -138,5 +138,4 @@ That is what a productivity system is&nbsp;for.
 
 _If you run something similar, or something better, I’d love to hear how you handle the carry. Writing about it is, in itself, one of the items that kept getting carried on my list. This post is a 3× that finally&nbsp;shipped._
 
-![](https://cdn-images-1.medium.com/max/1024/1*ZQ0XTWL81UC9khuOrsmYZg.jpeg)
- ![](https://medium.com/_/stat?event=post.clientViewed&referrerSource=full_rss&postId=fcc78ae18b60)
+![A spiral to-do-list notebook and pen on a desk beside a keyboard and mouse](/assets/images/posts/2026-04-24-The-Carry-Counter-How-I-Made-My-Procrastination-Countable/img-01.jpeg)

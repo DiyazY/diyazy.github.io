@@ -3,7 +3,7 @@ layout: post
 author: Diyaz Yakubov
 title: "Speculative Design | Breaking the Silence: Social and Cultural Impacts of Body-Powered Devices"
 date: 2025-05-07 15:32:37 UTC
-background: https://cdn-images-1.medium.com/max/1024/1*bIO4bo0dVtS7gVhmOCb7og.png
+background: /assets/images/posts/2025-05-07-Speculative-Design-Breaking-the-Silence-Social-and-Cultural-Impacts-of-BodyPowered-Devices/img-01.png
 excerpt_separator: <!--more-->
 tags: [fun, technology, speculative-design, future, biogas]
 original_link: https://medium.com/@diyaz.yakubov/speculative-design-breaking-the-silence-social-and-cultural-impacts-of-body-powered-devices-4f0e9f5b42bd?source=rss-ce9f85b2b690------2
@@ -75,7 +75,7 @@ If a “fart reactor” ever gained commercial traction, it might be championed 
 
 In some speculative futures, a personal biogas device could become a badge of environmental commitment. Much like driving a hybrid car can signal one’s values, wearing a body-powered device might project eco-savviness. Alternatively, it might remain niche, only championed by sustainability hobbyists or outliers comfortable challenging social&nbsp;norms.
 
-![](https://cdn-images-1.medium.com/max/1024/1*bIO4bo0dVtS7gVhmOCb7og.png)
+![It became a norm](/assets/images/posts/2025-05-07-Speculative-Design-Breaking-the-Silence-Social-and-Cultural-Impacts-of-BodyPowered-Devices/img-01.png)
 _It became a norm_
 
 ### 5. Looking&nbsp;Ahead
@@ -84,4 +84,3 @@ Body-powered devices will likely provoke a broad spectrum of responses — f
 
 In the next article, we’ll spotlight **other forms of human-generated bioenergy**  — from urine to sweat — to see how these “odd” ideas have already emerged in the lab and in limited real-world applications. By expanding our perspective, we’ll better understand how capturing human waste for power is less a wild invention and more a glimpse into what might be possible if we shift our collective mindset.
 
- ![](https://medium.com/_/stat?event=post.clientViewed&referrerSource=full_rss&postId=4f0e9f5b42bd)

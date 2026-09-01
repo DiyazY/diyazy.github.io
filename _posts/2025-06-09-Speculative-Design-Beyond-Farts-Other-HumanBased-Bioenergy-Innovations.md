@@ -3,7 +3,7 @@ layout: post
 author: Diyaz Yakubov
 title: "Speculative Design | Beyond Farts: Other Human-Based Bioenergy Innovations"
 date: 2025-06-09 15:02:16 UTC
-background: https://cdn-images-1.medium.com/max/1024/1*_j8Wwj1i5xYxQeS5hh8hvw.png
+background: /assets/images/posts/2025-06-09-Speculative-Design-Beyond-Farts-Other-HumanBased-Bioenergy-Innovations/img-01.png
 excerpt_separator: <!--more-->
 tags: [fun, speculative-design, biogas, future, technology]
 original_link: https://medium.com/@diyaz.yakubov/speculative-design-beyond-farts-other-human-based-bioenergy-innovations-a8d89149d8b1?source=rss-ce9f85b2b690------2
@@ -78,7 +78,7 @@ Piezoelectric devices convert mechanical energy, such as footsteps or muscle mov
 **Impact**  
 Piezoelectric energy capture integrates seamlessly into daily routines, providing passive, continuous energy to support urban infrastructure and wearable technology.
 
-![](https://cdn-images-1.medium.com/max/1024/1*_j8Wwj1i5xYxQeS5hh8hvw.png)
+![Infographic of real-world bioenergy: microbial fuel cells fed by urine, sweat biofuel cells, and piezoelectric floors harvesting footsteps](/assets/images/posts/2025-06-09-Speculative-Design-Beyond-Farts-Other-HumanBased-Bioenergy-Innovations/img-01.png)
 
 ### Why These Innovations Matter
 
@@ -101,4 +101,3 @@ These technologies demonstrate that speculative concepts like our “fart reacto
 - **Dagdeviren, C., Yang, B. D., Su, Y., Tran, P. L., Joe, P., Anderson, E., & Rogers, J. A. (2014).** “Conformal piezoelectric energy harvesting and storage from motions of the heart, lung, and diaphragm.” _Proceedings of the National Academy of Sciences, 111_(5), 1927–1932.
 - **Pavegen (2023).** Official Website. Retrieved from: [https://www.pavegen.com](https://www.pavegen.com)
 
- ![](https://medium.com/_/stat?event=post.clientViewed&referrerSource=full_rss&postId=a8d89149d8b1)

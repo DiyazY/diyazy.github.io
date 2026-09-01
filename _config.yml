@@ -1,7 +1,7 @@
 # Site settings
 title: diyaz
 description: "Personal blog and portfolio of Diyaz Yakubov - sharing adventures in tech, DIY projects, and home lab experiments."
-url: "https://diyazy.github.io"
+url: "https://diyaz.dev"
 baseurl: ""
 author:
   name: Diyaz Yakubov

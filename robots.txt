@@ -1,5 +1,10 @@
+---
+# layout: null, like llms.txt — the site-wide default layout would wrap this
+# plain-text file in HTML. Front matter exists so the URLs track site.url.
+layout: null
+---
 User-agent: *
 Allow: /
 
-Sitemap: https://diyazy.github.io/sitemap.xml
-LLMs-Txt: https://diyazy.github.io/llms.txt
+Sitemap: {{ '/sitemap.xml' | absolute_url }}
+LLMs-Txt: {{ '/llms.txt' | absolute_url }}

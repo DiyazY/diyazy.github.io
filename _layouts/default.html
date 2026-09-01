@@ -13,11 +13,19 @@
     {% assign share_title = page.seo_title | default: page.title | default: site.title %}
     {% assign share_image = page.image | default: page.background | default: '/assets/images/og-default.png' %}
     {% assign share_image = share_image | absolute_url %}
+    {%- comment -%}
+      share_description carries entity-encoded HTML, ready to drop into an
+      attribute as-is — so consumers must NOT re-escape it. The two plain-text
+      sources are escaped here; the excerpt is already HTML from kramdown
+      (strip_html leaves its &amp;/&lt; entities intact), so escaping it again
+      would double-encode (&amp;amp;) and show literal entity codes in snippets.
+    {%- endcomment -%}
+    {%- capture share_description %}{%- if page.description %}{{ page.description | escape }}{% elsif page.excerpt %}{{ page.excerpt | strip_html | normalize_whitespace | truncate: 160 }}{% else %}{{ site.description | escape }}{% endif %}{% endcapture %}
 
-    <title>{% if page.seo_title %}{{ page.seo_title }}{% elsif page.title %}{{ page.title }} | {{ site.title }}{% else %}{{ site.title }}{% endif %}</title>
+    <title>{% if page.seo_title %}{{ page.seo_title | escape }}{% elsif page.title %}{{ page.title | escape }} | {{ site.title }}{% else %}{{ site.title }}{% endif %}</title>
 
     <!-- Meta Description -->
-    <meta name="description" content="{% if page.description %}{{ page.description }}{% elsif page.excerpt %}{{ page.excerpt | strip_html | truncate: 160 }}{% else %}{{ site.description }}{% endif %}">
+    <meta name="description" content="{{ share_description }}">
     <meta name="author" content="{{ site.author.name }}">
 
     <!-- Canonical URL -->
@@ -26,15 +34,15 @@
     <!-- Open Graph / Facebook -->
     <meta property="og:type" content="{% if page.layout == 'post' %}article{% else %}website{% endif %}">
     <meta property="og:url" content="{{ page.url | absolute_url }}">
-    <meta property="og:title" content="{{ share_title }}">
-    <meta property="og:description" content="{% if page.description %}{{ page.description }}{% elsif page.excerpt %}{{ page.excerpt | strip_html | truncate: 160 }}{% else %}{{ site.description }}{% endif %}">
+    <meta property="og:title" content="{{ share_title | escape }}">
+    <meta property="og:description" content="{{ share_description }}">
     <meta property="og:image" content="{{ share_image }}">
     <meta property="og:site_name" content="{{ site.title }}">
 
     <!-- Twitter Card -->
     <meta name="twitter:card" content="summary_large_image">
-    <meta name="twitter:title" content="{{ share_title }}">
-    <meta name="twitter:description" content="{% if page.description %}{{ page.description }}{% elsif page.excerpt %}{{ page.excerpt | strip_html | truncate: 160 }}{% else %}{{ site.description }}{% endif %}">
+    <meta name="twitter:title" content="{{ share_title | escape }}">
+    <meta name="twitter:description" content="{{ share_description }}">
     <meta name="twitter:image" content="{{ share_image }}">
 
     <!-- RSS Feed -->
@@ -95,7 +103,10 @@
         "headline": {{ page.title | jsonify }},
         "image": "{{ share_image }}",
         "datePublished": "{{ page.date | date_to_xmlschema }}",
-        "dateModified": "{{ page.date | date_to_xmlschema }}",
+        {%- comment -%}
+          Posts may set last_modified in front matter when meaningfully edited.
+        {%- endcomment %}
+        "dateModified": "{{ page.last_modified | default: page.date | date_to_xmlschema }}",
         "author": {
             "@type": "Person",
             "name": "{{ site.author.name }}"

@@ -95,14 +95,26 @@ else
   fail "robots.txt missing from build"
 fi
 
-# --- meta attributes are entity-escaped -----------------------------------
-# Titles/descriptions flow into content="" attributes through | escape, so a
-# bare "& " (escaped form is "&amp; ") means an interpolation lost its filter.
+# --- meta attributes are entity-escaped, but not doubly -------------------
+# Titles/descriptions flow into content="" attributes. Two failure modes:
+#   under-escaped: a raw "& " (would be "&amp; ") means a plain-text value
+#     reached the attribute without | escape.
+#   over-escaped: "&amp;amp;" means an already-encoded value (the post
+#     excerpt, which is kramdown HTML) got | escape applied on top, so
+#     snippets show literal entity codes. Guarding both keeps the escape
+#     boundary honest — plain text escaped once, excerpt not at all.
 if grep -rlE 'content="[^"]*& ' "$SITE" --include='*.html' >"$tmp"; then
   fail "page(s) with an unescaped ampersand in a meta attribute:"
   sed 's/^/          /' "$tmp"
 else
   pass "meta attributes carry no raw ampersands"
+fi
+
+if grep -rlE 'content="[^"]*&amp;amp;' "$SITE" --include='*.html' >"$tmp"; then
+  fail "page(s) with a double-escaped entity in a meta attribute:"
+  sed 's/^/          /' "$tmp"
+else
+  pass "meta attributes carry no double-escaped entities"
 fi
 
 # --- document outline: exactly one h1 per page ---------------------------

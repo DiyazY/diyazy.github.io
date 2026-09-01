@@ -10,7 +10,7 @@ original_link: https://medium.com/@diyaz.yakubov/speculative-design-breaking-the
 ---
 In the first two articles, we explored **why** someone might harness flatulence for energy and **how** a hypothetical device could convert gas into usable electricity. But technology doesn’t exist in a vacuum. Whether it’s an ordinary smartphone or a futuristic “fart reactor,” people’s perceptions — shaped by culture, etiquette, and taboo — can make or break innovation. In this third article, we examine how body-powered devices might shift social norms, why humour can help, and where personal comfort and privacy fit into the&nbsp;picture.
 
-> [Speculative Design | Fart&nbsp;Reactor](https://medium.com/@diyaz.yakubov/speculative-design-fart-reactor-35c1d7b6ef5b)
+> [Speculative Design \| Fart&nbsp;Reactor](https://medium.com/@diyaz.yakubov/speculative-design-fart-reactor-35c1d7b6ef5b)
 
 > [**1.From Taboo to Technology** : Why farts might be worth harnessing.](https://medium.com/@diyaz.yakubov/speculative-design-from-taboo-to-technology-why-farts-might-be-worth-harnessing-42b71ec5aeb0)
 

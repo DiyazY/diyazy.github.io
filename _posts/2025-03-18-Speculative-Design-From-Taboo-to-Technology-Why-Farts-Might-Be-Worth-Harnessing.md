@@ -10,7 +10,7 @@ original_link: https://medium.com/@diyaz.yakubov/speculative-design-from-taboo-t
 ---
 Farting is often the punchline of a joke — an embarrassing, smelly fact of life that many prefer to ignore. Yet as odd as it sounds, these taboo gas emissions contain valuable energy. In this opening article of our series on speculative bioenergy design, we’ll peel back the layers of stigma surrounding flatulence to reveal why it might actually matter for the future of sustainable technology — and briefly explore how attitudes toward farting vary across cultures.
 
-> [Speculative Design | Fart&nbsp;Reactor](https://medium.com/@diyaz.yakubov/speculative-design-fart-reactor-35c1d7b6ef5b)
+> [Speculative Design \| Fart&nbsp;Reactor](https://medium.com/@diyaz.yakubov/speculative-design-fart-reactor-35c1d7b6ef5b)
 
 > **1.From Taboo to Technology** : Why farts might be worth harnessing. 👈
 

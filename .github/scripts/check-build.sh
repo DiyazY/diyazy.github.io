@@ -133,6 +133,19 @@ else
   pass "meta attributes carry no double-escaped entities"
 fi
 
+# --- no accidental tables in posts ----------------------------------------
+# No post uses Markdown tables, but kramdown (GFM) turns a stray "|" — in a
+# link's text, an image alt, or a caption — into a shattered <table>, so the
+# link/image silently stops rendering. Any <table> in a built post is that
+# accident. Scoped to dated post URLs; if a real table is ever wanted, this
+# check is the reminder to reconsider.
+if find "$SITE" -path "$SITE/2*" -name '*.html' -exec grep -l '<table' {} + >"$tmp" 2>/dev/null && [ -s "$tmp" ]; then
+  fail "post(s) contain an unexpected <table> (a stray '|' formed one):"
+  sed "s#^$SITE/#          #" "$tmp"
+else
+  pass "no post contains an accidental table"
+fi
+
 # --- document outline: exactly one h1 per page ---------------------------
 # The header brand is an h1 only on the homepage; every other page supplies
 # its own. Zero means a page lost its heading, two means the banner regressed.

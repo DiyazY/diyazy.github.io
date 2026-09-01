@@ -1,11 +1,14 @@
+# URLs use the .html form — it matches each page's canonical URL, so internal
+# links and canonicals agree on one URL per page. (GitHub Pages serves the
+# extensionless form too, but as a duplicate, not a redirect.)
 - title: home
   url: /
 
 - title: about
-  url: /about
+  url: /about.html
 
 - title: projects
-  url: /projects
+  url: /projects.html
 
 - title: blog
-  url: /blog
+  url: /blog.html

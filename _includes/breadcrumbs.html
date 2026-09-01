@@ -27,7 +27,7 @@
   <ol>
     <li><a href="/">Home</a></li>
     {% if page.layout == 'post' %}
-      <li><a href="/blog">Blog</a></li>
+      <li><a href="/blog.html">Blog</a></li>
       <li><span aria-current="page">{{ page.title | truncate: 40 }}</span></li>
     {% elsif page.url contains '/blog' %}
       <li><span aria-current="page">Blog</span></li>

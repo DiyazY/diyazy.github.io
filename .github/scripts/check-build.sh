@@ -95,6 +95,16 @@ else
   fail "robots.txt missing from build"
 fi
 
+# --- meta attributes are entity-escaped -----------------------------------
+# Titles/descriptions flow into content="" attributes through | escape, so a
+# bare "& " (escaped form is "&amp; ") means an interpolation lost its filter.
+if grep -rlE 'content="[^"]*& ' "$SITE" --include='*.html' >"$tmp"; then
+  fail "page(s) with an unescaped ampersand in a meta attribute:"
+  sed 's/^/          /' "$tmp"
+else
+  pass "meta attributes carry no raw ampersands"
+fi
+
 # --- document outline: exactly one h1 per page ---------------------------
 # The header brand is an h1 only on the homepage; every other page supplies
 # its own. Zero means a page lost its heading, two means the banner regressed.

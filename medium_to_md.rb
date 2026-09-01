@@ -4,6 +4,7 @@ require 'httparty'
 require 'nokogiri'
 require 'reverse_markdown'
 require 'fileutils'
+require 'uri' # URI() below; loaded transitively today, made explicit so a gem change can't drop it
 
 if ARGV.length < 2
 	puts "Usage: " + __FILE__ + " <medium user without the '@'> </path/to/output>"
@@ -50,19 +51,24 @@ feed.entries.each do |e|
 	h4s.each { |h| h.name = 'h3' }
 
 	# Medium images arrive with empty alt text; the figcaption, when present,
-	# is the description the author actually wrote.
+	# is the description the author actually wrote. Escape pipes: an unescaped
+	# "|" in alt makes ![alt](src) plus a following caption line read as a GFM
+	# table, so the image never renders.
 	parseHTML.css('figure').each do |fig|
 		fig_img = fig.at_css('img')
 		caption = fig.at_css('figcaption')
 		next unless fig_img && caption
-		fig_img['alt'] = caption.text.strip if fig_img['alt'].to_s.strip.empty?
+		fig_img['alt'] = caption.text.strip.gsub('|') { '\|' } if fig_img['alt'].to_s.strip.empty?
 	end
 
 	# Self-host images: Medium's CDN is a third-party dependency the posts
-	# outlive, so download each image next to the post and point the markdown
-	# at the local copy. A failed download keeps the remote URL rather than
-	# failing the entry. Medium's RSS also appends a stat-tracking pixel —
-	# dropped, not hosted. Paths are cwd-relative; CI runs from the repo root.
+	# outlive, so download each image into assets/images/posts/<post-stem>/ and
+	# rewrite the markdown src to that site-absolute path. A failed download
+	# keeps the remote URL and warns — check-build.sh then fails the build on
+	# the sync PR (its Medium-CDN assertion), so a kept-remote image surfaces
+	# loudly rather than shipping. Medium's RSS also appends a stat-tracking
+	# pixel — dropped, not hosted. Write paths are cwd-relative (the leading "/"
+	# is a URL path, stripped for binwrite); CI runs from the repo root.
 	post_stem = File.basename(filename, '.md')
 	img_dir_rel = "assets/images/posts/#{post_stem}"
 	parseHTML.css('img[src]').each { |n| n.remove if n['src'].include?('medium.com/_/stat') }
@@ -92,9 +98,13 @@ feed.entries.each do |e|
 	img = parseHTML.at_xpath("//img[@src]")
 	cover_line = if img.nil?
 		''
-	elsif img['src'].start_with?('/')
+	elsif img['src'].start_with?('/assets/')
+		# Localized: the download loop rewrote src to its /assets/ path.
 		"background: #{img['src']}\n"
 	else
+		# Download failed, src still remote. Match '/assets/' specifically, not
+		# a bare '/', so a protocol-relative "//host/..." falls through here and
+		# gets normalized instead of being mistaken for a local path.
 		# `sub`, not `sub!` — sub! returns nil when the src is already protocol-relative.
 		"background: https:#{img['src'].sub(/\Ahttp(s)?:/, '')}\n"
 	end

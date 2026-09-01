@@ -66,14 +66,19 @@ else
 fi
 
 # --- no third-party Medium assets in the build ----------------------------
-# Post images are self-hosted under assets/images/posts/; a Medium CDN URL
-# or an RSS stat-tracking pixel in the output means the sync pipeline (or a
-# hand edit) reintroduced the dependency.
-if grep -rlE 'cdn-images-1\.medium\.com|medium\.com/_/stat' "$SITE" --include='*.html' --include='*.xml' >"$tmp"; then
-  fail "built file(s) reference Medium CDN images or tracking pixels:"
+# Post images are self-hosted under assets/images/posts/; a Medium image-CDN
+# URL or an RSS stat-tracking pixel in the output means the sync pipeline (or
+# a hand edit / an untried CDN host) reintroduced the dependency. Medium
+# serves images from subdomains (cdn-images-1.medium.com, miro.medium.com,
+# ...), so match any *.medium.com host — but NOT bare medium.com, which is
+# legitimate: the "Originally published on Medium" links and the author's
+# sameAs profile point there. The stat pixel lives on bare medium.com, so it
+# needs its own alternative.
+if grep -rlE '[a-z0-9-]+\.medium\.com|medium\.com/_/stat' "$SITE" --include='*.html' --include='*.xml' >"$tmp"; then
+  fail "built file(s) reference Medium image CDNs or tracking pixels:"
   sed 's/^/          /' "$tmp"
 else
-  pass "no Medium CDN images or tracking pixels in the build"
+  pass "no Medium image CDNs or tracking pixels in the build"
 fi
 
 # --- custom domain wiring -------------------------------------------------

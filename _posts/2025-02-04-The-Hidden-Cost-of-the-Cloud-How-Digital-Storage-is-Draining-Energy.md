@@ -17,15 +17,15 @@ At first, this might seem complex, but the core ideas are straightforward. I'll 
 
 Take a popular messaging app on your phone as an example. When you send a message, it travels through a series of network devices — like routers and switches — before reaching a server. This server stores, processes, and manages your message. To ensure reliability, the message is often replicated across multiple servers, creating backups. This redundancy ensures your message is safe; even if one server fails, you can still access your data seamlessly. The illustration below shows how this process works.
 
-![Simplified view of a messenger application flow — sequence diagram.](https://miro.medium.com/v2/resize:fit:2000/format:webp/1*YNYT63G5DZNwbE9r7rD8Qg.png)
+![Simplified view of a messenger application flow — sequence diagram.](/assets/images/posts/2025-02-04-The-Hidden-Cost-of-the-Cloud-How-Digital-Storage-is-Draining-Energy/img-02.png)
 
 In a sequence diagram, each actor is not tied to a fixed number. The message-sending process could involve 10 devices — or 100. Viewed from another angle, the complexity of this flow becomes evident.
 
-![Simplified view of a messenger application flow — action diagram.](https://miro.medium.com/v2/resize:fit:2000/format:webp/1*oAXWE3iXM2JHuKZdwywOMA.png)
+![Simplified view of a messenger application flow — action diagram.](/assets/images/posts/2025-02-04-The-Hidden-Cost-of-the-Cloud-How-Digital-Storage-is-Draining-Energy/img-03.png)
 
 However, the brilliance of technology lies in its ability to hide this complexity. The user interface simplifies everything, allowing us to send and receive data effortlessly without seeing the intricate processes behind the scenes. Today, transferring gigabytes [\[3\]](https://davidmytton.blog/how-much-energy-do-data-centers-use/) of data is seamless, and as data usage grows exponentially, our world becomes increasingly data-driven and intelligent.
 
-![Simple UI that hides all the complexity of modern tech.](https://miro.medium.com/v2/resize:fit:1400/format:webp/1*RwzStw_0x_vKvmQUJwwGkw.png)
+![Simple UI that hides all the complexity of modern tech.](/assets/images/posts/2025-02-04-The-Hidden-Cost-of-the-Cloud-How-Digital-Storage-is-Draining-Energy/img-04.png)
 
 It's often said that "data is the oil of modern life," but there's another, often-overlooked factor: electricity. I like to think of electricity as the oxygen that powers all these technologies. Energy-intensive innovations like AI, blockchain, and electric vehicles (EVs) are driving electricity demand, which can lead to shortages and, more importantly, significant environmental impacts.
 

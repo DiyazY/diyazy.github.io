@@ -65,6 +65,36 @@ else
   fail "no post exposes its cover image as og:image"
 fi
 
+# --- custom domain wiring -------------------------------------------------
+# The site lives at diyaz.dev; GitHub 301s the old *.github.io URLs to it.
+# CNAME must ship in the artifact, and no generated URL may still point at
+# the old host — a leaked one would canonicalize a page back to a redirect.
+# Case-sensitive on purpose: the giscus embed's repo slug is DiyazY.github.io.
+if [ -s "$SITE/CNAME" ] && [ "$(cat "$SITE/CNAME")" = "diyaz.dev" ]; then
+  pass "CNAME ships in the artifact with 'diyaz.dev'"
+else
+  fail "CNAME missing from artifact or has wrong content"
+fi
+
+if grep -rlF 'diyazy.github.io' "$SITE" --include='*.html' --include='*.xml' --include='*.txt' --include='*.json' >"$tmp"; then
+  fail "built file(s) still reference the old domain:"
+  sed 's/^/          /' "$tmp"
+else
+  pass "no built file references diyazy.github.io"
+fi
+
+if [ -f "$SITE/robots.txt" ]; then
+  if head -1 "$SITE/robots.txt" | grep -q '^---$'; then
+    fail "robots.txt leaks YAML front matter (layout: null lost?)"
+  elif grep -q "^Sitemap: https://diyaz.dev/sitemap.xml$" "$SITE/robots.txt"; then
+    pass "robots.txt rendered with the live sitemap URL"
+  else
+    fail "robots.txt sitemap line wrong or missing"
+  fi
+else
+  fail "robots.txt missing from build"
+fi
+
 # --- document outline: exactly one h1 per page ---------------------------
 # The header brand is an h1 only on the homepage; every other page supplies
 # its own. Zero means a page lost its heading, two means the banner regressed.

@@ -1,4 +1,4 @@
-# [diyazy.github.io](https://diyazy.github.io/)
+# [diyaz.dev](https://diyaz.dev/)
 
 A personal portfolio and blog website built with Jekyll, hosted on GitHub Pages. This site serves as a personal space to
 share technical blog posts, DIY projects, and personal interests.
@@ -193,7 +193,7 @@ The site is automatically deployed to GitHub Pages when changes are pushed to th
 2. Commit and push changes to the `main` branch
 3. GitHub Pages will automatically serve the updated content
 
-The live site is available at: https://diyazy.github.io/
+The live site is available at: https://diyaz.dev/
 
 ## Customization
 

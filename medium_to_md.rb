@@ -23,10 +23,15 @@ failed_titles = []
 feed.entries.each do |e|
 	# normalise `title` to arrive at a reasonable filename
 	published_date = e.published.strftime("%Y-%m-%d")
-	filename = output_dir + '/' + published_date + '-' + e.title.gsub(/[^0-9a-z\s]/i, '').gsub(/\s+/,'-') + '.md'
+	slug = e.title.gsub(/[^0-9a-z\s]/i, '').gsub(/\s+/,'-')
+	filename = output_dir + '/' + published_date + '-' + slug + '.md'
 	puts e
-	if File.exist?(filename)
-		puts "#{filename} already exists. Skipping.."
+	# Skip by slug under ANY date, not just today's. A site-first post later
+	# imported to Medium returns in the feed stamped with a newer publish date,
+	# so keying only on the exact filename would sync a duplicate alongside the
+	# copy already here. The date-prefix + \z anchor keep it to exact slugs.
+	if Dir.children(output_dir).any? { |name| name =~ /\A\d{4}-\d{2}-\d{2}-#{Regexp.escape(slug)}\.md\z/ }
+		puts "A post with slug '#{slug}' already exists. Skipping.."
 		next
 	end
 

@@ -146,6 +146,31 @@ else
   pass "no post contains an accidental table"
 fi
 
+# --- TOC entries carry their heading text ---------------------------------
+# The TOC (rendered for posts with >2 h2 sections) builds each entry by
+# string-splitting the heading HTML; a wrong split yields numbered but empty
+# links. It shipped that way once, unseen, because no post had triggered a TOC
+# before. Any `.toc-list` anchor with blank text is that bug.
+toc_bad=$(find "$SITE" -path "$SITE/2*" -name '*.html' -print0 \
+  | xargs -0 ruby -e '
+      bad = []
+      ARGV.each do |f|
+        html = File.read(f)
+        html.scan(%r{<ol class="toc-list".*?</ol>}m).each do |ol|
+          ol.scan(%r{<a[^>]*>(.*?)</a>}m) do |m|
+            bad << f if m[0].gsub(/<[^>]*>/, "").strip.empty?
+          end
+        end
+      end
+      puts bad.uniq
+    ' 2>/dev/null)
+if [ -n "$toc_bad" ]; then
+  fail "post(s) with an empty TOC entry (heading-text extraction broke):"
+  printf '%s\n' "$toc_bad" | sed "s#^$SITE/#          #"
+else
+  pass "TOC entries all carry heading text"
+fi
+
 # --- document outline: exactly one h1 per page ---------------------------
 # The header brand is an h1 only on the homepage; every other page supplies
 # its own. Zero means a page lost its heading, two means the banner regressed.

@@ -27,6 +27,10 @@ layout: default
             {% endif %}
         </div>
 
+        {% if page.background %}
+        <img class="post-hero" src="{{ page.background }}" alt="{{ page.title }}" loading="lazy" decoding="async">
+        {% endif %}
+
         {% if page.original_link %}
         <div class="medium-badge">
             <a href="{{ page.original_link }}" target="_blank" rel="noopener">

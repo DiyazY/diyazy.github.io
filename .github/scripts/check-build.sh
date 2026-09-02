@@ -147,28 +147,29 @@ else
 fi
 
 # --- TOC entries carry their heading text ---------------------------------
-# The TOC (rendered for posts with >2 h2 sections) builds each entry by
-# string-splitting the heading HTML; a wrong split yields numbered but empty
-# links. It shipped that way once, unseen, because no post had triggered a TOC
-# before. Any `.toc-list` anchor with blank text is that bug.
-toc_bad=$(find "$SITE" -path "$SITE/2*" -name '*.html' -print0 \
-  | xargs -0 ruby -e '
-      bad = []
-      ARGV.each do |f|
-        html = File.read(f)
-        html.scan(%r{<ol class="toc-list".*?</ol>}m).each do |ol|
-          ol.scan(%r{<a[^>]*>(.*?)</a>}m) do |m|
-            bad << f if m[0].gsub(/<[^>]*>/, "").strip.empty?
-          end
+# The TOC (rendered once a post has 2 or more h2 sections) builds each entry
+# by string-splitting the heading HTML; a wrong split yields numbered but
+# empty links. It shipped that way once, unseen, because no post had triggered
+# a TOC before. Any `.toc-list` anchor with blank text is that bug.
+# Branch on Ruby's exit status (like the JSON-LD checks below), not on empty
+# output — a bare 2>/dev/null + empty-check would pass silently if Ruby ever
+# raised (e.g. on a bad byte), the exact fail-green this file exists to catch.
+if ruby -e '
+    bad = []
+    Dir.glob(File.join(ARGV[0], "2*", "**", "*.html")).each do |f|
+      html = File.read(f, encoding: "UTF-8").scrub
+      html.scan(%r{<ol class="toc-list".*?</ol>}m).each do |ol|
+        ol.scan(%r{<a[^>]*>(.*?)</a>}m) do |m|
+          bad << f if m[0].gsub(/<[^>]*>/, "").strip.empty?
         end
       end
-      puts bad.uniq
-    ' 2>/dev/null)
-if [ -n "$toc_bad" ]; then
-  fail "post(s) with an empty TOC entry (heading-text extraction broke):"
-  printf '%s\n' "$toc_bad" | sed "s#^$SITE/#          #"
-else
+    end
+    abort(bad.uniq.join("\n")) unless bad.empty?
+  ' "$SITE" >"$tmp" 2>&1; then
   pass "TOC entries all carry heading text"
+else
+  fail "post(s) with an empty TOC entry (heading-text extraction broke), or the check itself errored:"
+  sed "s#^$SITE/#          #" "$tmp"
 fi
 
 # --- document outline: exactly one h1 per page ---------------------------

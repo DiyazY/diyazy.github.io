@@ -28,7 +28,7 @@ layout: default
         </div>
 
         {% if page.background %}
-        <img class="post-hero" src="{{ page.background }}" alt="{{ page.title }}" loading="lazy" decoding="async">
+        <img class="post-hero" src="{{ page.background }}" alt="{{ page.title | escape }}" decoding="async">
         {% endif %}
 
         {% if page.original_link %}

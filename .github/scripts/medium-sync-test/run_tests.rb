@@ -81,5 +81,26 @@ Dir.mktmpdir do |outdir|
   assert('failing entry title is logged', (stdout + stderr).include?('Broken Entry No PubDate'))
 end
 
+puts 'Scenario C: a post already present under a different date (site-first import) is not duplicated'
+Dir.mktmpdir do |outdir|
+  # A site-first post later imported to Medium comes back in the feed with the
+  # same title but a NEWER publish date than the copy already on disk, so the
+  # exact-filename skip misses it. It must still be recognized by slug.
+  pre = File.join(outdir, '2020-01-01-Post-With-Image.md')
+  File.write(pre, "---\nlayout: post\ntitle: \"Post With Image\"\n---\nalready here\n")
+  _stdout, _stderr, status = run_script('fixture.xml', outdir)
+  files = Dir.children(outdir).sort
+  puts "  exit=#{status.exitstatus} files=#{files.inspect}"
+
+  assert('exits 0', status.exitstatus == 0)
+  assert('does not create a second copy under the Medium date',
+         !File.exist?(File.join(outdir, '2026-08-03-Post-With-Image.md')))
+  assert('leaves the pre-existing post untouched',
+         File.read(pre).include?('already here'))
+  assert('still syncs the other new entries',
+         File.exist?(File.join(outdir, '2026-08-04-Post-Without-Image.md')) &&
+         File.exist?(File.join(outdir, '2026-08-05-Post-With-Protocol-Relative-Image.md')))
+end
+
 puts $failures.zero? ? 'ALL PASS' : "#{$failures} FAILURE(S)"
 exit($failures.zero? ? 0 : 1)

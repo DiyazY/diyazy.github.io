@@ -146,6 +146,32 @@ else
   pass "no post contains an accidental table"
 fi
 
+# --- TOC entries carry their heading text ---------------------------------
+# The TOC (rendered once a post has 2 or more h2 sections) builds each entry
+# by string-splitting the heading HTML; a wrong split yields numbered but
+# empty links. It shipped that way once, unseen, because no post had triggered
+# a TOC before. Any `.toc-list` anchor with blank text is that bug.
+# Branch on Ruby's exit status (like the JSON-LD checks below), not on empty
+# output — a bare 2>/dev/null + empty-check would pass silently if Ruby ever
+# raised (e.g. on a bad byte), the exact fail-green this file exists to catch.
+if ruby -e '
+    bad = []
+    Dir.glob(File.join(ARGV[0], "2*", "**", "*.html")).each do |f|
+      html = File.read(f, encoding: "UTF-8").scrub
+      html.scan(%r{<ol class="toc-list".*?</ol>}m).each do |ol|
+        ol.scan(%r{<a[^>]*>(.*?)</a>}m) do |m|
+          bad << f if m[0].gsub(/<[^>]*>/, "").strip.empty?
+        end
+      end
+    end
+    abort(bad.uniq.join("\n")) unless bad.empty?
+  ' "$SITE" >"$tmp" 2>&1; then
+  pass "TOC entries all carry heading text"
+else
+  fail "post(s) with an empty TOC entry (heading-text extraction broke), or the check itself errored:"
+  sed "s#^$SITE/#          #" "$tmp"
+fi
+
 # --- document outline: exactly one h1 per page ---------------------------
 # The header brand is an h1 only on the homepage; every other page supplies
 # its own. Zero means a page lost its heading, two means the banner regressed.

@@ -13,7 +13,16 @@
     <ol class="toc-list" id="toc-list">
         {% for heading in headings %}
             {% if forloop.first == false %}
-                {% assign heading_text = heading | split: '>' | last | split: '</h2>' | first %}
+                {%- comment -%}
+                  Isolate the heading first (up to </h2>), THEN drop the
+                  `id="...">` opening tag and keep the text after it — for
+                  plain heading text; inline markup in a heading (code, a
+                  link) would still truncate at its last '>'. Splitting by '>'
+                  first grabbed the tail of the body instead, so every entry
+                  rendered empty — invisible until a post finally had the h2
+                  sections needed to trigger the TOC at all.
+                {%- endcomment -%}
+                {% assign heading_text = heading | split: '</h2>' | first | split: '>' | last %}
                 {% assign heading_id = heading | split: 'id="' %}
                 {% if heading_id.size > 1 %}
                     {% assign heading_id = heading_id[1] | split: '"' | first %}

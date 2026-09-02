@@ -3,6 +3,7 @@ layout: post
 author: Diyaz Yakubov
 title: "The Site That Was Live and Unreachable"
 date: 2026-09-01 07:30:00 UTC
+background: /assets/images/posts/2026-09-01-The-Site-That-Was-Live-and-Unreachable/img-01.png
 excerpt_separator: <!--more-->
 tags: [github-pages, dns, https, debugging, build-in-public]
 ---

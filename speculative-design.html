@@ -1,0 +1,55 @@
+---
+layout: default
+title: "Speculative Design: Harnessing Human Bioenergy"
+description: "A speculative design series on turning the human body — flatulence, sweat, motion — into energy: the why, the hypothetical mechanics, the social and ethical stakes, and where human-powered technology could lead."
+image: /assets/images/posts/2025-03-10-Speculative-Design-Fart-Reactor/img-01.png
+---
+
+<style>
+  /* .panel-container is a 3-col grid; override to a centered single column,
+     like .projects-container / .post-container do. */
+  .series-page { display: block; padding: 10px; }
+  .series-container {
+    max-width: 820px; margin: 0 auto; padding: 30px;
+    background-color: var(--color-panel-bg, rgba(255, 255, 255, 0.95));
+    border-radius: 10px;
+  }
+  .series-intro { color: var(--color-text-muted, #6b6459); font-size: 1.05rem; line-height: 1.7; margin-bottom: 2rem; }
+  .series-list { list-style: none; padding: 0; margin: 0; counter-reset: none; }
+  .series-item { padding: 1.1rem 0; border-top: 1px solid var(--color-border, rgba(42, 37, 33, 0.12)); }
+  .series-item:first-child { border-top: none; }
+  .part-label {
+    display: inline-block; font-size: 0.72rem; letter-spacing: 0.06em; text-transform: uppercase;
+    color: var(--color-accent, #c9a227); font-weight: 700; margin-bottom: 0.15rem;
+  }
+  .part-date { color: var(--color-text-muted, #8d8478); font-size: 0.8rem; margin-left: 0.5rem; text-transform: none; letter-spacing: 0; font-weight: 400; }
+  .series-item h2 { font-size: 1.2rem; margin: 0.15rem 0 0.35rem; }
+  .series-item h2 a { text-decoration: none; }
+  .part-summary { color: var(--color-text-muted, #6b6459); font-size: 0.95rem; line-height: 1.6; margin: 0; }
+</style>
+
+<div class="panel-container series-page">
+  <div class="series-container">
+    <h1>Speculative Design: Harnessing Human Bioenergy</h1>
+
+    <p class="series-intro">
+      It started as a joke — a wearable that runs on flatulence — and turned into a seven-part
+      thought experiment about the human body as a power source. What begins with a &ldquo;fart reactor&rdquo;
+      ends somewhere serious: the mechanics of capturing bodily energy, the taboos and social norms in the
+      way, the other outputs (sweat, motion, heat) already being harvested in labs, and the ethics of who
+      owns the data your body makes. Speculative design doesn&rsquo;t predict the future; it builds an absurd
+      object so the ordinary one sneaking up behind it becomes visible. Read it in order, or jump in anywhere.
+    </p>
+
+    {%- assign series = site.posts | where_exp: "p", "p.tags contains 'speculative-design'" | sort: "date" -%}
+    <ol class="series-list">
+      {%- for post in series %}
+      <li class="series-item">
+        <span class="part-label">{% if forloop.first %}Start here{% else %}Part {{ forloop.index0 }}{% endif %}<span class="part-date">{{ post.date | date: "%b %Y" }}</span></span>
+        <h2><a href="{{ post.url }}">{{ post.title | remove_first: "Speculative Design | " }}</a></h2>
+        <p class="part-summary">{{ post.description | default: post.excerpt | strip_html | normalize_whitespace | truncate: 180 }}</p>
+      </li>
+      {%- endfor %}
+    </ol>
+  </div>
+</div>

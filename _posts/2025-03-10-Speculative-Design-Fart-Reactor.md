@@ -27,15 +27,7 @@ _Concept of a Fart Reactor wearable device_
 
 This seven-part exploration turns a playful idea — capturing flatulence for clean energy — into a springboard for rethinking how we harness human biowaste. Using **speculative design** , we challenge taboos and pose fresh questions about technology, culture, and sustainability.
 
-**Here’s what’s coming&nbsp;up:**
-
-1. [**From Taboo to Technology** : Why farts might be worth harnessing.](https://medium.com/@diyaz.yakubov/speculative-design-from-taboo-to-technology-why-farts-might-be-worth-harnessing-42b71ec5aeb0)
-2. [**Inside the Fart Reactor** : A look at the hypothetical mechanics.](https://medium.com/@diyaz.yakubov/speculative-design-inside-the-fart-reactor-a-look-at-the-hypothetical-mechanics-e30a887da940)
-3. **Breaking the Silence** : Social and cultural impacts of body-powered devices.
-4. **Beyond Farts** : Other human-based bioenergy innovations.
-5. **Design Challenges** : Comfort, efficiency, and privacy concerns.
-6. **Ethics and Ownership** : Who controls the data tied to our bodily by-products?
-7. **Speculative Futures** : Where human-powered tech could lead us&nbsp;next.
+_This is the opening of a seven-part series. [See all parts &rarr;](/speculative-design.html)_
 
 Seem far-fetched? Join us as we dive deeper into how this oddball concept of a “fart reactor” could transform not only our perceptions of human waste, but also our approach to sustainable design and the future of everyday&nbsp;living.
 

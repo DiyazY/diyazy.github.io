@@ -10,21 +10,7 @@ original_link: https://medium.com/@diyaz.yakubov/speculative-design-beyond-farts
 ---
 So far in our speculative bioenergy series, we’ve explored the provocative idea of turning flatulence into energy. Yet, human-generated bioenergy doesn’t end there. Innovative researchers and designers worldwide are harnessing other forms of bodily output — from urine and sweat to body heat and motion — to produce usable electricity. These real-world advancements provide crucial context, demonstrating how converting bodily waste and by-products into energy is already transforming sustainability, public health, and&nbsp;design.
 
-> [Speculative Design \| Fart&nbsp;Reactor](https://medium.com/@diyaz.yakubov/speculative-design-fart-reactor-35c1d7b6ef5b)
-
-> [**1.From Taboo to Technology** : Why farts might be worth harnessing.](https://medium.com/@diyaz.yakubov/speculative-design-from-taboo-to-technology-why-farts-might-be-worth-harnessing-42b71ec5aeb0)
-
-> [**2.Inside the Fart Reactor** : A look at the hypothetical mechanics.](https://medium.com/@diyaz.yakubov/speculative-design-inside-the-fart-reactor-a-look-at-the-hypothetical-mechanics-e30a887da940)
-
-> [**3.Breaking the Silence** : Social and cultural impacts of body-powered devices.](https://medium.com/@diyaz.yakubov/speculative-design-breaking-the-silence-social-and-cultural-impacts-of-body-powered-devices-4f0e9f5b42bd)
-
-> **4.Beyond Farts** : Other human-based bioenergy innovations. 👈
-
-> **5.Design Challenges** : Comfort, efficiency, and privacy concerns.
-
-> **6.Ethics and Ownership** : Who controls the data tied to our bodily by-products?
-
-> **7.Speculative Futures** : Where human-powered tech could lead us&nbsp;next.
+_Part of the Speculative Design series. [See all parts &rarr;](/speculative-design.html)_
 
 ### 1. Urine-Based Electricity: Microbial Fuel Cells&nbsp;(MFCs)
 

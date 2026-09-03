@@ -10,21 +10,7 @@ original_link: https://medium.com/@diyaz.yakubov/speculative-design-inside-the-f
 ---
 Welcome to the second article in our series on speculative bioenergy design. In our previous piece, we explored the taboos surrounding flatulence and why turning it into an energy source might be worth considering. Now, we’ll dive deeper, focusing on how gas from human flatulence could actually be captured and converted into electricity — without relying on unrealistic mini-turbines. Instead, we’ll look at **microbial fuel cells** and **chemical conversion** methods, both of which have real-world parallels in existing research.
 
-> [Speculative Design \| Fart&nbsp;Reactor](https://medium.com/@diyaz.yakubov/speculative-design-fart-reactor-35c1d7b6ef5b)
-
-> [**1.From Taboo to Technology** : Why farts might be worth harnessing.](https://medium.com/@diyaz.yakubov/speculative-design-from-taboo-to-technology-why-farts-might-be-worth-harnessing-42b71ec5aeb0)
-
-> **2.Inside the Fart Reactor** : A look at the hypothetical mechanics.👈
-
-> **3.Breaking the Silence** : Social and cultural impacts of body-powered devices.
-
-> **4.Beyond Farts** : Other human-based bioenergy innovations.
-
-> **5.Design Challenges** : Comfort, efficiency, and privacy concerns.
-
-> **6.Ethics and Ownership** : Who controls the data tied to our bodily by-products?
-
-> **7.Speculative Futures** : Where human-powered tech could lead us&nbsp;next.
+_Part of the Speculative Design series. [See all parts &rarr;](/speculative-design.html)_
 
 ### Capturing the&nbsp;Gas
 

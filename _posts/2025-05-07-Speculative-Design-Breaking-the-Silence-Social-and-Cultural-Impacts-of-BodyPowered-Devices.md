@@ -10,21 +10,7 @@ original_link: https://medium.com/@diyaz.yakubov/speculative-design-breaking-the
 ---
 In the first two articles, we explored **why** someone might harness flatulence for energy and **how** a hypothetical device could convert gas into usable electricity. But technology doesn’t exist in a vacuum. Whether it’s an ordinary smartphone or a futuristic “fart reactor,” people’s perceptions — shaped by culture, etiquette, and taboo — can make or break innovation. In this third article, we examine how body-powered devices might shift social norms, why humour can help, and where personal comfort and privacy fit into the&nbsp;picture.
 
-> [Speculative Design \| Fart&nbsp;Reactor](https://medium.com/@diyaz.yakubov/speculative-design-fart-reactor-35c1d7b6ef5b)
-
-> [**1.From Taboo to Technology** : Why farts might be worth harnessing.](https://medium.com/@diyaz.yakubov/speculative-design-from-taboo-to-technology-why-farts-might-be-worth-harnessing-42b71ec5aeb0)
-
-> [**2.Inside the Fart Reactor** : A look at the hypothetical mechanics.](https://medium.com/@diyaz.yakubov/speculative-design-inside-the-fart-reactor-a-look-at-the-hypothetical-mechanics-e30a887da940)
-
-> **3.Breaking the Silence** : Social and cultural impacts of body-powered devices.&nbsp;👈
-
-> **4.Beyond Farts** : Other human-based bioenergy innovations.
-
-> **5.Design Challenges** : Comfort, efficiency, and privacy concerns.
-
-> **6.Ethics and Ownership** : Who controls the data tied to our bodily by-products?
-
-> **7.Speculative Futures** : Where human-powered tech could lead us&nbsp;next.
+_Part of the Speculative Design series. [See all parts &rarr;](/speculative-design.html)_
 
 ### 1. The Taboo&nbsp;Factor
 

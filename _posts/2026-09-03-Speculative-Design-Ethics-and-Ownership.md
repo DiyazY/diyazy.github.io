@@ -2,6 +2,7 @@
 layout: post
 author: Diyaz Yakubov
 title: "Speculative Design | Ethics and Ownership: Who Owns the Data Your Body Makes?"
+description: "When the body becomes a power source, the energy is a rounding error and the data is the asset. On who owns what your body produces — and who really benefits."
 date: 2026-09-03 06:00:00 UTC
 background: /assets/images/posts/2026-09-03-Speculative-Design-Ethics-and-Ownership/img-01.png
 excerpt_separator: <!--more-->
@@ -37,7 +38,7 @@ This asymmetry isn't hypothetical or unique to speculative gadgets. It's the pat
 
 We have decent language for who owns a song or a house. We have almost none for who owns the exhaust of a living body.
 
-The law is patchy and jurisdictional. A few places treat biometric data as special — Illinois's biometric privacy act lets people sue over it; the EU's data-protection rules put biometric and health data in a protected category needing explicit consent. Most of the world has neither. And "consent," in practice, is a checkbox at setup that nobody reads and no one can meaningfully refuse if the device is a condition of a job.
+The law is patchy and jurisdictional. A few places treat biometric data as special — Illinois's biometric privacy act lets people sue over its misuse; the EU's data-protection rules treat biometric and health data as a special category with extra restrictions on how it can be processed. Most of the world has neither. And "consent," in practice, is a checkbox at setup that nobody reads and no one can meaningfully refuse if the device is a condition of a job.
 
 The principles that would make this fair aren't exotic. Data from the body should default to the person the body belongs to. Harvesting energy shouldn't be a trojan horse for collecting a health record. Consent has to be real — revocable, legible, and not coerced by employment. What's missing isn't the ideas. It's any obligation to follow them.
 

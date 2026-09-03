@@ -47,7 +47,7 @@ image: /assets/images/posts/2025-03-10-Speculative-Design-Fart-Reactor/img-01.pn
       <li class="series-item">
         <span class="part-label">{% if forloop.first %}Start here{% else %}Part {{ forloop.index0 }}{% endif %}<span class="part-date">{{ post.date | date: "%b %Y" }}</span></span>
         <h2><a href="{{ post.url }}">{{ post.title | remove_first: "Speculative Design | " }}</a></h2>
-        <p class="part-summary">{{ post.excerpt | strip_html | normalize_whitespace | truncate: 180 }}</p>
+        <p class="part-summary">{{ post.description | default: post.excerpt | strip_html | normalize_whitespace | truncate: 180 }}</p>
       </li>
       {%- endfor %}
     </ol>

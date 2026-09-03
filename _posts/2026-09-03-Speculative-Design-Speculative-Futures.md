@@ -2,6 +2,7 @@
 layout: post
 author: Diyaz Yakubov
 title: "Speculative Design | Speculative Futures: Where Human-Powered Tech Could Lead Us Next"
+description: "The finale of the speculative bioenergy series: three futures for human-powered technology — hopeful, grim, and boring-but-likely — and what the whole strange arc was really about."
 date: 2026-09-03 06:30:00 UTC
 background: /assets/images/posts/2026-09-03-Speculative-Design-Speculative-Futures/img-01.png
 excerpt_separator: <!--more-->
@@ -17,7 +18,7 @@ Seven parts ago I introduced a wearable that runs on flatulence and promised it 
 
 In the good version, "harvest, don't waste" stops being a slogan for power plants and becomes a habit at the scale of a single body.
 
-Nobody is charging a laptop off their own metabolism — the physics forbids it. But the low end of the power budget is real and useful. A pacemaker that never needs a replacement surgery because it sips energy from the heartbeat around it. A remote sensor in a place with no grid, kept alive by the warmth and motion of whoever tends it. A medical patch that monitors a chronic condition and powers itself from the sweat it's already reading. In this future the body doesn't run your devices; it quietly tops up the few that are small enough and important enough to matter, and the win is independence — from batteries, from wall sockets, from the maintenance that makes so much medical tech fragile.
+Nobody is charging a laptop off their own metabolism — you can't capture nearly enough of it, efficiently or safely, to come close. But the low end of the power budget is real and useful. A pacemaker that never needs a replacement surgery because it sips energy from the heartbeat around it. A remote sensor in a place with no grid, kept alive by the warmth and motion of whoever tends it. A medical patch that monitors a chronic condition and powers itself from the sweat it's already reading. In this future the body doesn't run your devices; it quietly tops up the few that are small enough and important enough to matter, and the win is independence — from batteries, from wall sockets, from the maintenance that makes so much medical tech fragile.
 
 Its real payload isn't the watts. It's a shift in mindset — the same one the whole series has been circling — where a byproduct stops being waste the moment you look at it as a resource.
 

@@ -3,9 +3,12 @@ Renders a single project card from a _data/projects.yml entry.
 
 Usage: {% include project-card.html item=item %}
 
-Two variants, chosen by whether item.image is set:
-  - with image    -> two-column grid, badge overlaid on the image
-  - without image -> .project-card--compact, badge inline above the title
+Every card is a two-column card. If item.image is set it fills the left column;
+otherwise a generated brand "plate" — an inline-SVG monogram on a faint grid,
+with a category-coloured keyline — is drawn in its place, so a project without a
+cover still reads as intentional. The plate is inline SVG (not a baked image) so
+it inherits the theme tokens and flips light/dark. The badge overlays the
+image / plate in both cases.
 {%- endcomment -%}
 {%- assign item = include.item -%}
 {%- comment -%}
@@ -14,18 +17,51 @@ Two variants, chosen by whether item.image is set:
 {%- endcomment -%}
 {%- assign has_image = false -%}
 {%- if item.image and item.image != "" -%}{%- assign has_image = true -%}{%- endif -%}
-<div class="project-card{% unless has_image %} project-card--compact{% endunless %}">
-  {%- if has_image %}
-  <div class="project-image" style="background-image: url('{{ site.baseurl }}/assets/images/projects/{{ item.image }}');">
+<div class="project-card">
+  <div class="project-image"{% if has_image %} style="background-image: url('{{ site.baseurl }}/assets/images/projects/{{ item.image }}');"{% endif %}>
+    {%- unless has_image %}
+    {%- comment -%}
+      Placeholder mark: an explicit item.monogram wins; otherwise take the first
+      two characters of the name (hyphens/spaces stripped) so "DayWatch" -> "Da"
+      and "di-agent" -> "di" stay distinct and keep each project's own casing.
+      The grid pattern id is slugified per project to avoid duplicate SVG ids
+      when several plates render on the same page.
+    {%- endcomment -%}
+    {%- if item.monogram and item.monogram != "" -%}
+      {%- assign monogram = item.monogram -%}
+    {%- else -%}
+      {%- assign monogram = item.name | remove: " " | remove: "-" | slice: 0, 2 -%}
+    {%- endif -%}
+    {%- comment -%} Shrink the type as the mark gets longer so it always fits the plate. {%- endcomment -%}
+    {%- assign mono_len = monogram | size -%}
+    {%- case mono_len -%}
+      {%- when 1 -%}{%- assign mono_size = 132 -%}
+      {%- when 2 -%}{%- assign mono_size = 104 -%}
+      {%- when 3 -%}{%- assign mono_size = 78 -%}
+      {%- when 4 -%}{%- assign mono_size = 60 -%}
+      {%- else -%}{%- assign mono_size = 48 -%}
+    {%- endcase -%}
+    {%- assign grid_id = item.name | slugify -%}
+    <svg class="project-placeholder" viewBox="0 0 280 220" preserveAspectRatio="xMidYMid slice" aria-hidden="true" focusable="false">
+      <defs>
+        <pattern id="ph-grid-{{ grid_id }}" width="20" height="20" patternUnits="userSpaceOnUse">
+          <path class="ph-grid" d="M20 0H0V20" fill="none" />
+        </pattern>
+      </defs>
+      <rect class="ph-field" width="280" height="220" />
+      <rect width="280" height="220" fill="url(#ph-grid-{{ grid_id }})" />
+      {%- comment -%} Centred so cover-cropping on tall cards trims symmetrically and never clips the mark. {%- endcomment -%}
+      <text class="ph-mono" x="140" y="102" text-anchor="middle" dominant-baseline="central" font-size="{{ mono_size }}">{{ monogram }}</text>
+      {%- if item.badge %}
+      <rect class="ph-key ph-key--{{ item.badge.style }}" x="112" y="170" width="56" height="5" rx="2.5" />
+      {%- endif %}
+    </svg>
+    {%- endunless %}
     {%- if item.badge %}
     <span class="project-badge badge-{{ item.badge.style }}">{{ item.badge.text }}</span>
     {%- endif %}
   </div>
-  {%- endif %}
   <div class="project-info">
-    {%- if item.badge and has_image == false %}
-    <span class="project-badge badge-{{ item.badge.style }}">{{ item.badge.text }}</span>
-    {%- endif %}
     <h3>{{ item.name }}</h3>
     <p class="project-description">{{ item.description }}</p>
     {%- if item.tech %}

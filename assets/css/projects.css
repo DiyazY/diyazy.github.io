@@ -75,25 +75,37 @@
   background-position: center;
 }
 
-/* Compact variant - projects without a cover image.
-   Drops the image column so the card doesn't render an empty grey block. */
-.project-card--compact {
-  grid-template-columns: 1fr;
+/* Generated brand placeholder — fills the image column when a project has no
+   cover image, replacing the old compact card. Inline SVG (see
+   _includes/project-card.html) so it inherits the theme tokens and flips
+   light/dark, and stays crisp at any size. */
+.project-placeholder {
+  display: block;
+  width: 100%;
+  height: 100%;
+}
+.project-placeholder .ph-field { fill: var(--color-bg-tertiary, #e8e8e8); }
+.project-placeholder .ph-grid {
+  stroke: var(--color-accent, #c9a227);
+  stroke-width: 0.5;
+  opacity: 0.16;
+}
+/* font-size is set per-mark as an SVG attribute in project-card.html (shorter
+   marks render larger); letter-spacing is em-relative so it tracks that size. */
+.project-placeholder .ph-mono {
+  fill: var(--color-primary, #2a2521);
+  font-family: var(--font-family, sans-serif);
+  font-weight: 800;
+  letter-spacing: -0.04em;
 }
 
-/* .project-info sets padding-left: 0 because the image normally fills the
-   left column. With no image, restore padding on all four sides. */
-.project-card--compact .project-info {
-  padding: 20px;
-}
-
-/* The badge is absolutely positioned over the image by default; with no
-   image it sits inline above the title instead. */
-.project-card--compact .project-badge {
-  position: static;
-  align-self: flex-start;
-  margin-bottom: 10px;
-}
+/* Baseline keyline echoes the badge's category colour (mirrors .badge-* below,
+   so the plate and its badge read as the same category). */
+.ph-key--live { fill: #22c55e; }
+.ph-key--research { fill: #3b82f6; }
+.ph-key--soon { fill: #f59e0b; }
+.ph-key--tool { fill: #7c3aed; }
+.ph-key--wip { fill: #64748b; }
 
 .project-badge {
   position: absolute;

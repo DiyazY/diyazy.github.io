@@ -19,7 +19,12 @@
 # Per item:
 #   name         required
 #   image        filename in assets/images/projects/. Omit, or set to null or
-#                "", for a compact image-less card (.project-card--compact).
+#                "", to render a generated brand plate (a monogram on a faint
+#                grid, with a category-coloured keyline) in place of a cover.
+#   monogram     optional 1-3 char override for the plate's mark. Defaults to
+#                the first two characters of the name, hyphens/spaces stripped
+#                ("DayWatch" -> "Da", "di-agent" -> "di"). Ignored when an
+#                image is set.
 #   badge        text + style; style maps to the CSS class badge-{style}
 #                (live, research, soon, tool, wip)
 #   description  long form, shown on the projects page
@@ -56,6 +61,7 @@
           icon: globe
 
     - name: busypipe
+      image: busypipe.webp
       badge:
         text: Live
         style: live
@@ -98,6 +104,7 @@
   llms_section: Projects
   items:
     - name: DayWatch
+      monogram: DW
       badge:
         text: Open Source
         style: tool
@@ -120,6 +127,7 @@
   llms_section: Research
   items:
     - name: Di-Select
+      image: di-select.webp
       badge:
         text: Published
         style: research
@@ -170,6 +178,7 @@
           icon: paper
 
     - name: di-agent
+      monogram: "di-a"
       badge:
         text: In Progress
         style: wip

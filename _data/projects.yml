@@ -132,7 +132,7 @@
         text: Published
         style: research
       description: >
-        A criteria-driven framework for choosing container orchestration distributions across
+        A criteria-driven framework for selecting container orchestration distributions across
         cloud and edge. Built from a structured literature review followed by grounded-theory
         coding, producing seven evaluation constructs and fifteen causal propositions that
         formalise the trade-offs between them. Published open access in Cluster Computing 29,
@@ -147,7 +147,7 @@
         - label: Paper
           url: https://doi.org/10.1007/s10586-026-06269-5
           icon: paper
-        - label: GitHub
+        - label: Code & data
           url: https://github.com/DiyazY/di-select
           icon: github
 
@@ -274,7 +274,7 @@
         Doctoral research at Tampere University
       tech: [Go, Edge Computing, Agents, Kubernetes]
       links:
-        - label: GitHub
+        - label: Code & data
           url: https://github.com/DiyazY/di-agent
           icon: github
 

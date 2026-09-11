@@ -177,6 +177,43 @@
           url: https://doi.org/10.1007/978-3-031-84617-5_8
           icon: paper
 
+    - name: Energy-Aware Edge Kubernetes
+      badge:
+        text: Accepted
+        style: research
+      description: >
+        An energy characterisation of five lightweight Kubernetes distributions on ARM edge
+        hardware (Raspberry Pi 4), combining a DVFS-based energy model, interrupt-storm profiling,
+        and thermal-stability analysis. It finds that CPU frequency does not predict orchestration
+        performance — the latency and throughput gaps between distributions are software-level
+        overhead, not hardware. Accepted as "Energy-Aware Kubernetes Distribution Selection for
+        Battery-Constrained Edge Devices" at ESOCC 2026 (Springer LNCS) with David Hästbacka;
+        proceedings to appear.
+      summary: >-
+        Energy characterisation of five lightweight Kubernetes distributions on battery-constrained
+        ARM edge hardware — DVFS energy model, interrupt profiling, and thermal stability, showing
+        CPU frequency does not predict orchestration performance. Accepted at ESOCC 2026, Springer
+        LNCS, to appear
+      tech: [Kubernetes, Edge Computing, Energy, ARM, DVFS]
+
+    - name: k0s Overhead Decomposition
+      monogram: k0s
+      badge:
+        text: Accepted
+        style: research
+      description: >
+        A cgroup-level decomposition of the per-container resource overhead of k0s system
+        components, answering which component dominates idle overhead and how it scales under load.
+        The idle "orchestration tax" is about 1.5% CPU and 46 MiB RAM, with kube-apiserver alone
+        accounting for two-thirds of idle CPU overhead. Accepted as "Per-Container Overhead
+        Decomposition for k0s: A cgroup-Level Analysis" at ESOCC 2026 (Springer LNCS) with
+        David Hästbacka; proceedings to appear.
+      summary: >-
+        cgroup-level decomposition of per-container overhead in k0s system components — isolating
+        the idle orchestration tax (~1.5% CPU, 46 MiB RAM; kube-apiserver two-thirds of idle CPU)
+        and how it scales under load. Accepted at ESOCC 2026, Springer LNCS, to appear
+      tech: [Kubernetes, k0s, Edge Computing, cgroups, Observability]
+
     - name: di-agent
       monogram: "di-a"
       badge:

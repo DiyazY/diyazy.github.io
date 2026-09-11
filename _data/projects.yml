@@ -151,31 +151,59 @@
           url: https://github.com/DiyazY/di-select
           icon: github
 
-    - name: IoT Edge Kubernetes
-      image: iot-edge.webp
+    - name: "Edge Kubernetes: Performance"
+      monogram: Perf
       badge:
         text: Published
         style: research
       description: >
-        Comparative analysis of five lightweight Kubernetes distributions on Raspberry Pi
-        hardware, covering performance, resource efficiency, security, resilience, and
-        maintainability. Published as two chapters in ESOCC 2025 (Springer, Lecture Notes
-        in Computer Science).
+        An empirical comparison of five lightweight Kubernetes distributions — k0s, k3s, k8s,
+        KubeEdge, OpenYurt — on an Intel NUC + Raspberry Pi testbed, measuring CPU, memory, disk,
+        throughput, and latency under varying workloads. k3s shows the lowest resource consumption,
+        while k0s and k8s lead on data-plane throughput and latency; under heavy stress k3s and k0s
+        finish fastest. Full title "Comparative Analysis of Lightweight Kubernetes Distributions for
+        Edge Computing: Performance and Resource Efficiency", published in ESOCC 2025 (Springer LNCS
+        15547) with David Hästbacka.
       summary: >-
-        Comparative analysis of five lightweight Kubernetes distributions on edge hardware,
-        covering performance, resource efficiency, security, resilience, and maintainability.
-        Published as two chapters in ESOCC 2025 (Springer LNCS)
-      tech: [Kubernetes, Python, Shell, Edge Computing]
+        Empirical performance and resource-efficiency comparison of five lightweight Kubernetes
+        distributions (k0s, k3s, k8s, KubeEdge, OpenYurt) on Intel NUC + Raspberry Pi hardware —
+        CPU, memory, throughput, latency. First chapter of the edge series; ESOCC 2025, Springer
+        LNCS 15547
+      tech: [Kubernetes, Edge Computing, Benchmarking, Performance]
       links:
-        - label: GitHub
-          url: https://github.com/DiyazY/iot-edge
-          icon: github
-        - label: Performance
+        - label: Paper
           url: https://doi.org/10.1007/978-3-031-84617-5_7
           icon: paper
-        - label: Security
+        - label: Code & data
+          url: https://github.com/DiyazY/iot-edge
+          icon: github
+
+    - name: "Edge Kubernetes: Security & Resilience"
+      monogram: Sec
+      badge:
+        text: Published
+        style: research
+      description: >
+        A companion study evaluating the same five lightweight Kubernetes distributions on security
+        compliance (via kube-bench), resilience under simulated network outages, and maintainability.
+        k3s and k0s are the easiest to operate but score lower on security compliance; k8s is balanced
+        but resource-intensive; KubeEdge and OpenYurt harden security and outage resilience at the
+        cost of complexity and resource use. Full title "Comparative Analysis of Lightweight
+        Kubernetes Distributions for Edge Computing: Security, Resilience and Maintainability",
+        published in ESOCC 2025 (Springer LNCS 15547) with David Hästbacka.
+      summary: >-
+        Security-compliance (kube-bench), network-outage resilience, and maintainability comparison
+        of five lightweight Kubernetes distributions — k3s/k0s easiest to operate but weaker on
+        security; KubeEdge/OpenYurt harden resilience at higher cost. Second chapter of the edge
+        series; ESOCC 2025, Springer LNCS 15547
+      tech: [Kubernetes, Edge Computing, Security, Resilience]
+      links:
+        - label: Paper
           url: https://doi.org/10.1007/978-3-031-84617-5_8
           icon: paper
+        - label: Code & data
+          url: https://github.com/DiyazY/iot-edge
+          icon: github
 
     - name: "Edge Kubernetes: CPU & Energy"
       monogram: En

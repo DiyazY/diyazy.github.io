@@ -132,87 +132,131 @@
         text: Published
         style: research
       description: >
-        A criteria-driven framework for choosing container orchestration distributions across
+        A criteria-driven framework for selecting container orchestration distributions across
         cloud and edge. Built from a structured literature review followed by grounded-theory
         coding, producing seven evaluation constructs and fifteen causal propositions that
-        formalise the trade-offs between them. Published open access in Cluster Computing 29(8)
-        with Sergio Moreschini and David Hästbacka.
+        formalise the trade-offs between them. Published open access in Cluster Computing 29,
+        article 478 (2026) with Sergio Moreschini and David Hästbacka.
       summary: >-
         Criteria-driven framework for selecting container orchestration distributions in cloud
         and edge computing — seven evaluation constructs and fifteen causal propositions,
-        derived via structured literature review and grounded theory. Cluster Computing 29(8),
-        2026, open access
+        derived via structured literature review and grounded theory. Cluster Computing 29,
+        article 478 (2026), open access
       tech: [Grounded Theory, Edge Computing, Orchestration]
       links:
         - label: Paper
           url: https://doi.org/10.1007/s10586-026-06269-5
           icon: paper
-        - label: GitHub
+        - label: Code & data
           url: https://github.com/DiyazY/di-select
           icon: github
 
-    - name: IoT Edge Kubernetes
-      image: iot-edge.webp
+    - name: "Edge Kubernetes: Performance"
+      monogram: Perf
       badge:
         text: Published
         style: research
       description: >
-        Comparative analysis of five lightweight Kubernetes distributions on Raspberry Pi
-        hardware, covering performance, resource efficiency, security, resilience, and
-        maintainability. Published as two chapters in ESOCC 2025 (Springer, Lecture Notes
-        in Computer Science).
+        An empirical comparison of five lightweight Kubernetes distributions — k0s, k3s, k8s,
+        KubeEdge, OpenYurt — on an Intel NUC + Raspberry Pi testbed, measuring CPU, memory, disk,
+        throughput, and latency under varying workloads. k3s shows the lowest resource consumption,
+        while k0s and k8s lead on data-plane throughput and latency; under heavy stress k3s and k0s
+        finish fastest. Full title "Comparative Analysis of Lightweight Kubernetes Distributions for
+        Edge Computing: Performance and Resource Efficiency", published in ESOCC 2025 (Springer LNCS
+        15547) with David Hästbacka.
       summary: >-
-        Comparative analysis of five lightweight Kubernetes distributions on edge hardware,
-        covering performance, resource efficiency, security, resilience, and maintainability.
-        Published as two chapters in ESOCC 2025 (Springer LNCS)
-      tech: [Kubernetes, Python, Shell, Edge Computing]
+        Empirical performance and resource-efficiency comparison of five lightweight Kubernetes
+        distributions (k0s, k3s, k8s, KubeEdge, OpenYurt) on Intel NUC + Raspberry Pi hardware —
+        CPU, memory, throughput, latency. First chapter of the edge series; ESOCC 2025, Springer
+        LNCS 15547
+      tech: [Kubernetes, Edge Computing, Benchmarking, Performance]
       links:
-        - label: GitHub
-          url: https://github.com/DiyazY/iot-edge
-          icon: github
-        - label: Performance
+        - label: Paper
           url: https://doi.org/10.1007/978-3-031-84617-5_7
           icon: paper
-        - label: Security
+        - label: Code & data
+          url: https://github.com/DiyazY/iot-edge
+          icon: github
+
+    - name: "Edge Kubernetes: Security & Resilience"
+      monogram: Sec
+      badge:
+        text: Published
+        style: research
+      description: >
+        A companion study evaluating the same five lightweight Kubernetes distributions on security
+        compliance (via kube-bench), resilience under simulated network outages, and maintainability.
+        k3s and k0s are the easiest to operate but score lower on security compliance; k8s is balanced
+        but resource-intensive; KubeEdge and OpenYurt harden security and outage resilience at the
+        cost of complexity and resource use. Full title "Comparative Analysis of Lightweight
+        Kubernetes Distributions for Edge Computing: Security, Resilience and Maintainability",
+        published in ESOCC 2025 (Springer LNCS 15547) with David Hästbacka.
+      summary: >-
+        Security-compliance (kube-bench), network-outage resilience, and maintainability comparison
+        of five lightweight Kubernetes distributions — k3s/k0s easiest to operate but weaker on
+        security; KubeEdge/OpenYurt harden resilience at higher cost. Second chapter of the edge
+        series; ESOCC 2025, Springer LNCS 15547
+      tech: [Kubernetes, Edge Computing, Security, Resilience]
+      links:
+        - label: Paper
           url: https://doi.org/10.1007/978-3-031-84617-5_8
           icon: paper
+        - label: Code & data
+          url: https://github.com/DiyazY/iot-edge
+          icon: github
 
-    - name: Energy-Aware Edge Kubernetes
+    - name: "Edge Kubernetes: CPU & Energy"
+      monogram: En
       badge:
         text: Accepted
         style: research
       description: >
-        An energy characterisation of five lightweight Kubernetes distributions on ARM edge
-        hardware (Raspberry Pi 4), combining a DVFS-based energy model, interrupt-storm profiling,
-        and thermal-stability analysis. It finds that CPU frequency does not predict orchestration
-        performance — the latency and throughput gaps between distributions are software-level
-        overhead, not hardware. Accepted as "Energy-Aware Kubernetes Distribution Selection for
-        Battery-Constrained Edge Devices" at ESOCC 2026 (Springer LNCS) with David Hästbacka;
-        proceedings to appear.
+        The third study in the lightweight-Kubernetes edge series (after the two ESOCC 2025
+        chapters), and the first to model energy rather than raw CPU. A DVFS-based power model
+        calibrated to the ARM Cortex-A72 (Raspberry Pi 4) compares five distributions — k8s, k3s,
+        k0s, KubeEdge, OpenYurt — across idle and pod-churn workloads, with interrupt-storm profiling
+        and thermal analysis. At idle all five draw within ~1.5%; under load k8s is the most
+        energy-efficient per pod lifecycle despite being full-featured, and CPU frequency does not
+        predict orchestration performance — the differences are software-architectural, not
+        hardware. Full title "Comparative Analysis of Lightweight Kubernetes Distributions for Edge
+        Computing: CPU Microarchitecture and Energy Efficiency", accepted at ESOCC 2026 (Springer
+        LNCS) with Sergio Moreschini and David Hästbacka; proceedings to appear.
       summary: >-
-        Energy characterisation of five lightweight Kubernetes distributions on battery-constrained
-        ARM edge hardware — DVFS energy model, interrupt profiling, and thermal stability, showing
-        CPU frequency does not predict orchestration performance. Accepted at ESOCC 2026, Springer
-        LNCS, to appear
-      tech: [Kubernetes, Edge Computing, Energy, ARM, DVFS]
+        Energy comparison of five lightweight Kubernetes distributions (k8s, k3s, k0s, KubeEdge,
+        OpenYurt) on ARM edge hardware via a DVFS power model, with interrupt and thermal analysis —
+        finding CPU frequency does not predict orchestration performance and k8s is most efficient
+        per pod. Third in the edge series; accepted at ESOCC 2026, Springer LNCS, to appear
+      tech: [Kubernetes, Edge Computing, Energy, DVFS, ARM]
+      links:
+        - label: Code & data
+          url: https://github.com/DiyazY/kd-edge-internals
+          icon: github
 
-    - name: k0s Overhead Decomposition
-      monogram: k0s
+    - name: Edge Computing Orchestration Overhead
+      monogram: OH
       badge:
         text: Accepted
         style: research
       description: >
-        A cgroup-level decomposition of the per-container resource overhead of k0s system
-        components, answering which component dominates idle overhead and how it scales under load.
-        The idle "orchestration tax" is about 1.5% CPU and 46 MiB RAM, with kube-apiserver alone
-        accounting for two-thirds of idle CPU overhead. Accepted as "Per-Container Overhead
-        Decomposition for k0s: A cgroup-Level Analysis" at ESOCC 2026 (Springer LNCS) with
-        David Hästbacka; proceedings to appear.
+        The first per-container decomposition of a Kubernetes distribution on real edge hardware.
+        Using cgroups v2 telemetry on a k0s worker, it attributes orchestration overhead to the four
+        worker-side system pods (kube-apiserver/konnectivity-agent, controller-manager, kube-proxy,
+        CoreDNS) and tracks how the "orchestration tax" scales from idle through control-plane churn
+        to a busy data plane. At idle one pod carries two-thirds of system CPU while the whole tax is
+        ~0.38% of the node; control-plane churn multiplies system CPU 9.2×, and memory stays a
+        near-fixed ~46–60 MiB band. Full title "Edge Computing Orchestration Overhead: Analysing
+        Per-Container Decomposition of Kubernetes on Edge Using cgroup Telemetry", accepted at ESOCC
+        2026 (Springer LNCS) with Sergio Moreschini and David Hästbacka; proceedings to appear.
       summary: >-
-        cgroup-level decomposition of per-container overhead in k0s system components — isolating
-        the idle orchestration tax (~1.5% CPU, 46 MiB RAM; kube-apiserver two-thirds of idle CPU)
-        and how it scales under load. Accepted at ESOCC 2026, Springer LNCS, to appear
-      tech: [Kubernetes, k0s, Edge Computing, cgroups, Observability]
+        First per-container decomposition of a Kubernetes distribution on real edge hardware — cgroup
+        telemetry on a k0s worker attributing the orchestration tax across four system pods and its
+        scaling under load (idle ~0.38% of node; control-plane churn 9.2× system CPU). Accepted at
+        ESOCC 2026, Springer LNCS, to appear
+      tech: [Kubernetes, k0s, cgroups, Edge Computing, Observability]
+      links:
+        - label: Code & data
+          url: https://github.com/DiyazY/kd-edge-internals
+          icon: github
 
     - name: di-agent
       monogram: "di-a"
@@ -230,7 +274,7 @@
         Doctoral research at Tampere University
       tech: [Go, Edge Computing, Agents, Kubernetes]
       links:
-        - label: GitHub
+        - label: Code & data
           url: https://github.com/DiyazY/di-agent
           icon: github
 

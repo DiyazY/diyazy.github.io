@@ -135,13 +135,13 @@
         A criteria-driven framework for choosing container orchestration distributions across
         cloud and edge. Built from a structured literature review followed by grounded-theory
         coding, producing seven evaluation constructs and fifteen causal propositions that
-        formalise the trade-offs between them. Published open access in Cluster Computing 29(8)
-        with Sergio Moreschini and David Hästbacka.
+        formalise the trade-offs between them. Published open access in Cluster Computing 29,
+        article 478 (2026) with Sergio Moreschini and David Hästbacka.
       summary: >-
         Criteria-driven framework for selecting container orchestration distributions in cloud
         and edge computing — seven evaluation constructs and fifteen causal propositions,
-        derived via structured literature review and grounded theory. Cluster Computing 29(8),
-        2026, open access
+        derived via structured literature review and grounded theory. Cluster Computing 29,
+        article 478 (2026), open access
       tech: [Grounded Theory, Edge Computing, Orchestration]
       links:
         - label: Paper

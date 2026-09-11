@@ -1,6 +1,28 @@
+/* Box sizing reset — include padding and border in an element's declared
+   width/height. Without this, elements that set an explicit width AND padding
+   (e.g. the full-width resume button, the header container on small screens)
+   compute to wider than their container and overflow the viewport on mobile. */
+*,
+*::before,
+*::after {
+    box-sizing: border-box;
+}
+
 /* Base layout */
 html {
     scroll-behavior: smooth;
+}
+
+/* Media never forces the page wider than the screen */
+img,
+svg,
+video,
+canvas {
+    max-width: 100%;
+}
+
+img {
+    height: auto;
 }
 
 html, body {

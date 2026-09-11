@@ -123,6 +123,27 @@
   height: auto;
 }
 
+/* Keep long content from overflowing the viewport on mobile:
+   break long words/URLs, and let wide code blocks and tables scroll
+   horizontally within their own box instead of widening the page. */
+.article-post {
+  overflow-wrap: break-word;
+  word-wrap: break-word;
+}
+
+.article-post pre {
+  max-width: 100%;
+  overflow-x: auto;
+  -webkit-overflow-scrolling: touch;
+}
+
+.article-post table {
+  display: block;
+  max-width: 100%;
+  overflow-x: auto;
+  -webkit-overflow-scrolling: touch;
+}
+
 .article-post blockquote {
   border-left: 4px solid var(--color-border-strong, rgba(42, 37, 33, 0.2));
   padding-left: 20px;

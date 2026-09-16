@@ -13,14 +13,21 @@ description: "Diyaz Yakubov — engineer and founder of busypipe. Writing about 
 <div class="panel-container home-grid">
   <div class="item-latest-post mob-h-auto">
     <h2 class="section-title">Latest Posts</h2>
-    {% for post in site.posts limit:2 %}
+    {% for post in site.posts limit:3 %}
     <article class="featured-post">
-      <a href="{{ post.url }}" class="post-link">
-        <h3>{{ post.title }}</h3>
+      {% if post.background %}
+      <a href="{{ post.url }}" class="featured-thumbnail" aria-label="Read {{ post.title }}">
+        <img src="{{ post.background }}" alt="" loading="lazy" decoding="async">
       </a>
-      <p class="post-meta">{{ post.date | date: "%B %d, %Y" }}</p>
-      <p class="post-excerpt">{{ post.excerpt | strip_html | truncate: 150 }}</p>
-      <a href="{{ post.url }}" class="read-more">Read more &rarr;</a>
+      {% endif %}
+      <div class="featured-body">
+        <a href="{{ post.url }}" class="post-link">
+          <h3>{{ post.title }}</h3>
+        </a>
+        <p class="post-meta">{{ post.date | date: "%B %d, %Y" }}</p>
+        <p class="post-excerpt">{{ post.excerpt | strip_html | truncate: 150 }}</p>
+        <a href="{{ post.url }}" class="read-more">Read more &rarr;</a>
+      </div>
     </article>
     {% endfor %}
   </div>

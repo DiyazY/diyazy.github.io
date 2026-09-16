@@ -1,10 +1,13 @@
 name: Sync Medium Posts
 
+# Manual-only. The daily schedule was removed on 2026-09-16: since the
+# diyaz.dev migration the site is the source of truth and posts are authored
+# here first, then cross-posted to Medium. A scheduled Medium->site pull runs
+# against that direction and re-imports cross-posted essays as duplicates (the
+# slug-dedup guard in medium_to_md.rb only catches exact title-slug matches).
+# Kept as workflow_dispatch so a deliberate one-off import is still possible.
 on:
-  schedule:
-    # Runs daily at 08:00 UTC
-    - cron: '0 8 * * *'
-  workflow_dispatch: # Allow manual trigger
+  workflow_dispatch: # Manual trigger only
 
 permissions:
   contents: write

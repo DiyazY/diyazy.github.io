@@ -168,6 +168,7 @@
   color: var(--color-text-light, #555);
   margin: 0 0 15px 0;
   line-height: 1.5;
+  font-size: small;
 }
 
 .read-more {

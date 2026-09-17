@@ -35,6 +35,24 @@ kramdown:
 exclude:
   - ROADMAP.md
 
+# Analytics (PostHog, EU cloud)
+# Privacy-first setup: the snippet in _includes/analytics.html runs PostHog in
+# cookieless mode, so it sets no cookies and uses no local/session storage and
+# needs no consent banner (visitor identity is a server-side daily hash). This
+# matches the "no cookie banner needed" goal in ROADMAP.md.
+#
+# api_key is the *public* project key (phc_...). It is designed to ship in
+# client HTML and is safe to commit. Leave it empty to disable analytics
+# entirely — the snippet is skipped when api_key is blank, so local builds and
+# forks stay tracking-free.
+#
+# NOTE: cookieless mode must also be enabled in the PostHog project under
+# Settings > Web analytics > "Cookieless server hash mode", or events are
+# silently dropped.
+posthog:
+  api_key: "phc_Ab5m9tpLKS9gaXkirx4xmjz3Z8SWtvJQ3iFmHNCNTD3U"
+  api_host: "https://eu.i.posthog.com"
+
 # Plugins
 plugins:
   - jekyll-sitemap

@@ -61,14 +61,21 @@
       return;
     }
 
-    const results = searchIndex.filter(item => {
+    const matches = searchIndex.filter(item => {
       const titleMatch = item.title.toLowerCase().includes(query);
       const contentMatch = item.content.toLowerCase().includes(query);
       const tagsMatch = item.tags && item.tags.toLowerCase().includes(query);
       return titleMatch || contentMatch || tagsMatch;
-    }).slice(0, 8); // Limit to 8 results
+    });
 
-    displayResults(results, query);
+    // Let analytics (assets/js/analytics.js) observe the search with the true
+    // match count, before we cap the displayed list below. No-op if nothing is
+    // listening, so this stays independent of whether analytics is loaded.
+    document.dispatchEvent(new CustomEvent('site:search', {
+      detail: { query: query, resultsCount: matches.length }
+    }));
+
+    displayResults(matches.slice(0, 8), query); // Show at most 8 results
   }
 
   // Display search results

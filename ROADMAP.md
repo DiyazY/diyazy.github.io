@@ -329,19 +329,20 @@ To enable comments, you need to:
       </form>
       ```
 
-- [ ] **Analytics** (deferred)
-    - [ ] Choose provider:
-        - **GoatCounter** (recommended) - Free, simple, no cookie banner needed
+- [x] **Analytics** — PostHog, cookieless + EU cloud (see `_config.yml`,
+  `_includes/analytics.html`, `assets/js/analytics.js`)
+    - [x] Choose provider — chose **PostHog**: cookieless server-hash mode means
+      no cookie banner, EU-hosted for GDPR, and product analytics (custom events,
+      funnels) beyond plain page counts. Alternatives evaluated:
+        - **GoatCounter** - Free, simple, no cookie banner needed
         - **Umami** - Free self-host (HomeLab!) or $9/mo cloud
         - **Plausible** - $9/mo or self-host, privacy-friendly
         - **Cloudflare Analytics** - Free if using Cloudflare DNS
-    - [ ] Sign up and get tracking script
-    - [ ] Add to `_includes/analytics.html` and include in `default.html`
-    - [ ] Example (GoatCounter):
-      ```html
-      <script data-goatcounter="https://YOURSITE.goatcounter.com/count"
-              async src="//gc.zgo.at/count.js"></script>
-      ```
+    - [x] Sign up and get tracking script (public key in `_config.yml`)
+    - [x] Add to `_includes/analytics.html` and include in `default.html`
+      (gated on `jekyll.environment == "production"`)
+    - [x] Custom events: search, theme, sharing, outbound clicks, post
+      read-through, homepage tiles (`assets/js/analytics.js`)
 
 - [x] **RSS feed improvements**
     - [x] Full content in feed (content:encoded)

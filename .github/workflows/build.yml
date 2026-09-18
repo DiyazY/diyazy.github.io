@@ -57,6 +57,19 @@ jobs:
       - name: Check generated output
         run: ./.github/scripts/check-build.sh _site
 
+      # Validate scheduled posts too. The production build above sets
+      # future: false, so future-dated posts (e.g. a drip series) are excluded
+      # and never build in CI — a broken one would stay green until it reveals.
+      # Build again with --future into a throwaway dir so those posts are
+      # compiled and checked now. This output is validation-only; it is never
+      # uploaded or deployed (the artifact ships the production _site).
+      - name: Validate scheduled (future-dated) posts
+        run: |
+          bundle exec jekyll build --future --trace --strict_front_matter -d _site_future
+          ./.github/scripts/check-build.sh _site_future
+        env:
+          JEKYLL_ENV: production
+
       # Only main produces a publishable artifact; PR runs stop at the checks.
       - name: Upload Pages artifact
         if: github.ref == 'refs/heads/main'

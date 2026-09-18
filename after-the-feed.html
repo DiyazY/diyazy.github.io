@@ -46,7 +46,7 @@ image: /assets/images/posts/2026-09-18-After-the-Feed-Why-Social-Media-Stopped-F
     <ol class="series-list">
       {%- for post in series %}
       <li class="series-item">
-        <span class="part-label">{% if forloop.first %}Start here{% else %}Part {{ forloop.index0 }}{% endif %}<span class="part-date">{{ post.date | date: "%b %Y" }}</span></span>
+        <span class="part-label">{% if forloop.first %}Start here{% else %}Part {{ forloop.index }}{% endif %}<span class="part-date">{{ post.date | date: "%b %Y" }}</span></span>
         <h2><a href="{{ post.url }}">{{ post.title | remove_first: "After the Feed | " }}</a></h2>
         <p class="part-summary">{{ post.description | default: post.excerpt | strip_html | normalize_whitespace | truncate: 180 }}</p>
       </li>

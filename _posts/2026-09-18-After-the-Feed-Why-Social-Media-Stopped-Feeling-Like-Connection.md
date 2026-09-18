@@ -3,7 +3,7 @@ layout: post
 author: Diyaz Yakubov
 title: "After the Feed | Why social media stopped feeling like connection"
 description: "Social apps quietly changed jobs — from connecting you to people to keeping you watching. Part 1 of a field guide to what broke, and what's being built to replace it."
-date: 2026-09-18 09:00:00 UTC
+date: 2026-09-18 06:00:00 UTC
 background: /assets/images/posts/2026-09-18-After-the-Feed-Why-Social-Media-Stopped-Feeling-Like-Connection/img-01.png
 excerpt_separator: <!--more-->
 tags: [after-the-feed, social-media, technology, future]
@@ -94,7 +94,7 @@ This is a field guide, not a manifesto. Over the next parts I'll follow that one
 
 The wager underneath all of it is simple: the next platform that matters won't win by having a better feed. It'll win by not being a feed at all.
 
-_Next in the series: **Part 2 — how the last three social takeovers actually happened**, and the pattern hiding inside WhatsApp, Instagram, and Telegram. [See all parts &rarr;](/after-the-feed.html)_
+_Next: [**Part 2 — how the last three social takeovers actually happened** &rarr;](/2026/09/18/After-the-Feed-How-the-Last-Three-Takeovers-Actually-Happened.html), and the pattern hiding inside WhatsApp, Instagram, and Telegram._
 
 ## References
 

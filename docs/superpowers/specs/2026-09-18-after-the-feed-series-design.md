@@ -130,13 +130,32 @@ reasonable search, it doesn't go in the post under Diyaz's name.
 figures (55% / 47% / 61%); the algorithmic-dependency-vs-usage finding. The
 3-era shift is conceptual (diagram, no stats).
 
-## 7. Cadence & build order
-- Dates: Part 1 dated on/near publish day (≤ today so it builds); later parts
-  spaced a few days apart. If a scheduled drip is wanted, either publish
-  incrementally or add `future: true` to `_config.yml` (decide at batch time).
-- Build order: (a) this spec → (b) verification pass → (c) Part 1 + its cover +
-  the hub page + tag wiring, as the pilot → (d) review → (e) Parts 2–7 + covers
-  + diagrams → (f) final link-in from blog/nav/homepage.
+## 7. Cadence & rollout (weekly drip)
+Decided: reveal one post per Wednesday, starting 2026-09-23. Mechanism:
+- Each post is **future-dated** to its Wednesday (08:00 UTC). `future: false` in
+  `_config.yml` keeps future-dated posts out of the build entirely — no page, no
+  URL — so they stay hidden until their date.
+- A **weekly cron** in `.github/workflows/build.yml` (`0 14 * * 3`, Wednesdays
+  14:00 UTC) rebuilds and deploys, revealing that week's post. Manual
+  `workflow_dispatch` is the catch-up if a scheduled run is skipped.
+- Filename date = frontmatter date = URL date = cover-dir date, all the Wednesday
+  (the post URL follows the frontmatter `date`, verified empirically).
+- **Forward** cross-links (to a not-yet-published part) point to the hub so they
+  never 404 mid-rollout; **backward** links point directly to the earlier part.
+
+| Part | Reveal (Wed) | URL |
+|---|---|---|
+| 1 | 2026-09-23 | /2026/09/23/After-the-Feed-Why-Social-Media-Stopped-Feeling-Like-Connection.html |
+| 2 | 2026-09-30 | /2026/09/30/After-the-Feed-How-the-Last-Three-Takeovers-Actually-Happened.html |
+| 3 | 2026-10-07 | /2026/10/07/After-the-Feed-The-Apps-Quietly-Proving-People-Want-Out.html |
+| 4 | 2026-10-14 | /2026/10/14/After-the-Feed-Three-Openings-Nobody-Has-Fully-Built.html |
+| 5 | 2026-10-21 | /2026/10/21/After-the-Feed-How-You-Would-Actually-Build-It.html |
+| 6 | 2026-10-28 | /2026/10/28/After-the-Feed-How-It-Pays-For-Itself-Without-Ads.html |
+| 7 | 2026-11-04 | /2026/11/04/After-the-Feed-Where-This-Goes-Next.html |
+
+Caveat: the post source lives in the public repo once merged; only the built
+pages are hidden until each date. Hiding the source too would need a manual
+weekly merge instead of the cron.
 
 ## 8. Out of scope
 - No changes to the Speculative Design series.

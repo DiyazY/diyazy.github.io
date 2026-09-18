@@ -3,14 +3,14 @@ layout: post
 author: Diyaz Yakubov
 title: "After the Feed | Where this goes next"
 description: "The realistic build order, and three honest futures for a post-feed social web — the hopeful one, the grim one, and the boring-but-likely one in between."
-date: 2026-09-18 09:00:00 UTC
-background: /assets/images/posts/2026-09-18-After-the-Feed-Where-This-Goes-Next/img-01.png
+date: 2026-11-04 08:00:00 UTC
+background: /assets/images/posts/2026-11-04-After-the-Feed-Where-This-Goes-Next/img-01.png
 excerpt_separator: <!--more-->
 tags: [after-the-feed, social-media, technology, future]
 ---
 _Part 7, the finale, of **After the Feed**. [See all parts &rarr;](/after-the-feed.html)_
 
-We started with a small, stupid moment — opening an app to see friends and getting a stranger deep-frying a phone — and pulled on the thread under it until it ran through the whole industry. The feed broke ([Part 1](/2026/09/18/After-the-Feed-Why-Social-Media-Stopped-Feeling-Like-Connection.html)). Takeovers happen sideways, not head-on ([Part 2](/2026/09/18/After-the-Feed-How-the-Last-Three-Takeovers-Actually-Happened.html)). People are already paying for the alternative in pieces ([Part 3](/2026/09/18/After-the-Feed-The-Apps-Quietly-Proving-People-Want-Out.html)). Combine the pieces and openings appear ([Part 4](/2026/09/18/After-the-Feed-Three-Openings-Nobody-Has-Fully-Built.html)); the tools to build them exist ([Part 5](/2026/09/18/After-the-Feed-How-You-Would-Actually-Build-It.html)); and it can pay for itself ([Part 6](/2026/09/18/After-the-Feed-How-It-Pays-For-Itself-Without-Ads.html)). So — where does it actually go?
+We started with a small, stupid moment — opening an app to see friends and getting a stranger deep-frying a phone — and pulled on the thread under it until it ran through the whole industry. The feed broke ([Part 1](/2026/09/23/After-the-Feed-Why-Social-Media-Stopped-Feeling-Like-Connection.html)). Takeovers happen sideways, not head-on ([Part 2](/2026/09/30/After-the-Feed-How-the-Last-Three-Takeovers-Actually-Happened.html)). People are already paying for the alternative in pieces ([Part 3](/2026/10/07/After-the-Feed-The-Apps-Quietly-Proving-People-Want-Out.html)). Combine the pieces and openings appear ([Part 4](/2026/10/14/After-the-Feed-Three-Openings-Nobody-Has-Fully-Built.html)); the tools to build them exist ([Part 5](/2026/10/21/After-the-Feed-How-You-Would-Actually-Build-It.html)); and it can pay for itself ([Part 6](/2026/10/28/After-the-Feed-How-It-Pays-For-Itself-Without-Ads.html)). So — where does it actually go?
 
 <!--more-->
 

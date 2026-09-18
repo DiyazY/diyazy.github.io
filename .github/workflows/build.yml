@@ -16,6 +16,13 @@ on:
     branches: [main]
   pull_request:
   workflow_dispatch:
+  # Weekly rollout of future-dated posts (e.g. the "After the Feed" series):
+  # rebuild every Wednesday 14:00 UTC so a post dated that morning reveals on
+  # its date. Scheduled runs use the default branch (main), so the deploy job
+  # (gated on refs/heads/main) publishes. If GitHub ever skips a run, trigger
+  # this workflow manually (workflow_dispatch) to catch up.
+  schedule:
+    - cron: '0 14 * * 3'
 
 permissions:
   contents: read

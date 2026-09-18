@@ -3,14 +3,14 @@ layout: post
 author: Diyaz Yakubov
 title: "After the Feed | Three openings nobody has fully built"
 description: "Combine the proven pieces — constraint, authenticity, tangibility — and three product openings appear: a verified-camera network, a darkroom that mails you things, and an ambient close circle."
-date: 2026-09-18 07:30:00 UTC
-background: /assets/images/posts/2026-09-18-After-the-Feed-Three-Openings-Nobody-Has-Fully-Built/img-01.png
+date: 2026-10-14 08:00:00 UTC
+background: /assets/images/posts/2026-10-14-After-the-Feed-Three-Openings-Nobody-Has-Fully-Built/img-01.png
 excerpt_separator: <!--more-->
 tags: [after-the-feed, social-media, technology, ideas]
 ---
 _Part 4 of **After the Feed**, a field guide to how social media gets rebuilt. [See all parts &rarr;](/after-the-feed.html)_
 
-[Part 3](/2026/09/18/After-the-Feed-The-Apps-Quietly-Proving-People-Want-Out.html) showed the demand is real and already paying: constraint, authenticity, tangibility, all monetized without ads — just scattered across a widget, a journal, a camera mode, and a toy. So the obvious move is to stop scattering. What happens when you combine them, on shared infrastructure, at scale?
+[Part 3](/2026/10/07/After-the-Feed-The-Apps-Quietly-Proving-People-Want-Out.html) showed the demand is real and already paying: constraint, authenticity, tangibility, all monetized without ads — just scattered across a widget, a journal, a camera mode, and a toy. So the obvious move is to stop scattering. What happens when you combine them, on shared infrastructure, at scale?
 
 You get three distinct openings. None fully exists yet. Each is a product someone will build.
 

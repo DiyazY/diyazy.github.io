@@ -3,14 +3,14 @@ layout: post
 author: Diyaz Yakubov
 title: "After the Feed | How you'd actually build it (deep dive)"
 description: "The mechanics of an anti-algorithmic network: an open protocol that splits the pieces apart, a photo signed as real at the shutter, and the trick of hiding all the cryptography behind a normal app."
-date: 2026-09-18 08:00:00 UTC
-background: /assets/images/posts/2026-09-18-After-the-Feed-How-You-Would-Actually-Build-It/img-01.png
+date: 2026-10-21 08:00:00 UTC
+background: /assets/images/posts/2026-10-21-After-the-Feed-How-You-Would-Actually-Build-It/img-01.png
 excerpt_separator: <!--more-->
 tags: [after-the-feed, technology, protocols, deep-dive]
 ---
 _Part 5 of **After the Feed**, a field guide to how social media gets rebuilt. [See all parts &rarr;](/after-the-feed.html)_
 
-**Heads up:** Parts 5 and 6 are the deep dives — the actual mechanics. If you're here for the story rather than the plumbing, [skip to Part 7](/2026/09/18/After-the-Feed-Where-This-Goes-Next.html) and you won't miss the argument. Still here? Good. Let's build the thing from [Part 4](/2026/09/18/After-the-Feed-Three-Openings-Nobody-Has-Fully-Built.html).
+**Heads up:** Parts 5 and 6 are the deep dives — the actual mechanics. If you're here for the story rather than the plumbing, [skip the deep dives](/after-the-feed.html) and you won't miss the argument. Still here? Good. Let's build the thing from [Part 4](/2026/10/14/After-the-Feed-Three-Openings-Nobody-Has-Fully-Built.html).
 
 <!--more-->
 

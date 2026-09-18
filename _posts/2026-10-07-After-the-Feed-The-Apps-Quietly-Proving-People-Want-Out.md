@@ -3,14 +3,14 @@ layout: post
 author: Diyaz Yakubov
 title: "After the Feed | The apps quietly proving people want out"
 description: "Locket, Retro, Halide, and Instax look like unrelated novelties. They're actually a set of live experiments proving that constraint, authenticity, and tangible objects retain people — and make money without ads."
-date: 2026-09-18 07:00:00 UTC
-background: /assets/images/posts/2026-09-18-After-the-Feed-The-Apps-Quietly-Proving-People-Want-Out/img-01.png
+date: 2026-10-07 08:00:00 UTC
+background: /assets/images/posts/2026-10-07-After-the-Feed-The-Apps-Quietly-Proving-People-Want-Out/img-01.png
 excerpt_separator: <!--more-->
 tags: [after-the-feed, social-media, technology, apps]
 ---
 _Part 3 of **After the Feed**, a field guide to how social media gets rebuilt. [See all parts &rarr;](/after-the-feed.html)_
 
-[Part 2](/2026/09/18/After-the-Feed-How-the-Last-Three-Takeovers-Actually-Happened.html) ended on a claim: the opening for a new social platform is *authenticity*, and the overlooked capability is the phone's ability to prove something is real. That could stay a nice theory. Except it isn't only a theory — pieces of it are already shipping, making money, and keeping people around. They just don't look like "the next social network." They look like small, odd, single-purpose apps.
+[Part 2](/2026/09/30/After-the-Feed-How-the-Last-Three-Takeovers-Actually-Happened.html) ended on a claim: the opening for a new social platform is *authenticity*, and the overlooked capability is the phone's ability to prove something is real. That could stay a nice theory. Except it isn't only a theory — pieces of it are already shipping, making money, and keeping people around. They just don't look like "the next social network." They look like small, odd, single-purpose apps.
 
 Put four of them side by side and they stop looking random.
 

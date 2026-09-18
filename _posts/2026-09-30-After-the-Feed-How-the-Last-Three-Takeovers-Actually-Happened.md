@@ -3,14 +3,14 @@ layout: post
 author: Diyaz Yakubov
 title: "After the Feed | How the last three social takeovers actually happened"
 description: "WhatsApp, Instagram, and Telegram didn't win by building a better version of the incumbent. Each caught an overlooked shift in hardware, networks, or trust — and there's a pattern in it."
-date: 2026-09-18 06:30:00 UTC
-background: /assets/images/posts/2026-09-18-After-the-Feed-How-the-Last-Three-Takeovers-Actually-Happened/img-01.png
+date: 2026-09-30 08:00:00 UTC
+background: /assets/images/posts/2026-09-30-After-the-Feed-How-the-Last-Three-Takeovers-Actually-Happened/img-01.png
 excerpt_separator: <!--more-->
 tags: [after-the-feed, social-media, technology, history]
 ---
 _Part 2 of **After the Feed**, a field guide to how social media gets rebuilt. [See all parts &rarr;](/after-the-feed.html)_
 
-In [Part 1](/2026/09/18/After-the-Feed-Why-Social-Media-Stopped-Feeling-Like-Connection.html) I argued that the feed broke in two ways — it got exhausting, and it stopped being believable — and that the thread worth following out of the mess is **trust**. That's the *why*. This part is about the *how*: when a giant social platform actually gets displaced, how does it happen?
+In [Part 1](/2026/09/23/After-the-Feed-Why-Social-Media-Stopped-Feeling-Like-Connection.html) I argued that the feed broke in two ways — it got exhausting, and it stopped being believable — and that the thread worth following out of the mess is **trust**. That's the *why*. This part is about the *how*: when a giant social platform actually gets displaced, how does it happen?
 
 Because it almost never happens the way you'd expect. The winners didn't build a better version of the thing they replaced.
 

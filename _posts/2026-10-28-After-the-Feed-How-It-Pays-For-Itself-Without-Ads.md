@@ -3,14 +3,14 @@ layout: post
 author: Diyaz Yakubov
 title: "After the Feed | How it pays for itself without ads (deep dive)"
 description: "If you're not selling attention, how does a social network survive? Subscriptions, physical prints, and a creator market — and why an unbundled network is cheap enough to run for it to work."
-date: 2026-09-18 08:30:00 UTC
-background: /assets/images/posts/2026-09-18-After-the-Feed-How-It-Pays-For-Itself-Without-Ads/img-01.png
+date: 2026-10-28 08:00:00 UTC
+background: /assets/images/posts/2026-10-28-After-the-Feed-How-It-Pays-For-Itself-Without-Ads/img-01.png
 excerpt_separator: <!--more-->
 tags: [after-the-feed, technology, business, deep-dive]
 ---
 _Part 6 of **After the Feed**, a field guide to how social media gets rebuilt. [See all parts &rarr;](/after-the-feed.html)_
 
-We [built the thing](/2026/09/18/After-the-Feed-How-You-Would-Actually-Build-It.html) in Part 5, and did it without an ad engine. Which raises the obvious objection: advertising exists because it answered a genuinely hard question — how do you pay for a free product used by millions of people? If you throw the ad model out, you need a real answer, not a wish. Here's the answer, and why it's not as fragile as it sounds.
+We [built the thing](/2026/10/21/After-the-Feed-How-You-Would-Actually-Build-It.html) in Part 5, and did it without an ad engine. Which raises the obvious objection: advertising exists because it answered a genuinely hard question — how do you pay for a free product used by millions of people? If you throw the ad model out, you need a real answer, not a wish. Here's the answer, and why it's not as fragile as it sounds.
 
 <!--more-->
 
@@ -18,7 +18,7 @@ We [built the thing](/2026/09/18/After-the-Feed-How-You-Would-Actually-Build-It.
 
 The point isn't that ads are evil. It's that the ad model *is* the feed model. You can't keep one and drop the other.
 
-Surveillance advertising pays out in proportion to attention and data, so it rewards whatever maximizes both: infinite scroll, autoplay, notification bait, a feed tuned to agitate. Every dark pattern from [Part 1](/2026/09/18/After-the-Feed-Why-Social-Media-Stopped-Feeling-Like-Connection.html) is a rational response to that incentive. A network built on trust and calm can't run on a revenue model that pays it to be neither. So the money has to come from somewhere that gets *better* when the product gets better for you.
+Surveillance advertising pays out in proportion to attention and data, so it rewards whatever maximizes both: infinite scroll, autoplay, notification bait, a feed tuned to agitate. Every dark pattern from [Part 1](/2026/09/23/After-the-Feed-Why-Social-Media-Stopped-Feeling-Like-Connection.html) is a rational response to that incentive. A network built on trust and calm can't run on a revenue model that pays it to be neither. So the money has to come from somewhere that gets *better* when the product gets better for you.
 
 There are three such places, and two of them are already proven (Part 3).
 
@@ -60,4 +60,4 @@ _Next in the series: **Part 7 — where this goes next**: the roadmap, and the h
 
 - Retro pricing and model: [Engadget](https://www.engadget.com/2234246/retro-app-what-is-it-how-to-use/); [$21M Series A](https://techcrunch.com/2026/08/28/friend-focused-photo-sharing-app-retro-snags-21m/)
 - Physical-goods demand: [Fujifilm Instax sales to exceed $1 billion](https://www.digitalcameraworld.com/cameras/instant-cameras/fujifilm-instax-sales-to-exceed-usd1-billion)
-- On why the ad model shapes the feed: [Part 1 references](/2026/09/18/After-the-Feed-Why-Social-Media-Stopped-Feeling-Like-Connection.html#references)
+- On why the ad model shapes the feed: [Part 1 references](/2026/09/23/After-the-Feed-Why-Social-Media-Stopped-Feeling-Like-Connection.html#references)

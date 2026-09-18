@@ -34,6 +34,9 @@ kramdown:
 # markdown. Merged with Jekyll's default excludes, not replacing them.
 exclude:
   - ROADMAP.md
+  # Internal planning/design docs (series specs, etc.). Kept in the repo for
+  # continuity but never published, same rationale as ROADMAP.md above.
+  - docs/
 
 # Analytics (PostHog, EU cloud)
 # Privacy-first setup: the snippet in _includes/analytics.html runs PostHog in

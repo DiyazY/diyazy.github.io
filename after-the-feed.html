@@ -1,0 +1,56 @@
+---
+layout: default
+title: "After the Feed: Rebuilding Social Media"
+description: "A field guide to how consumer social media gets rebuilt — why the algorithmic feed broke, the apps proving people want out, and how you'd build a network that runs on trust instead of attention."
+image: /assets/images/posts/2026-09-23-After-the-Feed-Why-Social-Media-Stopped-Feeling-Like-Connection/img-01.png
+---
+
+<style>
+  /* .panel-container is a 3-col grid; override to a centered single column,
+     like .projects-container / .post-container do. */
+  .series-page { display: block; padding: 10px; }
+  .series-container {
+    max-width: 820px; margin: 0 auto; padding: 30px;
+    background-color: var(--color-panel-bg, rgba(255, 255, 255, 0.95));
+    border-radius: 10px;
+  }
+  .series-intro { color: var(--color-text-muted, #6b6459); font-size: 1.05rem; line-height: 1.7; margin-bottom: 2rem; }
+  .series-list { list-style: none; padding: 0; margin: 0; counter-reset: none; }
+  .series-item { padding: 1.1rem 0; border-top: 1px solid var(--color-border, rgba(42, 37, 33, 0.12)); }
+  .series-item:first-child { border-top: none; }
+  .part-label {
+    display: inline-block; font-size: 0.72rem; letter-spacing: 0.06em; text-transform: uppercase;
+    color: var(--color-accent, #c9a227); font-weight: 700; margin-bottom: 0.15rem;
+  }
+  .part-date { color: var(--color-text-muted, #8d8478); font-size: 0.8rem; margin-left: 0.5rem; text-transform: none; letter-spacing: 0; font-weight: 400; }
+  .series-item h2 { font-size: 1.2rem; margin: 0.15rem 0 0.35rem; }
+  .series-item h2 a { text-decoration: none; }
+  .part-summary { color: var(--color-text-muted, #6b6459); font-size: 0.95rem; line-height: 1.6; margin: 0; }
+</style>
+
+<div class="panel-container series-page">
+  <div class="series-container">
+    <h1>After the Feed: Rebuilding Social Media</h1>
+
+    <p class="series-intro">
+      Somewhere in the last decade, social apps quietly changed jobs &mdash; from connecting you to
+      people you know into keeping you watching whatever a machine ranked highest. This series is a
+      field guide to what broke and what&rsquo;s being built in its place: the pattern behind the last
+      three social takeovers, the small apps already proving people want out, the openings nobody has
+      fully built yet, and &mdash; for anyone who wants the mechanics &mdash; how you&rsquo;d actually
+      build a network that runs on trust and human presence instead of attention, and how it could pay
+      for itself without selling you. Read it in order, or jump in anywhere.
+    </p>
+
+    {%- assign series = site.posts | where_exp: "p", "p.tags contains 'after-the-feed'" | sort: "date" -%}
+    <ol class="series-list">
+      {%- for post in series %}
+      <li class="series-item">
+        <span class="part-label">{% if forloop.first %}Start here{% else %}Part {{ forloop.index }}{% endif %}<span class="part-date">{{ post.date | date: "%b %Y" }}</span></span>
+        <h2><a href="{{ post.url }}">{{ post.title | remove_first: "After the Feed | " }}</a></h2>
+        <p class="part-summary">{{ post.description | default: post.excerpt | strip_html | normalize_whitespace | truncate: 180 }}</p>
+      </li>
+      {%- endfor %}
+    </ol>
+  </div>
+</div>

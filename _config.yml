@@ -21,6 +21,12 @@ timezone: UTC
 lsi: false
 source: ./
 incremental: false
+
+# Scheduled series rollout. Future-dated posts are kept out of the build so they
+# stay hidden (no page, no URL) until their date passes; the weekly cron in
+# .github/workflows/build.yml rebuilds to reveal each one. `false` is Jekyll's
+# default, set explicitly so a drip can't be broken by a later config change.
+future: false
 highlighter: rouge
 gist:
   noscript: false
@@ -34,6 +40,9 @@ kramdown:
 # markdown. Merged with Jekyll's default excludes, not replacing them.
 exclude:
   - ROADMAP.md
+  # Internal planning/design docs (series specs, etc.). Kept in the repo for
+  # continuity but never published, same rationale as ROADMAP.md above.
+  - docs/
 
 # Analytics (PostHog, EU cloud)
 # Privacy-first setup: the snippet in _includes/analytics.html runs PostHog in

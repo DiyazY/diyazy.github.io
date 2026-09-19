@@ -130,6 +130,7 @@ dist
 .pnp.*
 
 _site
+_site_future
 .jekyll-metadata
 .DS_Store
 .todo-list

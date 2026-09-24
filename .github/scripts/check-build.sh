@@ -347,6 +347,36 @@ if [ -f "$SITE/about.html" ]; then
   fi
 fi
 
+# --- posts.json feeds the newsletter announcer ----------------------------
+# workers/subscribe/scripts/notify.ts reads this file from the build output
+# to decide which posts to email. A malformed file stops announcements; a
+# future-dated entry would announce a post before it is public. The --future
+# validation build legitimately contains future posts, so CI sets
+# CHECK_ALLOW_FUTURE=1 for that run only.
+if [ -f "$SITE/posts.json" ]; then
+  if ruby -rjson -rtime -e '
+      posts = JSON.parse(File.read(ARGV[0]))
+      abort "not an array" unless posts.is_a?(Array)
+      abort "empty" if posts.empty?
+      abort "#{posts.size} entries (max 10)" if posts.size > 10
+      posts.each_with_index do |p, i|
+        %w[url path title description date].each do |k|
+          abort "entry #{i} missing #{k}" if p[k].to_s.strip.empty?
+        end
+        abort "entry #{i} url not on https://diyaz.dev/" unless p["url"].start_with?("https://diyaz.dev/")
+        t = (Time.iso8601(p["date"]) rescue abort("entry #{i} date not ISO 8601: #{p["date"]}"))
+        abort "entry #{i} is future-dated (#{p["date"]})" if ENV["CHECK_ALLOW_FUTURE"] != "1" && t > Time.now
+      end
+      puts "#{posts.size} entries"
+    ' "$SITE/posts.json" >"$tmp" 2>&1; then
+    pass "posts.json valid ($(cat "$tmp"))"
+  else
+    fail "posts.json invalid: $(cat "$tmp")"
+  fi
+else
+  fail "posts.json missing from build"
+fi
+
 echo
 if [ "$fails" -gt 0 ]; then
   echo "$fails check(s) failed"

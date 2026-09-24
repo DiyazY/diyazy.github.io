@@ -69,6 +69,8 @@ jobs:
           ./.github/scripts/check-build.sh _site_future
         env:
           JEKYLL_ENV: production
+          # posts.json in this throwaway build legitimately lists future posts.
+          CHECK_ALLOW_FUTURE: '1'
 
       # Only main produces a publishable artifact; PR runs stop at the checks.
       - name: Upload Pages artifact

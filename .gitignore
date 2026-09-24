@@ -137,3 +137,7 @@ _site_future
 
 # IDE
 .idea
+
+# Subscribe Worker build output (wrangler dry-run bundle, local state)
+workers/subscribe/dist/
+.wrangler/

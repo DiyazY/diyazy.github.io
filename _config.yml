@@ -43,6 +43,9 @@ exclude:
   # Internal planning/design docs (series specs, etc.). Kept in the repo for
   # continuity but never published, same rationale as ROADMAP.md above.
   - docs/
+  # The subscribe Worker (TypeScript + node_modules); deployed with wrangler,
+  # never part of the static site.
+  - workers/
 
 # Analytics (PostHog, EU cloud)
 # Privacy-first setup: the snippet in _includes/analytics.html runs PostHog in

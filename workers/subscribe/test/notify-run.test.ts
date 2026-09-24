@@ -1,8 +1,9 @@
 import { describe, expect, it } from 'vitest';
-import { runNotify } from '../src/notify/run.ts';
+import { publicErrorMessage, runNotify } from '../src/notify/run.ts';
 import type { NotifyConfig } from '../src/notify/run.ts';
 import type { PostEntry } from '../src/notify/posts.ts';
 import { broadcastName } from '../src/notify/select.ts';
+import { ResendError } from '../src/resend.ts';
 import type { BroadcastInput, EmailInput, ResendClient } from '../src/resend.ts';
 import { FROM } from '../src/config.ts';
 import { fakeFetch } from './helpers.ts';
@@ -121,9 +122,34 @@ describe('runNotify', () => {
     expect(s.broadcasts).toHaveLength(0);
   });
 
+  it('records a scheduled broadcast even when its heads-up fails, and fails the run at the end', async () => {
+    const s = setup();
+    s.deps.resend.sendEmail = async () => {
+      throw new ResendError(500, 'heads-up boom');
+    };
+    await expect(runNotify([post(29), post(30)], CONFIG, s.deps)).rejects.toThrow(/heads-up email failed for: Post 29, Post 30/);
+    expect(s.broadcasts).toHaveLength(2); // one failed heads-up doesn't stop the next post
+    expect(s.logs.join('\n')).toContain('scheduled: Post 29 (b_1)');
+    expect(s.summary.join('\n')).toContain('b_2');
+  });
+
   it('never puts the reply-to address in logs or the summary', async () => {
     const s = setup();
     await runNotify([post(30)], CONFIG, s.deps);
     expect([...s.logs, ...s.summary].join('\n')).not.toContain('owner@example.net');
+  });
+});
+
+describe('publicErrorMessage', () => {
+  it('reports Resend errors by status and redacts any address in the message', () => {
+    const err = new ResendError(403, 'You can only send testing emails to your own email address (owner@example.net).');
+    expect(publicErrorMessage(err)).toBe(
+      'Resend HTTP 403: You can only send testing emails to your own email address ([redacted]).',
+    );
+  });
+
+  it('redacts addresses in any other error', () => {
+    expect(publicErrorMessage(new Error('bad reader+x@example.com here'))).toBe('bad [redacted] here');
+    expect(publicErrorMessage('plain a@b.co')).toBe('plain [redacted]');
   });
 });

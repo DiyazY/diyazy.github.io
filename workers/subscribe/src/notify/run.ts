@@ -2,12 +2,27 @@
 // GitHub Actions, so it carries post titles and broadcast IDs only.
 import { FROM } from '../config.ts';
 import type { Fetch } from '../env.ts';
+import { ResendError } from '../resend.ts';
 import type { ResendClient } from '../resend.ts';
 import { renderHeadsUpEmail, renderPostEmail } from './emails.ts';
 import type { PostEntry } from './posts.ts';
 import { broadcastName, selectCandidates } from './select.ts';
 
 const DELAY_MS = 2 * 60 * 60 * 1000; // must match scheduled_at below
+const ADDRESS = /[^\s@()<>,;"']+@[^\s@()<>,;"']+/g;
+
+// Everything the notify script prints lands in public GitHub Actions logs, and
+// Resend's error messages can quote an address (e.g. its unverified-domain
+// rejection names the account's own address).
+export function publicErrorMessage(err: unknown): string {
+  const text =
+    err instanceof ResendError
+      ? `Resend HTTP ${err.status}: ${err.message}`
+      : err instanceof Error
+        ? err.message
+        : String(err);
+  return text.replace(ADDRESS, '[redacted]');
+}
 
 export interface NotifyConfig {
   since: string | undefined;
@@ -70,6 +85,7 @@ export async function runNotify(
   }
 
   let scheduled = 0;
+  const headsUpFailed: string[] = [];
   for (const post of candidates) {
     const { id } = await deps.resend.createBroadcast({
       segment_id: config.segmentId,
@@ -81,11 +97,23 @@ export async function runNotify(
       send: true,
       scheduled_at: 'in 2 hours',
     });
+    scheduled++;
+    // Record the broadcast before anything else can fail: a re-run skips this
+    // post (its name now exists), so this line is the only place its ID shows.
     const sendAt = new Date(deps.now().getTime() + DELAY_MS);
-    await deps.resend.sendEmail({ from: FROM, to: config.replyTo, ...renderHeadsUpEmail(post, sendAt, id) });
     deps.log(`scheduled: ${post.title} (${id})`);
     deps.summary(`- **${post.title}**: sends ~${sendAt.toISOString().slice(11, 16)} UTC, broadcast \`${id}\``);
-    scheduled++;
+    try {
+      await deps.resend.sendEmail({ from: FROM, to: config.replyTo, ...renderHeadsUpEmail(post, sendAt, id) });
+    } catch (err) {
+      deps.log(`heads-up failed for ${post.title}: ${publicErrorMessage(err)}`);
+      headsUpFailed.push(post.title);
+    }
+  }
+  if (headsUpFailed.length > 0) {
+    // Broadcasts are scheduled regardless; fail the job so the missing cancel
+    // notice is noticed.
+    throw new Error(`heads-up email failed for: ${headsUpFailed.join(', ')} (broadcasts are still scheduled; see IDs above)`);
   }
   return { scheduled };
 }

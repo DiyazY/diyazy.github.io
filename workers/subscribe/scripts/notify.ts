@@ -6,7 +6,7 @@
 import { appendFileSync, readFileSync } from 'node:fs';
 import type { Fetch } from '../src/env.ts';
 import { parsePosts } from '../src/notify/posts.ts';
-import { runNotify } from '../src/notify/run.ts';
+import { publicErrorMessage, runNotify } from '../src/notify/run.ts';
 import { createResendClient } from '../src/resend.ts';
 
 function required(name: string): string {
@@ -52,6 +52,6 @@ try {
   );
   console.log(`done: ${result.scheduled} scheduled`);
 } catch (err) {
-  console.error(err instanceof Error ? err.message : String(err));
+  console.error(publicErrorMessage(err));
   process.exit(1);
 }

@@ -1,6 +1,7 @@
 import { SITE_URL } from './config.ts';
 import type { Deps, Env } from './env.ts';
 import { allowedOrigins } from './env.ts';
+import { handleConfirmGet, handleConfirmPost } from './handlers/confirm.ts';
 import { handleSubscribe } from './handlers/subscribe.ts';
 import { corsHeaders } from './http.ts';
 
@@ -15,6 +16,12 @@ export async function route(request: Request, env: Env, deps: Deps): Promise<Res
     }
     if (request.method === 'POST') return handleSubscribe(request, env, deps);
     return new Response('Method Not Allowed', { status: 405, headers: { Allow: 'POST, OPTIONS' } });
+  }
+
+  if (pathname === '/confirm') {
+    if (request.method === 'GET') return handleConfirmGet(request);
+    if (request.method === 'POST') return handleConfirmPost(request, env, deps);
+    return new Response('Method Not Allowed', { status: 405, headers: { Allow: 'GET, POST' } });
   }
 
   if (pathname === '/') return Response.redirect(`${SITE_URL}/subscribe/`, 302);

@@ -16,6 +16,11 @@ on:
     branches: [main]
   pull_request:
   workflow_dispatch:
+    inputs:
+      dry_run:
+        description: "notify job: list the posts it would announce, send nothing"
+        type: boolean
+        default: false
   # Weekly rollout of future-dated posts (e.g. the "After the Feed" series):
   # rebuild every Wednesday 14:00 UTC so a post dated that morning reveals on
   # its date. Scheduled runs use the default branch (main), so the deploy job
@@ -79,6 +84,16 @@ jobs:
         with:
           path: _site
 
+      # The notify job reads posts.json from this exact build, not the live
+      # site (GitHub Pages caches responses for ~10 minutes).
+      - name: Upload posts.json for notify
+        if: github.ref == 'refs/heads/main'
+        uses: actions/upload-artifact@v4
+        with:
+          name: posts-json
+          path: _site/posts.json
+          retention-days: 1
+
   deploy:
     if: github.ref == 'refs/heads/main'
     needs: build
@@ -96,3 +111,70 @@ jobs:
       - name: Deploy to GitHub Pages
         id: deployment
         uses: actions/deploy-pages@v4
+
+  # Subscribe Worker + announcer (workers/subscribe/): types, tests, and a
+  # dry-run bundle so a Worker-only build error fails CI, not the deploy.
+  worker:
+    runs-on: ubuntu-latest
+    defaults:
+      run:
+        working-directory: workers/subscribe
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Set up Node
+        uses: actions/setup-node@v4
+        with:
+          node-version: '24'
+          cache: npm
+          cache-dependency-path: workers/subscribe/package-lock.json
+
+      - run: npm ci
+      - run: npm run typecheck
+      - run: npm test
+      - name: Bundle without deploying
+        run: npm run build:check
+
+  # Emails newly published posts to subscribers (a Resend broadcast scheduled
+  # 2 hours out, plus a heads-up to the author). Runs after every deploy of
+  # main, including the Wednesday cron that reveals scheduled posts. Skipped
+  # until ANNOUNCE_SINCE exists (i.e. before launch); the script also refuses
+  # to run without it. Logs are public: the script prints titles and IDs only.
+  notify:
+    if: github.ref == 'refs/heads/main' && vars.ANNOUNCE_SINCE != ''
+    needs: [deploy, worker]
+    runs-on: ubuntu-latest
+    permissions:
+      contents: read
+    defaults:
+      run:
+        working-directory: workers/subscribe
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Set up Node
+        uses: actions/setup-node@v4
+        with:
+          node-version: '24'
+          cache: npm
+          cache-dependency-path: workers/subscribe/package-lock.json
+
+      - run: npm ci
+
+      - name: Download posts.json from this build
+        uses: actions/download-artifact@v4
+        with:
+          name: posts-json
+          path: ${{ runner.temp }}/posts
+
+      - name: Announce new posts
+        run: node scripts/notify.ts "$RUNNER_TEMP/posts/posts.json"
+        env:
+          RESEND_API_KEY: ${{ secrets.RESEND_API_KEY_NOTIFY }}
+          NOTIFY_REPLY_TO: ${{ secrets.NOTIFY_REPLY_TO }}
+          ANNOUNCE_SINCE: ${{ vars.ANNOUNCE_SINCE }}
+          RESEND_SEGMENT_ID: ${{ vars.RESEND_SEGMENT_ID }}
+          TOPIC_NEW_POSTS_ID: ${{ vars.TOPIC_NEW_POSTS_ID }}
+          DRY_RUN: ${{ inputs.dry_run && '1' || '' }}

@@ -1,0 +1,24 @@
+{
+  "$schema": "./node_modules/wrangler/config-schema.json",
+  "name": "diyaz-subscribe",
+  "main": "src/index.ts",
+  "compatibility_date": "2026-09-24",
+  "workers_dev": false,
+  "routes": [{ "pattern": "subscribe.diyaz.dev", "custom_domain": true }],
+  "observability": { "enabled": true },
+  "vars": {
+    // Comma-separated. Task 12 temporarily adds http://localhost:4000 via
+    // `wrangler deploy --var`, never by editing this file.
+    "ALLOWED_ORIGINS": "https://diyaz.dev",
+    // Resend team "diyaz.dev" IDs (not secrets). Empty = Worker fails closed.
+    "RESEND_SEGMENT_ID": "",
+    "TOPIC_NEW_POSTS_ID": "",
+    "TOPIC_PROGRAMMES_ID": ""
+  },
+  // Secrets (wrangler secret put): RESEND_API_KEY, TOKEN_KEY,
+  // TURNSTILE_SECRET, REPLY_TO.
+  "ratelimits": [
+    { "name": "RL_IP", "namespace_id": "1001", "simple": { "limit": 5, "period": 60 } },
+    { "name": "RL_EMAIL", "namespace_id": "1002", "simple": { "limit": 2, "period": 60 } }
+  ]
+}

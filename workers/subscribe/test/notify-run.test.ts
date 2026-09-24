@@ -41,6 +41,8 @@ function fakeResend(existingNames: string[] = []) {
     createContact: async () => ({ id: 'unused' }),
     updateContact: async () => {},
     addContactToSegment: async () => {},
+    listContactSegmentIds: async () => [],
+    getContactTopics: async () => [],
     updateContactTopics: async () => {},
   };
   return { client, broadcasts, emails };

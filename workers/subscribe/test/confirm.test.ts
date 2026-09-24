@@ -17,9 +17,19 @@ function confirmPost(token: string): Request {
   });
 }
 
-// Resend stand-in. `existing` answers GET /contacts with a contact;
-// `failOn` makes any call whose "METHOD /path" starts with it return 500.
-function resend(options: { existing?: boolean; failOn?: string; segment409?: boolean; first429?: boolean } = {}) {
+// Resend stand-in. `existing` answers GET /contacts with a contact whose
+// segments/topics reflect `inSegment` and `programmesOptIn`; `failOn` makes any
+// call whose "METHOD /path" starts with it return 500.
+function resend(
+  options: {
+    existing?: boolean;
+    inSegment?: boolean;
+    programmesOptIn?: boolean;
+    failOn?: string;
+    segment409?: boolean;
+    first429?: boolean;
+  } = {},
+) {
   let throttled = false;
   return fakeFetch((call: Call) => {
     const key = `${call.method} ${call.url.replace('https://api.resend.com', '')}`;
@@ -32,6 +42,19 @@ function resend(options: { existing?: boolean; failOn?: string; segment409?: boo
       return options.existing
         ? jsonResponse({ id: 'c_1', email: ADDR, unsubscribed: true })
         : jsonResponse({ message: 'not found' }, 404);
+    }
+    if (key === `GET /contacts/${ENC}/segments?limit=100`) {
+      return jsonResponse({ object: 'list', has_more: false, data: options.inSegment ? [{ id: 'seg_readers' }] : [] });
+    }
+    if (key === `GET /contacts/${ENC}/topics?limit=100`) {
+      return jsonResponse({
+        object: 'list',
+        has_more: false,
+        data: [
+          { id: 'topic_posts', subscription: 'opt_out' },
+          { id: 'topic_programmes', subscription: options.programmesOptIn ? 'opt_in' : 'opt_out' },
+        ],
+      });
     }
     if (key === 'POST /contacts') return jsonResponse({ id: 'c_new' });
     if (key === `PATCH /contacts/${ENC}`) return jsonResponse({ id: 'c_1' });
@@ -100,10 +123,35 @@ describe('POST /confirm', () => {
     expect(bodyOf(calls, `PATCH /contacts/${ENC}/topics`)).toEqual([{ id: 'topic_posts', subscription: 'opt_in' }]);
   });
 
+  it('does not re-add a contact that is already in the segment', async () => {
+    const { fetch, calls } = resend({ existing: true, inSegment: true });
+    const res = await route(confirmPost(await tokenFor(false)), makeEnv(), makeDeps(fetch));
+    expect(res.status).toBe(303);
+    expect(calls.some((c) => c.method === 'POST' && c.url.includes('/segments/'))).toBe(false);
+  });
+
+  it('keeps an earlier Programmes opt-in when the box is left unticked', async () => {
+    const { fetch, calls } = resend({ existing: true, inSegment: true, programmesOptIn: true });
+    await route(confirmPost(await tokenFor(false)), makeEnv(), makeDeps(fetch));
+    expect(bodyOf(calls, `PATCH /contacts/${ENC}/topics`)).toEqual([
+      { id: 'topic_posts', subscription: 'opt_in' },
+      { id: 'topic_programmes', subscription: 'opt_in' },
+    ]);
+  });
+
+  it('opts an existing contact into Programmes when the box is ticked', async () => {
+    const { fetch, calls } = resend({ existing: true, inSegment: true });
+    await route(confirmPost(await tokenFor(true)), makeEnv(), makeDeps(fetch));
+    expect(bodyOf(calls, `PATCH /contacts/${ENC}/topics`)).toEqual([
+      { id: 'topic_posts', subscription: 'opt_in' },
+      { id: 'topic_programmes', subscription: 'opt_in' },
+    ]);
+  });
+
   it('lands on /subscribed/ when the same link is confirmed twice', async () => {
     const token = await tokenFor(true);
     const first = await route(confirmPost(token), makeEnv(), makeDeps(resend().fetch));
-    const second = await route(confirmPost(token), makeEnv(), makeDeps(resend({ existing: true, segment409: true }).fetch));
+    const second = await route(confirmPost(token), makeEnv(), makeDeps(resend({ existing: true, inSegment: true }).fetch));
     expect([first.status, second.status]).toEqual([303, 303]);
     expect(second.headers.get('Location')).toBe('https://diyaz.dev/subscribed/');
   });

@@ -42,11 +42,13 @@ export async function handleConfirmPost(request: Request, env: Env, deps: Deps):
     return html(expiredPage(), 400);
   }
 
-  // The form only ever adds opt-ins. An unticked box leaves Programmes alone:
-  // new contacts fall back to its opt_out default, and an earlier opt-in is
-  // not revoked. Opting out happens on Resend's preferences page.
-  const topics: TopicSubscription[] = [{ id: env.TOPIC_NEW_POSTS_ID, subscription: 'opt_in' }];
-  if (payload.programmes) topics.push({ id: env.TOPIC_PROGRAMMES_ID, subscription: 'opt_in' });
+  // The form only ever adds opt-ins. An unticked box never revokes Programmes:
+  // new contacts fall back to its opt_out default, and an existing opt-in is
+  // carried over. Opting out happens on Resend's preferences page.
+  const topicsFor = (programmes: boolean): TopicSubscription[] => [
+    { id: env.TOPIC_NEW_POSTS_ID, subscription: 'opt_in' },
+    ...(programmes ? [{ id: env.TOPIC_PROGRAMMES_ID, subscription: 'opt_in' as const }] : []),
+  ];
 
   const resend = createResendClient({ apiKey: env.RESEND_API_KEY, fetch: deps.fetch, sleep: deps.sleep });
   try {
@@ -56,14 +58,21 @@ export async function handleConfirmPost(request: Request, env: Env, deps: Deps):
         email: payload.email,
         unsubscribed: false,
         segments: [{ id: env.RESEND_SEGMENT_ID }],
-        topics,
+        topics: topicsFor(payload.programmes),
       });
     } else {
       // The global flag only spans this team (diyaz.dev), so clearing it
       // can't re-subscribe anyone to another product's emails.
       await resend.updateContact(payload.email, { unsubscribed: false });
-      await resend.addContactToSegment(payload.email, env.RESEND_SEGMENT_ID);
-      await resend.updateContactTopics(payload.email, topics);
+      // Read before writing: Resend documents neither its answer to a
+      // duplicate segment add nor whether a topics PATCH replaces the list.
+      const segmentIds = await resend.listContactSegmentIds(payload.email);
+      if (!segmentIds.includes(env.RESEND_SEGMENT_ID)) {
+        await resend.addContactToSegment(payload.email, env.RESEND_SEGMENT_ID);
+      }
+      const current = await resend.getContactTopics(payload.email);
+      const hadProgrammes = current.some((t) => t.id === env.TOPIC_PROGRAMMES_ID && t.subscription === 'opt_in');
+      await resend.updateContactTopics(payload.email, topicsFor(payload.programmes || hadProgrammes));
     }
   } catch (err) {
     deps.log({ step: 'confirm.save', status: err instanceof ResendError ? err.status : 0 });

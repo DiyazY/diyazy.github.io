@@ -66,6 +66,8 @@ export interface ResendClient {
   createContact(input: ContactInput): Promise<{ id: string }>;
   updateContact(email: string, patch: { unsubscribed: boolean }): Promise<void>;
   addContactToSegment(email: string, segmentId: string): Promise<void>;
+  listContactSegmentIds(email: string): Promise<string[]>;
+  getContactTopics(email: string): Promise<TopicSubscription[]>;
   updateContactTopics(email: string, topics: TopicSubscription[]): Promise<void>;
   listBroadcasts(): Promise<BroadcastSummary[]>;
   createBroadcast(input: BroadcastInput): Promise<{ id: string }>;
@@ -129,6 +131,17 @@ export function createResendClient(options: {
     async addContactToSegment(email, segmentId) {
       // 409 = already in the segment: re-confirming must stay idempotent.
       await expectOk(await call('POST', `${contact(email)}/segments/${encodeURIComponent(segmentId)}`), [409]);
+    },
+
+    // One page is enough: this team has one segment and two topics.
+    async listContactSegmentIds(email) {
+      const page = await json<{ data: { id: string }[] }>('GET', `${contact(email)}/segments?limit=100`);
+      return page.data.map((segment) => segment.id);
+    },
+
+    async getContactTopics(email) {
+      const page = await json<{ data: TopicSubscription[] }>('GET', `${contact(email)}/topics?limit=100`);
+      return page.data.map(({ id, subscription }) => ({ id, subscription }));
     },
 
     async updateContactTopics(email, topics) {

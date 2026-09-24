@@ -96,6 +96,26 @@ describe('createResendClient', () => {
     expect(calls[0]).toMatchObject({ method: 'POST', url: 'https://api.resend.com/contacts/r%40example.com/segments/seg' });
   });
 
+  it("lists a contact's segment ids", async () => {
+    const { resend, calls } = setup(() =>
+      jsonResponse({ object: 'list', has_more: false, data: [{ id: 'seg', name: 'Readers', created_at: 'x' }] }),
+    );
+    expect(await resend.listContactSegmentIds('r@example.com')).toEqual(['seg']);
+    expect(calls[0]).toMatchObject({ method: 'GET', url: 'https://api.resend.com/contacts/r%40example.com/segments?limit=100' });
+  });
+
+  it("reads a contact's topic subscriptions", async () => {
+    const { resend, calls } = setup(() =>
+      jsonResponse({
+        object: 'list',
+        has_more: false,
+        data: [{ id: 't1', name: 'New posts', description: 'x', subscription: 'opt_in' }],
+      }),
+    );
+    expect(await resend.getContactTopics('r@example.com')).toEqual([{ id: 't1', subscription: 'opt_in' }]);
+    expect(calls[0]).toMatchObject({ method: 'GET', url: 'https://api.resend.com/contacts/r%40example.com/topics?limit=100' });
+  });
+
   it('pages through every broadcast', async () => {
     const { resend, calls } = setup((call) =>
       call.url.includes('after=b2')

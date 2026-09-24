@@ -377,6 +377,42 @@ else
   fail "posts.json missing from build"
 fi
 
+# --- subscribe form follows the subscribe.enabled switch ------------------
+# The form ships dark (enabled: false) until the Worker is tested end to end.
+# Disabled: no page may render it. Enabled: every post must, and the public
+# Turnstile site key must be set or the form can never get a token.
+sub_enabled=$(ruby -ryaml -e 'puts((YAML.load_file(ARGV[0])["subscribe"] || {})["enabled"] == true)' "$REPO/_config.yml")
+if [ "$sub_enabled" = "true" ]; then
+  missing=0
+  for f in "$SITE"/2*/*/*/*.html; do
+    [ -f "$f" ] || continue
+    grep -q 'data-subscribe-form' "$f" || missing=$((missing + 1))
+  done
+  if [ "$missing" -eq 0 ]; then pass "subscribe form on every post"; else fail "$missing post(s) missing the subscribe form"; fi
+  if ruby -ryaml -e 'k = ((YAML.load_file(ARGV[0])["subscribe"] || {})["turnstile_site_key"]).to_s; abort if k.strip.empty?' "$REPO/_config.yml"; then
+    pass "subscribe.turnstile_site_key is set"
+  else
+    fail "subscribe.enabled is true but subscribe.turnstile_site_key is empty"
+  fi
+else
+  if grep -rl 'data-subscribe-form' "$SITE" --include='*.html' >"$tmp"; then
+    fail "subscribe form rendered while subscribe.enabled is false:"
+    sed 's/^/          /' "$tmp"
+  else
+    pass "no subscribe form while subscribe.enabled is false"
+  fi
+fi
+
+for f in subscribe/index.html subscribed/index.html privacy/index.html; do
+  if [ -s "$SITE/$f" ]; then pass "$f exists and is non-empty"; else fail "$f missing or empty"; fi
+done
+
+if [ -f "$SITE/sitemap.xml" ] && grep -q '/subscribed/' "$SITE/sitemap.xml"; then
+  fail "/subscribed/ (a post-confirmation page) is in sitemap.xml"
+else
+  pass "sitemap.xml omits /subscribed/"
+fi
+
 echo
 if [ "$fails" -gt 0 ]; then
   echo "$fails check(s) failed"

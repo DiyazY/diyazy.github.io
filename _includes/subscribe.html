@@ -1,0 +1,38 @@
+{%- comment -%}
+  Email subscribe form. Renders nothing unless site.subscribe.enabled.
+  Params: location ("post" | "page", used for ids and analytics),
+          heading (optional title above the form).
+  Posts to the Worker in workers/subscribe/ (field names are its contract).
+  Turnstile's api.js has no integrity= on purpose: Cloudflare updates it in
+  place and requires loading it from this exact URL, so a pinned SRI hash
+  would break the form on their next release (same as the PostHog loader).
+{%- endcomment -%}
+{%- if site.subscribe.enabled -%}
+<link rel="stylesheet" href="{{ site.baseurl }}/assets/css/subscribe.css">
+<section class="subscribe-box" aria-label="Subscribe by email">
+  {%- if include.heading %}
+  <h3 class="subscribe-title">{{ include.heading }}</h3>
+  {%- endif %}
+  <form class="subscribe-form" data-subscribe-form data-location="{{ include.location }}"
+        data-endpoint="{{ site.subscribe.endpoint }}" data-sitekey="{{ site.subscribe.turnstile_site_key }}" novalidate>
+    <div class="subscribe-row">
+      <label class="sr-only" for="subscribe-email-{{ include.location }}">Email address</label>
+      <input id="subscribe-email-{{ include.location }}" type="email" name="email" required autocomplete="email" placeholder="you@example.com">
+      <button type="submit">Subscribe</button>
+    </div>
+    <label class="subscribe-check">
+      <input type="checkbox" name="programmes" value="1">
+      <span>Also send me occasional news about my coaching programmes.</span>
+    </label>
+    <div class="subscribe-hp" aria-hidden="true">
+      <label>Leave this empty <input type="text" name="hp" tabindex="-1" autocomplete="off"></label>
+    </div>
+    <div class="subscribe-turnstile"></div>
+    <p class="subscribe-status" role="status" aria-live="polite"></p>
+    <p class="subscribe-note">You'll get an email to confirm. Unsubscribe any time. No open or click tracking. <a href="{{ '/privacy/' | relative_url }}">Privacy</a></p>
+  </form>
+  <noscript><p class="subscribe-note">Subscribing needs JavaScript. You can follow the <a href="{{ '/feed.xml' | relative_url }}">RSS feed</a> instead.</p></noscript>
+</section>
+<script src="{{ site.baseurl }}/assets/js/subscribe.js"></script>
+<script src="https://challenges.cloudflare.com/turnstile/v0/api.js?render=explicit&amp;onload=onSubscribeTurnstileLoad" async defer></script>
+{%- endif -%}

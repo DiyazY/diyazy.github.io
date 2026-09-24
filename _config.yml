@@ -72,6 +72,15 @@ posthog:
   api_key: "phc_Ab5m9tpLKS9gaXkirx4xmjz3Z8SWtvJQ3iFmHNCNTD3U"
   api_host: "https://eu.i.posthog.com"
 
+# Email subscriptions (docs/superpowers/specs/2026-09-24-subscribe-form-design.md).
+# The form, the footer "Subscribe" link, and the form on /subscribe/ render
+# only when enabled. The Worker behind `endpoint` lives in workers/subscribe/.
+# turnstile_site_key is public (Cloudflare Turnstile widget "diyaz-subscribe").
+subscribe:
+  enabled: false
+  endpoint: "https://subscribe.diyaz.dev/subscribe"
+  turnstile_site_key: ""
+
 # Plugins
 plugins:
   - jekyll-sitemap

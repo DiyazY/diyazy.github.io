@@ -1,0 +1,18 @@
+---
+title: Subscribe
+description: "Get new posts from diyaz.dev by email: one short note when something new goes up. Confirm by email, unsubscribe any time."
+permalink: /subscribe/
+---
+<link rel="stylesheet" href="{{ site.baseurl }}/assets/css/subscribe.css">
+
+<div class="panel-container simple-page">
+  <div class="simple-page-container">
+    <h1>Subscribe</h1>
+    <p>One short email when a new post goes up: the title, a line about it, and a link. Nothing else unless you ask for it.</p>
+    {% if site.subscribe.enabled %}
+      {% include subscribe.html location="page" %}
+    {% else %}
+      <p>Email subscriptions open soon. Until then, you can follow the <a href="{{ '/feed.xml' | relative_url }}">RSS feed</a>.</p>
+    {% endif %}
+  </div>
+</div>

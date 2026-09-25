@@ -26,8 +26,10 @@ button{font:inherit;font-weight:600;padding:12px 20px;border:0;border-radius:8px
 </html>`;
 }
 
+// Disabling the button on submit stops a double click sending two POSTs (the
+// handler copes with that race too, this just avoids it).
 function tokenForm(token: string, label: string): string {
-  return `<form method="post" action="/confirm"><input type="hidden" name="t" value="${escapeHtml(token)}"><button type="submit">${label}</button></form>`;
+  return `<form method="post" action="/confirm" onsubmit="this.querySelector('button').disabled = true"><input type="hidden" name="t" value="${escapeHtml(token)}"><button type="submit">${label}</button></form>`;
 }
 
 export function confirmPage(token: string): string {

@@ -54,4 +54,11 @@ describe('renderHeadsUpEmail', () => {
     expect(email.text).toContain('https://resend.com/broadcasts');
     expect(email.html).not.toContain('RESEND_UNSUBSCRIBE_URL');
   });
+
+  it('escapes the title in the heads-up HTML', () => {
+    const email = renderHeadsUpEmail({ ...POST, title: 'Q&A <draft>' }, new Date('2026-09-30T16:05:00Z'), 'b_<1>');
+    expect(email.html).toContain('Q&amp;A &lt;draft&gt;');
+    expect(email.html).toContain('b_&lt;1&gt;');
+    expect(email.html).not.toContain('<draft>');
+  });
 });

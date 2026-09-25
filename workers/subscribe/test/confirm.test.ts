@@ -42,7 +42,7 @@ describe('GET /confirm', () => {
     expect(res.headers.get('Cache-Control')).toBe('no-store');
     expect(res.headers.get('Referrer-Policy')).toBe('no-referrer');
     const page = await res.text();
-    expect(page).toContain('<form method="post" action="/confirm">');
+    expect(page).toContain('<form method="post" action="/confirm"');
     expect(page).toContain('value="abc"');
     expect(calls).toHaveLength(0);
   });

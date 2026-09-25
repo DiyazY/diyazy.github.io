@@ -1,5 +1,5 @@
 import { describe, expect, it } from 'vitest';
-import { route } from '../src/index.ts';
+import worker, { route } from '../src/index.ts';
 import { decryptToken } from '../src/token.ts';
 import { FROM } from '../src/config.ts';
 import { sha256Hex } from '../src/hash.ts';
@@ -263,6 +263,14 @@ describe('POST /subscribe: order, CORS and diagnostics', () => {
 });
 
 describe('routing', () => {
+  it('serves requests through the real Worker entry point', async () => {
+    const res = await worker.fetch(new Request('https://subscribe.diyaz.dev/'), makeEnv());
+    expect(res.status).toBe(302);
+    expect(res.headers.get('Location')).toBe('https://diyaz.dev/subscribe/');
+    const confirm = await worker.fetch(new Request('https://subscribe.diyaz.dev/confirm?t=abc'), makeEnv());
+    expect(await confirm.text()).toContain('value="abc"');
+  });
+
   it('lists the allowed request headers in the CORS preflight answer', async () => {
     const req = new Request('https://subscribe.diyaz.dev/subscribe', { method: 'OPTIONS', headers: { Origin: ORIGIN } });
     const res = await route(req, makeEnv(), makeDeps(services().fetch));

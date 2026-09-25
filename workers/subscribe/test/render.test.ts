@@ -52,8 +52,13 @@ describe('pages', () => {
     }
   });
 
+  it('confirm page disables its button on submit, so a double click sends one POST', () => {
+    expect(all.confirm).toMatch(/<form method="post" action="\/confirm" onsubmit="[^"]*disabled\s*=\s*true/);
+    expect(all.retry).toMatch(/onsubmit="[^"]*disabled\s*=\s*true/);
+  });
+
   it('confirm page POSTs the token back', () => {
-    expect(all.confirm).toContain('<form method="post" action="/confirm">');
+    expect(all.confirm).toContain('<form method="post" action="/confirm"');
     expect(all.confirm).toContain('<input type="hidden" name="t" value="tok">');
   });
 

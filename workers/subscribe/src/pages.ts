@@ -1,6 +1,6 @@
 // The Worker's own HTML: the confirm button page and its outcomes. Inline CSS,
 // light/dark via prefers-color-scheme, never indexed.
-import { SITE_URL } from './config.ts';
+import { SITE_URL, TOKEN_TTL_HOURS } from './config.ts';
 import { escapeHtml } from './email/layout.ts';
 
 function page(title: string, body: string): string {
@@ -40,7 +40,7 @@ export function confirmPage(token: string): string {
 export function expiredPage(): string {
   return page(
     'Link expired',
-    `<h1>This link has expired</h1><p>Confirmation links work for 48 hours. <a href="${SITE_URL}/subscribe/">Subscribe again</a> and you'll get a fresh one.</p>`,
+    `<h1>This link has expired or isn't valid</h1><p>Confirmation links work for ${TOKEN_TTL_HOURS} hours, and only exactly as they were sent. <a href="${SITE_URL}/subscribe/">Subscribe again</a> and you'll get a fresh one.</p>`,
   );
 }
 

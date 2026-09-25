@@ -7,9 +7,8 @@ import { configProblems } from '../env.ts';
 import { html } from '../http.ts';
 import { confirmPage, errorPage, expiredPage, retryPage } from '../pages.ts';
 import { ResendError, createResendClient } from '../resend.ts';
-import type { TopicSubscription } from '../resend.ts';
-import { decryptToken } from '../token.ts';
-import type { TokenPayload } from '../token.ts';
+import type { ResendClient, TopicSubscription } from '../resend.ts';
+import { readToken } from '../token.ts';
 
 export function handleConfirmGet(request: Request): Response {
   const token = new URL(request.url).searchParams.get('t') ?? '';
@@ -18,8 +17,9 @@ export function handleConfirmGet(request: Request): Response {
 }
 
 export async function handleConfirmPost(request: Request, env: Env, deps: Deps): Promise<Response> {
-  if (configProblems(env).length > 0) {
-    deps.log({ step: 'confirm.config', status: 500 });
+  const problems = configProblems(env);
+  if (problems.length > 0) {
+    deps.log({ step: 'confirm.config', status: 500, reason: problems.join('+') });
     return html(errorPage(), 500);
   }
 
@@ -30,52 +30,24 @@ export async function handleConfirmPost(request: Request, env: Env, deps: Deps):
     // No form body: treated as a missing token below.
   }
 
-  let payload: TokenPayload | null = null;
-  try {
-    payload = token ? await decryptToken(token, env.TOKEN_KEY) : null;
-  } catch {
-    deps.log({ step: 'confirm.key', status: 500 });
-    return html(errorPage(), 500);
-  }
-  if (!payload || payload.exp < deps.now()) {
-    deps.log({ step: 'confirm.token', status: 400 });
+  const check = await readToken(token, env.TOKEN_KEY, deps.now());
+  if (!check.ok) {
+    deps.log({ step: 'confirm.token', status: 400, reason: check.reason });
     return html(expiredPage(), 400);
   }
-
-  // The form only ever adds opt-ins. An unticked box never revokes Programmes:
-  // new contacts fall back to its opt_out default, and an existing opt-in is
-  // carried over. Opting out happens on Resend's preferences page.
-  const topicsFor = (programmes: boolean): TopicSubscription[] => [
-    { id: env.TOPIC_NEW_POSTS_ID, subscription: 'opt_in' },
-    ...(programmes ? [{ id: env.TOPIC_PROGRAMMES_ID, subscription: 'opt_in' as const }] : []),
-  ];
+  const { email, programmes } = check.payload;
 
   const resend = createResendClient({ apiKey: env.RESEND_API_KEY, fetch: deps.fetch, sleep: deps.sleep });
+  const step = { call: 'getContact' }; // which Resend call is in flight, for the log
   try {
-    const existing = await resend.getContact(payload.email);
-    if (!existing) {
-      await resend.createContact({
-        email: payload.email,
-        unsubscribed: false,
-        segments: [{ id: env.RESEND_SEGMENT_ID }],
-        topics: topicsFor(payload.programmes),
-      });
-    } else {
-      // The global flag only spans this team (diyaz.dev), so clearing it
-      // can't re-subscribe anyone to another product's emails.
-      await resend.updateContact(payload.email, { unsubscribed: false });
-      // Read before writing: Resend documents neither its answer to a
-      // duplicate segment add nor whether a topics PATCH replaces the list.
-      const segmentIds = await resend.listContactSegmentIds(payload.email);
-      if (!segmentIds.includes(env.RESEND_SEGMENT_ID)) {
-        await resend.addContactToSegment(payload.email, env.RESEND_SEGMENT_ID);
-      }
-      const current = await resend.getContactTopics(payload.email);
-      const hadProgrammes = current.some((t) => t.id === env.TOPIC_PROGRAMMES_ID && t.subscription === 'opt_in');
-      await resend.updateContactTopics(payload.email, topicsFor(payload.programmes || hadProgrammes));
-    }
+    await saveSubscriber(resend, env, email, programmes, step);
   } catch (err) {
-    deps.log({ step: 'confirm.save', status: err instanceof ResendError ? err.status : 0 });
+    deps.log({
+      step: 'confirm.save',
+      status: err instanceof ResendError ? err.status : 0,
+      call: step.call,
+      reason: err instanceof ResendError ? (err.code ?? 'unknown') : err instanceof Error ? err.name : 'unknown',
+    });
     return html(retryPage(token), 502);
   }
 
@@ -84,4 +56,74 @@ export async function handleConfirmPost(request: Request, env: Env, deps: Deps):
     status: 303,
     headers: { Location: `${SITE_URL}/subscribed/`, 'Cache-Control': 'no-store', 'Referrer-Policy': 'no-referrer' },
   });
+}
+
+// The form only ever adds opt-ins. New contacts get New posts, plus Programmes
+// only when ticked (otherwise the topic's opt_out default applies; the
+// Programmes topic must be created as opt_out in Resend, spec §5).
+async function saveSubscriber(
+  resend: ResendClient,
+  env: Env,
+  email: string,
+  programmes: boolean,
+  step: { call: string },
+): Promise<void> {
+  const optIns = (withProgrammes: boolean): TopicSubscription[] => [
+    { id: env.TOPIC_NEW_POSTS_ID, subscription: 'opt_in' },
+    ...(withProgrammes ? [{ id: env.TOPIC_PROGRAMMES_ID, subscription: 'opt_in' as const }] : []),
+  ];
+
+  step.call = 'getContact';
+  let existing = await resend.getContact(email);
+  if (!existing) {
+    step.call = 'createContact';
+    try {
+      await resend.createContact({
+        email,
+        unsubscribed: false,
+        segments: [{ id: env.RESEND_SEGMENT_ID }],
+        topics: optIns(programmes),
+      });
+      return;
+    } catch (err) {
+      // Two confirms of the same link racing (a double click): both saw 404
+      // and the other one created the contact first. Carry on as an update.
+      if (!(err instanceof ResendError) || err.status < 400 || err.status >= 500) throw err;
+      step.call = 'getContact';
+      existing = await resend.getContact(email);
+      if (!existing) throw err;
+    }
+  }
+
+  // Read before writing: Resend documents neither its answer to a duplicate
+  // segment add nor whether a topics PATCH replaces the whole list.
+  step.call = 'listContactSegmentIds';
+  if (!(await resend.listContactSegmentIds(email)).includes(env.RESEND_SEGMENT_ID)) {
+    step.call = 'addContactToSegment';
+    await resend.addContactToSegment(email, env.RESEND_SEGMENT_ID);
+  }
+
+  step.call = 'getContactTopics';
+  const current = await resend.getContactTopics(email);
+  // Carry over a Programmes opt-in only from a reader who is still subscribed:
+  // after "unsubscribe from all", a leftover topic opt-in is not consent.
+  const keepProgrammes =
+    !existing.unsubscribed &&
+    current.some((t) => t.id === env.TOPIC_PROGRAMMES_ID && t.subscription === 'opt_in');
+  const topics = optIns(programmes || keepProgrammes);
+  if (existing.unsubscribed && !programmes) {
+    // The one opt_out this form writes: it restores the reader's own last choice,
+    // so the stale opt-in can't come back when the global flag is cleared below.
+    topics.push({ id: env.TOPIC_PROGRAMMES_ID, subscription: 'opt_out' });
+  }
+  step.call = 'updateContactTopics';
+  await resend.updateContactTopics(email, topics);
+
+  // Re-subscribe last, so a failure above never leaves the contact
+  // re-subscribed with its old topic state. The flag only spans this team
+  // (diyaz.dev), so clearing it can't re-subscribe anyone to other products.
+  if (existing.unsubscribed) {
+    step.call = 'updateContact';
+    await resend.updateContact(email, { unsubscribed: false });
+  }
 }

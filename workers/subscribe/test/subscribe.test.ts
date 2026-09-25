@@ -2,6 +2,7 @@ import { describe, expect, it } from 'vitest';
 import { route } from '../src/index.ts';
 import { decryptToken } from '../src/token.ts';
 import { FROM } from '../src/config.ts';
+import { sha256Hex } from '../src/hash.ts';
 import { NOW, TEST_KEY, fakeFetch, jsonResponse, limiter, makeDeps, makeEnv } from './helpers.ts';
 
 const ORIGIN = 'https://diyaz.dev';
@@ -20,14 +21,14 @@ function subscribeRequest(fields: Record<string, string>, origin: string | null 
   });
 }
 
-function services(options: { turnstile?: unknown; emailStatus?: number } = {}) {
+function services(options: { turnstile?: unknown; emailStatus?: number; emailBody?: unknown } = {}) {
   return fakeFetch((call) => {
     if (call.url.endsWith('/turnstile/v0/siteverify')) {
       return jsonResponse(options.turnstile ?? { success: true, hostname: 'diyaz.dev', action: 'subscribe' });
     }
     if (call.url === 'https://api.resend.com/emails') {
       const status = options.emailStatus ?? 200;
-      return jsonResponse(status < 400 ? { id: 'em_1' } : { message: 'boom' }, status);
+      return jsonResponse(status < 400 ? { id: 'em_1' } : (options.emailBody ?? { message: 'boom' }), status);
     }
     throw new Error(`unexpected ${call.method} ${call.url}`);
   });
@@ -173,7 +174,102 @@ describe('POST /subscribe', () => {
   });
 });
 
+describe('POST /subscribe: order, CORS and diagnostics', () => {
+  it('puts CORS headers on every JSON answer to an allowed origin', async () => {
+    const cases: [Record<string, string>, Parameters<typeof makeEnv>[0], ReturnType<typeof services>, number][] = [
+      [{ ...VALID, email: 'nope' }, {}, services(), 400],
+      [VALID, {}, services({ turnstile: { success: false } }), 403],
+      [VALID, { RL_IP: limiter(false) }, services(), 429],
+      [VALID, { TOKEN_KEY: '' }, services(), 500],
+      [VALID, {}, services({ emailStatus: 500 }), 502],
+    ];
+    for (const [fields, env, svc, status] of cases) {
+      const res = await route(subscribeRequest(fields), makeEnv(env), makeDeps(svc.fetch));
+      expect(res.status).toBe(status);
+      expect(res.headers.get('Access-Control-Allow-Origin')).toBe(ORIGIN);
+      expect(res.headers.get('Vary')).toBe('Origin');
+    }
+  });
+
+  it('keys the per-address limit on the hash of the normalised address', async () => {
+    const byAddress = limiter();
+    await route(subscribeRequest({ ...VALID, email: '  READER@example.COM ' }), makeEnv({ RL_EMAIL: byAddress }), makeDeps(services().fetch));
+    expect(byAddress.keys).toEqual([`email:${await sha256Hex('reader@example.com')}`]);
+  });
+
+  it('spends no rate-limit budget on a request that fails Turnstile', async () => {
+    const byIp = limiter();
+    const byAddress = limiter();
+    const svc = services({ turnstile: { success: false } });
+    await route(subscribeRequest(VALID), makeEnv({ RL_IP: byIp, RL_EMAIL: byAddress }), makeDeps(svc.fetch));
+    expect([...byIp.keys, ...byAddress.keys]).toEqual([]);
+  });
+
+  it('checks the honeypot before validating the address', async () => {
+    const { fetch, calls } = services();
+    const res = await route(subscribeRequest({ ...VALID, email: 'nope', hp: 'x' }), makeEnv(), makeDeps(fetch));
+    expect(res.status).toBe(200);
+    expect(calls).toHaveLength(0);
+  });
+
+  it('fails closed on a malformed TOKEN_KEY before spending Turnstile or rate-limit budget', async () => {
+    const byIp = limiter();
+    const { fetch, calls } = services();
+    const res = await route(subscribeRequest(VALID), makeEnv({ TOKEN_KEY: 'a'.repeat(64), RL_IP: byIp }), makeDeps(fetch));
+    expect(res.status).toBe(500);
+    expect(await res.json()).toEqual({ ok: false, error: 'server' });
+    expect(calls).toHaveLength(0);
+    expect(byIp.keys).toEqual([]);
+  });
+
+  it('turns an unexpected throw into a logged JSON 500 that the browser can read', async () => {
+    const broken = { limit: async () => { throw new TypeError('binding exploded'); } };
+    const deps = makeDeps(services().fetch);
+    const res = await route(subscribeRequest(VALID), makeEnv({ RL_IP: broken }), deps);
+    expect(res.status).toBe(500);
+    expect(await res.json()).toEqual({ ok: false, error: 'server' });
+    expect(res.headers.get('Access-Control-Allow-Origin')).toBe(ORIGIN);
+    expect(deps.logs).toContainEqual({ step: 'subscribe.unhandled', status: 500, reason: 'TypeError' });
+  });
+
+  it('logs the rejected origin', async () => {
+    const deps = makeDeps(services().fetch);
+    await route(subscribeRequest(VALID, 'https://evil.example'), makeEnv(), deps);
+    expect(deps.logs).toContainEqual({ step: 'subscribe.origin', status: 403, reason: 'https://evil.example' });
+  });
+
+  it('logs why Turnstile said no', async () => {
+    const deps = makeDeps(services({ turnstile: { success: false, 'error-codes': ['invalid-input-secret'] } }).fetch);
+    await route(subscribeRequest(VALID), makeEnv(), deps);
+    expect(deps.logs).toContainEqual({ step: 'subscribe.turnstile', status: 403, reason: 'invalid-input-secret' });
+  });
+
+  it("logs Resend's error code when the confirmation email fails", async () => {
+    const svc = services({ emailStatus: 422, emailBody: { name: 'validation_error', message: 'Invalid `to` for r@example.com' } });
+    const deps = makeDeps(svc.fetch);
+    await route(subscribeRequest(VALID), makeEnv(), deps);
+    expect(deps.logs).toContainEqual({ step: 'subscribe.send', status: 422, reason: 'validation_error' });
+    expect(JSON.stringify(deps.logs)).not.toContain('@');
+  });
+
+  it('mentions the Programmes opt-in in the confirmation email only when ticked', async () => {
+    const ticked = services();
+    await route(subscribeRequest(VALID), makeEnv(), makeDeps(ticked.fetch));
+    expect(sentEmail(ticked.calls).text).toContain('coaching programmes');
+    const unticked = services();
+    await route(subscribeRequest({ ...VALID, programmes: '' }), makeEnv(), makeDeps(unticked.fetch));
+    expect(sentEmail(unticked.calls).text).not.toContain('coaching programmes');
+  });
+});
+
 describe('routing', () => {
+  it('lists the allowed request headers in the CORS preflight answer', async () => {
+    const req = new Request('https://subscribe.diyaz.dev/subscribe', { method: 'OPTIONS', headers: { Origin: ORIGIN } });
+    const res = await route(req, makeEnv(), makeDeps(services().fetch));
+    expect(res.headers.get('Access-Control-Allow-Headers')).toBe('Content-Type');
+    expect(res.headers.get('Access-Control-Allow-Methods')).toBe('POST, OPTIONS');
+  });
+
   it('answers CORS preflight for an allowed origin', async () => {
     const req = new Request('https://subscribe.diyaz.dev/subscribe', { method: 'OPTIONS', headers: { Origin: ORIGIN } });
     const res = await route(req, makeEnv(), makeDeps(services().fetch));

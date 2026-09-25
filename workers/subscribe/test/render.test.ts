@@ -23,15 +23,21 @@ describe('renderEmail', () => {
 
 describe('renderConfirmationEmail', () => {
   it('carries the confirm link in both parts and says how long it lasts', () => {
-    const email = renderConfirmationEmail(URL_);
+    const email = renderConfirmationEmail(URL_, false);
     expect(email.subject).toBe('Confirm your subscription to diyaz.dev');
     expect(email.html).toContain(`href="${URL_}"`);
     expect(email.text).toContain(URL_);
     expect(email.text).toContain('48 hours');
   });
 
+  it('restates the Programmes opt-in only when it was ticked', () => {
+    expect(renderConfirmationEmail(URL_, true).text).toContain('occasional news about my coaching programmes');
+    expect(renderConfirmationEmail(URL_, true).html).toContain('occasional news about my coaching programmes');
+    expect(renderConfirmationEmail(URL_, false).text).not.toContain('coaching programmes');
+  });
+
   it('has no unsubscribe placeholder (it is transactional, not a broadcast)', () => {
-    const email = renderConfirmationEmail(URL_);
+    const email = renderConfirmationEmail(URL_, false);
     expect(email.html + email.text).not.toContain('RESEND_UNSUBSCRIBE_URL');
   });
 });

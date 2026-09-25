@@ -1,5 +1,6 @@
-// One look for every email: plain, text-first, no images (no remote loads,
-// so nothing that works like open tracking).
+// One look for every email: plain, text-first, no images, so the template adds
+// nothing that works like open tracking. Resend's own open/click tracking is a
+// per-domain setting and must stay off for news.diyaz.dev (spec §5).
 
 export function escapeHtml(value: string): string {
   return value
@@ -12,6 +13,12 @@ export function escapeHtml(value: string): string {
 
 export function button(href: string, label: string): string {
   return `<a href="${escapeHtml(href)}" style="display:inline-block;padding:12px 20px;background:#2a2521;color:#ffffff;text-decoration:none;border-radius:8px;font-weight:600;">${escapeHtml(label)}</a>`;
+}
+
+export interface RenderedEmail {
+  subject: string;
+  html: string;
+  text: string;
 }
 
 export interface EmailParts {

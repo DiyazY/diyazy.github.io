@@ -16,6 +16,23 @@ describe('normalizeEmail', () => {
     }
   });
 
+  it('rejects display-name forms and other characters a mailbox never needs', () => {
+    for (const bad of [
+      '"a"<victim@example.com>',
+      'x<victim@example.com>',
+      'a,b@example.com',
+      'a;b@example.com',
+      'a@b..com',
+      'a..b@example.com',
+      'a@[192.0.2.1]',
+      'a\\b@example.com',
+      'a(b)@example.com',
+      'a:b@example.com',
+    ]) {
+      expect(normalizeEmail(bad)).toBeNull();
+    }
+  });
+
   it('rejects addresses over 254 characters', () => {
     expect(normalizeEmail(`${'a'.repeat(245)}@example.com`)).toBeNull();
   });

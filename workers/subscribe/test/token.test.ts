@@ -1,5 +1,6 @@
 import { describe, expect, it } from 'vitest';
-import { decryptToken, encryptToken } from '../src/token.ts';
+import { decryptToken, encryptToken, isValidTokenKey, issueToken, readToken } from '../src/token.ts';
+import { TOKEN_TTL_MS } from '../src/config.ts';
 
 const KEY = Buffer.alloc(32, 7).toString('base64');
 const OTHER_KEY = Buffer.alloc(32, 9).toString('base64');
@@ -47,5 +48,30 @@ describe('token', () => {
   it('throws on a malformed key', async () => {
     await expect(encryptToken(PAYLOAD, 'short')).rejects.toThrow(/32 bytes/);
     await expect(encryptToken(PAYLOAD, Buffer.alloc(16).toString('base64'))).rejects.toThrow(/32 bytes/);
+  });
+
+  it('issues tokens that expire TOKEN_TTL_MS after issue', async () => {
+    const now = 1_790_000_000_000;
+    const token = await issueToken({ email: 'reader@example.com', programmes: true }, KEY, now);
+    expect(await readToken(token, KEY, now)).toEqual({
+      ok: true,
+      payload: { email: 'reader@example.com', programmes: true, exp: now + TOKEN_TTL_MS },
+    });
+    expect(await readToken(token, KEY, now + TOKEN_TTL_MS)).toMatchObject({ ok: true });
+    expect(await readToken(token, KEY, now + TOKEN_TTL_MS + 1)).toEqual({ ok: false, reason: 'expired' });
+  });
+
+  it('says why a token was rejected', async () => {
+    expect(await readToken('', KEY, 0)).toEqual({ ok: false, reason: 'missing' });
+    expect(await readToken('not a token!', KEY, 0)).toEqual({ ok: false, reason: 'invalid' });
+    const other = await issueToken({ email: 'r@example.com', programmes: false }, OTHER_KEY, 0);
+    expect(await readToken(other, KEY, 0)).toEqual({ ok: false, reason: 'invalid' });
+  });
+
+  it('checks a key is 32 bytes of base64 without throwing', () => {
+    expect(isValidTokenKey(KEY)).toBe(true);
+    expect(isValidTokenKey('a'.repeat(64))).toBe(false); // hex-looking, decodes to 48 bytes
+    expect(isValidTokenKey('short')).toBe(false);
+    expect(isValidTokenKey('')).toBe(false);
   });
 });

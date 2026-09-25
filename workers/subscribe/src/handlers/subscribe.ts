@@ -1,14 +1,14 @@
 // POST /subscribe: validate, prove human, rate-limit, then email a
 // confirmation link. Nothing is stored; the subscriber exists only after the
 // reader confirms (handlers/confirm.ts).
-import { FROM, TOKEN_TTL_MS, WORKER_URL } from '../config.ts';
+import { FROM, WORKER_URL } from '../config.ts';
 import type { Deps, Env } from '../env.ts';
-import { allowedOrigins, missingConfig } from '../env.ts';
+import { allowedOrigins, configProblems } from '../env.ts';
 import { renderConfirmationEmail } from '../email/confirmation.ts';
 import { sha256Hex } from '../hash.ts';
 import { corsHeaders, json } from '../http.ts';
 import { ResendError, createResendClient } from '../resend.ts';
-import { encryptToken } from '../token.ts';
+import { issueToken } from '../token.ts';
 import { verifyTurnstile } from '../turnstile.ts';
 import { normalizeEmail } from '../validate.ts';
 
@@ -21,7 +21,7 @@ export async function handleSubscribe(request: Request, env: Env, deps: Deps): P
   }
   const cors = corsHeaders(origin);
 
-  if (missingConfig(env).length > 0) {
+  if (configProblems(env).length > 0) {
     deps.log({ step: 'subscribe.config', status: 500 });
     return json({ ok: false, error: 'server' }, 500, cors);
   }
@@ -45,15 +45,15 @@ export async function handleSubscribe(request: Request, env: Env, deps: Deps): P
   if (!email) return json({ ok: false, error: 'validation' }, 400, cors);
 
   const ip = request.headers.get('CF-Connecting-IP') ?? '';
-  const human = await verifyTurnstile({
+  const turnstile = await verifyTurnstile({
     secret: env.TURNSTILE_SECRET,
     token: String(form.get('cf-turnstile-response') ?? ''),
     ip,
     allowedHostnames: origins.map((o) => new URL(o).hostname),
     fetch: deps.fetch,
   });
-  if (!human) {
-    deps.log({ step: 'subscribe.turnstile', status: 403 });
+  if (!turnstile.ok) {
+    deps.log({ step: 'subscribe.turnstile', status: 403, reason: turnstile.reason });
     return json({ ok: false, error: 'turnstile' }, 403, cors);
   }
 
@@ -67,10 +67,7 @@ export async function handleSubscribe(request: Request, env: Env, deps: Deps): P
     return json({ ok: false, error: 'rate_limit' }, 429, cors);
   }
 
-  const token = await encryptToken(
-    { email, programmes: form.get('programmes') === '1', exp: deps.now() + TOKEN_TTL_MS },
-    env.TOKEN_KEY,
-  );
+  const token = await issueToken({ email, programmes: form.get('programmes') === '1' }, env.TOKEN_KEY, deps.now());
   const message = renderConfirmationEmail(`${WORKER_URL}/confirm?t=${token}`);
   try {
     await createResendClient({ apiKey: env.RESEND_API_KEY, fetch: deps.fetch, sleep: deps.sleep }).sendEmail({

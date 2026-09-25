@@ -2,6 +2,8 @@
 // { email, programmes, exp }, serialised as base64url(iv || ciphertext).
 // Encryption (not just a signature) keeps the address unreadable in URLs that
 // land in logs, browser history or link scanners; GCM's tag rejects tampering.
+// Handlers use issueToken/readToken, which own the expiry rule.
+import { TOKEN_TTL_MS } from './config.ts';
 
 export interface TokenPayload {
   email: string;
@@ -31,14 +33,24 @@ function fromBase64Url(text: string): Uint8Array<ArrayBuffer> | null {
   }
 }
 
-async function importKey(base64Key: string): Promise<CryptoKey> {
-  let raw: Uint8Array<ArrayBuffer>;
+function decodeKey(base64Key: string): Uint8Array<ArrayBuffer> | null {
   try {
-    raw = Uint8Array.from(atob(base64Key), (c) => c.charCodeAt(0));
+    const raw = Uint8Array.from(atob(base64Key), (c) => c.charCodeAt(0));
+    return raw.length === 32 ? raw : null;
   } catch {
-    throw new Error('TOKEN_KEY must be 32 bytes (base64)');
+    return null;
   }
-  if (raw.length !== 32) throw new Error('TOKEN_KEY must be 32 bytes (base64)');
+}
+
+// Synchronous check used by configProblems(), so a bad key fails closed with
+// a logged config error instead of throwing mid-request.
+export function isValidTokenKey(base64Key: string): boolean {
+  return decodeKey(base64Key) !== null;
+}
+
+async function importKey(base64Key: string): Promise<CryptoKey> {
+  const raw = decodeKey(base64Key);
+  if (!raw) throw new Error('TOKEN_KEY must be 32 bytes (base64)');
   return crypto.subtle.importKey('raw', raw, 'AES-GCM', false, ['encrypt', 'decrypt']);
 }
 
@@ -55,8 +67,8 @@ export async function encryptToken(payload: TokenPayload, base64Key: string): Pr
   return toBase64Url(out);
 }
 
-// null for anything that isn't a token we issued with this key. Expiry is the
-// caller's job (it owns the clock).
+// null for anything that isn't a token we issued with this key; throws only if
+// the key itself is malformed. Expiry is checked by readToken.
 export async function decryptToken(token: string, base64Key: string): Promise<TokenPayload | null> {
   const key = await importKey(base64Key);
   const bytes = fromBase64Url(token);
@@ -73,4 +85,24 @@ export async function decryptToken(token: string, base64Key: string): Promise<To
   } catch {
     return null;
   }
+}
+
+export function issueToken(
+  input: { email: string; programmes: boolean },
+  base64Key: string,
+  now: number,
+): Promise<string> {
+  return encryptToken({ ...input, exp: now + TOKEN_TTL_MS }, base64Key);
+}
+
+export type TokenCheck =
+  | { ok: true; payload: TokenPayload }
+  | { ok: false; reason: 'missing' | 'invalid' | 'expired' };
+
+export async function readToken(token: string, base64Key: string, now: number): Promise<TokenCheck> {
+  if (!token) return { ok: false, reason: 'missing' };
+  const payload = await decryptToken(token, base64Key);
+  if (!payload) return { ok: false, reason: 'invalid' };
+  if (payload.exp < now) return { ok: false, reason: 'expired' };
+  return { ok: true, payload };
 }

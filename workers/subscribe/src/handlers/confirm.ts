@@ -3,7 +3,7 @@
 // subscribe-on-GET would confirm people who never clicked.
 import { SITE_URL } from '../config.ts';
 import type { Deps, Env } from '../env.ts';
-import { missingConfig } from '../env.ts';
+import { configProblems } from '../env.ts';
 import { html } from '../http.ts';
 import { confirmPage, errorPage, expiredPage, retryPage } from '../pages.ts';
 import { ResendError, createResendClient } from '../resend.ts';
@@ -18,7 +18,7 @@ export function handleConfirmGet(request: Request): Response {
 }
 
 export async function handleConfirmPost(request: Request, env: Env, deps: Deps): Promise<Response> {
-  if (missingConfig(env).length > 0) {
+  if (configProblems(env).length > 0) {
     deps.log({ step: 'confirm.config', status: 500 });
     return html(errorPage(), 500);
   }

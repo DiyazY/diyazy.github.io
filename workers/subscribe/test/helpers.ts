@@ -1,4 +1,4 @@
-import type { Deps, Env, Fetch, RateLimit } from '../src/env.ts';
+import type { Deps, Env, Fetch, LogEntry, RateLimit } from '../src/env.ts';
 
 export const NOW = Date.parse('2026-09-26T12:00:00Z');
 export const TEST_KEY = Buffer.alloc(32, 7).toString('base64');
@@ -66,8 +66,8 @@ export function makeEnv(overrides: Partial<Env> = {}): Env {
   };
 }
 
-export function makeDeps(fetch: Fetch): Deps & { logs: Record<string, string | number>[]; sleeps: number[] } {
-  const logs: Record<string, string | number>[] = [];
+export function makeDeps(fetch: Fetch): Deps & { logs: LogEntry[]; sleeps: number[] } {
+  const logs: LogEntry[] = [];
   const sleeps: number[] = [];
   return {
     fetch,

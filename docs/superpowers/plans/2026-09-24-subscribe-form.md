@@ -18,7 +18,8 @@
 | §6.2 "per-IP rate limit" | Two limiters: `RL_IP` 5/60 s and `RL_EMAIL` 2/60 s (keyed on SHA-256 of the address) | Cloudflare docs advise against IP-only keys (shared NATs); the per-address key is what stops "subscription bombing" one victim. Allowed periods are only 10 or 60 s. |
 | §6.2 honeypot (unnamed) | Field name `hp` | Browsers autofill fields named like `website`/`url`; an autofilled honeypot would silently drop a real human. |
 | §8.2 broadcast name `post:<path>` | `post:<first 12 hex of SHA-256(path)>` | Immune to any broadcast-name length limit; path-based, so retitling never re-sends. |
-| §8.1 job runs on every main push | `notify` job is skipped until repo variable `ANNOUNCE_SINCE` exists | Prevents red CI on every push between merge and launch. The script itself still refuses to run without it (§8.2 rule 1 intact). |
+| §8.1 job runs on every main push | `notify` job runs only when repo variable `NOTIFY_ENABLED` is `true` (revised in PR review; was "until `ANNOUNCE_SINCE` exists") | Prevents red CI between merge and launch, and a deleted `ANNOUNCE_SINCE` after launch now fails loudly instead of silently skipping. The script also refuses to run without `ANNOUNCE_SINCE`. |
+| — (PR #49 review, 2026-09-25) | Turnstile loads on first form interaction and runs on submit; confirm reads segments/topics first, clears `unsubscribed` last and never revives a Programmes opt-in after a global unsubscribe (writes `opt_out` in that one case); `scheduled_at` is an ISO timestamp; `happy-dom` dev dependency for site-JS tests; Cloudflare invocation logs off | Findings from the five-agent PR review; the spec was revised to match. |
 | §8.3 heads-up links `…/broadcasts/{id}` | Links `https://resend.com/broadcasts` + prints the ID | The per-broadcast URL format is unverified; the list page certainly exists. |
 | §7 form "after `{{ content }}`" | After the share section | `post_read_completed` fires when `.share-section` scrolls into view; inserting the form above it would shift that metric. |
 | — | Turnstile `action` must equal `subscribe`; allowed hostnames derive from `ALLOWED_ORIGINS` | Cloudflare's recommended siteverify checks; one variable toggles localhost for the E2E test. |
@@ -3335,6 +3336,9 @@ Requires Task 1. Deploying is outward-facing: get Diyaz's explicit go-ahead in c
   5. Clicks **Confirm** again on the same page (back button, resubmit) → still ends on `/subscribed/`.
   6. Blocks `challenges.cloudflare.com` (browser devtools request blocking, or an ad blocker), reloads, submits → sees the "bot check didn't load" message; no request to `subscribe.diyaz.dev` in the network tab (Review Focus 5).
   7. Submits a bogus address like `nope` → "That email address doesn't look right."
+  8. With the Network tab open on a post, confirms **no** request to `challenges.cloudflare.com` until clicking into the form (lazy Turnstile, which `/privacy/` promises).
+  9. Consent round-trip (the PR-review critical case): subscribe with Programmes **ticked** and confirm → in Resend, open the preferences link from a test broadcast (or mark the contact unsubscribed in the dashboard) and unsubscribe from all → subscribe again with the box **unticked** and confirm → the contact is subscribed, New posts `opt_in`, **Programmes `opt_out`**.
+  10. Note in the ledger what Resend actually does for a topics PATCH (merge or replace) and for a duplicate segment add; the code is correct either way, but record it.
   If step 3 or 4 shows a Resend API mismatch (e.g. a status other than 404/409 for "not found"/"already in segment"), fix `src/resend.ts` with a failing test first, redeploy, repeat.
 
 - [ ] **Step 6: Lock origins back down to production**
@@ -3377,7 +3381,7 @@ Requires Tasks 11–12 and Diyaz's approval of the PR.
   ```bash
   git add _config.yml && git commit -m "Switch on email subscriptions" && git push
   ```
-  Diyaz merges the PR. Expected on `main`: `build`, `deploy`, `worker` green; `notify` **skipped** (no `ANNOUNCE_SINCE` yet).
+  Diyaz merges the PR. Expected on `main`: `build`, `deploy`, `worker` green; `notify` **skipped** (`NOTIFY_ENABLED` not set yet).
 
 - [ ] **Step 4: Verify production.** Open `https://diyaz.dev/subscribe/` and a post in the browser pane: form present, Turnstile widget loads, footer shows Subscribe + Privacy, `https://diyaz.dev/privacy/` renders. (Don't submit a real address unless Diyaz asks — they already tested the flow in Task 12.)
 
@@ -3385,6 +3389,7 @@ Requires Tasks 11–12 and Diyaz's approval of the PR.
 
   ```bash
   gh variable set ANNOUNCE_SINCE --body "<launch day, e.g. 2026-09-26>"
+  gh variable set NOTIFY_ENABLED --body "true"
   gh workflow run build.yml --ref main -f dry_run=true
   ```
   Expected in the `notify` job log: `0 post(s) to announce` and `done: 0 scheduled` (Part 2 is still future-dated).

@@ -1,8 +1,18 @@
 # Subscribe form — design spec
 
-_Status: approved design, pre-plan · Date: 2026-09-24 · Author: Diyaz Yakubov (with Claude)_
+_Status: approved design, implemented in PR #49 · Date: 2026-09-24, revised 2026-09-25 · Author: Diyaz Yakubov (with Claude)_
 
 Internal planning document. Not published (see `exclude` in `_config.yml`).
+
+> **Revised 2026-09-25 after the PR #49 review.** Changes are made inline
+> below; in short: Turnstile loads only when a reader touches the form and
+> runs on submit (§7); re-confirming never revives a Programmes opt-in after
+> "unsubscribe from all" (§6.4); logs are fixed-vocabulary and Cloudflare
+> invocation logs are off (§6.5); the announcer is switched on by
+> `NOTIFY_ENABLED`, names broadcasts by a path hash, refuses a nameless
+> broadcast list and logs every skipped post (§8); tests include the site's
+> form script and a self-test of the build checks (§9). The plan's
+> "Deviations" table lists the rest.
 
 ## 1. Goal
 
@@ -40,10 +50,10 @@ here, in its own Resend team).
 | **Approach** | Cloudflare Worker + Resend (contacts, topics, broadcasts) + GitHub Actions announcer | No new vendor; hosted unsubscribe/preferences from Resend; ~230 lines of code. |
 | **Resend account** | **Separate Resend team "diyaz.dev"** | Contact `unsubscribed` is account-wide ("unsubscribed from all Broadcasts"); a separate team keeps consent, abuse blast radius, and full-access keys away from toptop.dev, BusyPipe, Salpön, Eurojackpot Stats. |
 | **Replies** | Reach Diyaz | `reply_to` set to Diyaz's inbox. The address is a secret (Worker + GitHub), never committed; `author.email` in `_config.yml` stays empty. |
-| **Consent** | Double opt-in, encrypted stateless token, POST-confirm | No subscriber exists until the reader clicks **Confirm** on a page; link scanners that only GET cannot subscribe anyone. |
+| **Consent** | Double opt-in, encrypted stateless token, POST-confirm | No subscriber exists until the reader clicks **Confirm** on a page; link scanners that only GET cannot subscribe anyone. Turnstile loads only when a reader touches the form and runs on submit. |
 | **Email content** | Teaser: title + `description` + link | Readers land on the site (read-completion + programme links measurable). Text-first, no images, no open/click tracking. |
-| **Send safety** | Broadcast scheduled "in 2 hours" + heads-up email to Diyaz | A cancel window that is actually noticed. |
-| **Launch switch** | `subscribe.enabled` in `_config.yml` | Code ships dark; flipped after an end-to-end test against the deployed Worker. |
+| **Send safety** | Broadcast scheduled 2 hours out (an ISO timestamp from one clock) + heads-up email to Diyaz | A cancel window that is actually noticed. |
+| **Launch switch** | `subscribe.enabled` in `_config.yml`; repo variable `NOTIFY_ENABLED=true` for the announcer | Code ships dark; flipped after an end-to-end test against the deployed Worker. |
 
 ## 4. Architecture
 
@@ -152,18 +162,33 @@ POSTs `t` to `/confirm`. Headers: `Cache-Control: no-store`,
 2. Upsert the contact in Resend:
    - add to segment "diyaz.dev readers";
    - topic "New posts" → `opt_in`;
-   - topic "Programmes" → `opt_in` **only if** `programmes` is true. When false,
-     leave the topic untouched (new contacts fall back to its `opt_out`
-     default; an existing opt-in is not revoked by a later form).
+   - topic "Programmes" → `opt_in` if `programmes` is true. When false, new
+     contacts fall back to its `opt_out` default, and a **still-subscribed**
+     contact keeps an existing opt-in.
      **Rule: the form only ever adds opt-ins; opt-outs happen on Resend's
-     preferences page.**
-   - `unsubscribed: false` (safe: the flag is scoped to this team only).
+     preferences page.** One exception: a contact who had used "unsubscribe
+     from all" and re-confirms with the box unticked gets Programmes written
+     as `opt_out`, because a leftover topic opt-in from before the global
+     unsubscribe is not consent (it would otherwise come back when the flag is
+     cleared).
+   - Existing contacts: read their segments and topics before writing
+     (Resend documents neither the duplicate segment-add answer nor whether a
+     topics PATCH replaces the list); add to the segment only if missing.
+   - `unsubscribed: false` **last**, only for a contact that was unsubscribed,
+     so a failure part-way never leaves them re-subscribed with old topics
+     (safe: the flag is scoped to this team only).
+   - A double click can race two confirms past the 404; a 4xx from the create
+     re-reads the contact and continues as an update.
 3. On Resend failure → page with a **Try again** button (same token, still valid).
 4. Success → `303` to `SITE_URL/subscribed/`.
 
 ### 6.5 Logging
 
-Log the failing step and HTTP status; **never** log email addresses or tokens.
+Log the failing step, HTTP status, which Resend call failed, and a fixed code
+(Resend's error name, Siteverify's error-codes, the token failure reason
+`missing|invalid|expired`, a rejected Origin); **never** log email addresses,
+tokens or free-text error messages. Cloudflare's invocation logs are turned off
+in `wrangler.jsonc`, since they would record every `/confirm?t=<token>` URL.
 
 ## 7. Site changes (Jekyll)
 
@@ -197,16 +222,25 @@ Log the failing step and HTTP status; **never** log email addresses or tokens.
   production `future: false`, so future-dated posts never appear.
 - **Analytics** (`assets/js/analytics.js`): `subscribe_submitted`
   (`{ programmes, location: "post" | "page" }`) on a 200 response;
-  `subscribe_failed` (`{ reason: "validation" | "turnstile" | "rate_limit" |
-  "server" }`). A confirmation = a `/subscribed/` pageview. Announcer links
-  carry `utm_source=newsletter&utm_medium=email&utm_campaign=<slug>`.
+  `subscribe_failed` (`{ reason, location, code?, http_status? }`, where
+  `reason` is a server answer `validation | turnstile | rate_limit | server`
+  or a browser-side `network | pending | blocked | widget`, and `code` is
+  Turnstile's error code for `widget`). A confirmation = a `/subscribed/`
+  pageview. Announcer links carry
+  `utm_source=newsletter&utm_medium=email&utm_campaign=<slug>`.
+- **Turnstile** is loaded by `assets/js/subscribe.js` on the reader's first
+  touch of the form (or on submit), rendered with `execution: 'execute'` so
+  the check runs on submit, with an error callback and 20 s timeouts; readers
+  who never use the form never load it. `/privacy/` says exactly this.
 
 ## 8. Announcer — `notify` job
 
 ### 8.1 Placement
 
 New job in `.github/workflows/build.yml`: `needs: deploy`, runs only on
-`refs/heads/main` (push, the Wednesday `0 14 * * 3` cron, `workflow_dispatch`).
+`refs/heads/main` (push, the Wednesday `0 14 * * 3` cron, `workflow_dispatch`)
+and only when the repo variable `NOTIFY_ENABLED` is `true`. It sets up Node but
+installs no packages (the script needs none).
 Separate from `deploy`, so a failure never blocks or rolls back a deploy.
 Reads `posts.json` from **this run's build output** (not the live site, which
 GitHub Pages caches ~10 min). Script: `workers/subscribe/scripts/notify.ts`,
@@ -224,7 +258,10 @@ A post is a candidate when **all** hold:
 
 1. `date >= ANNOUNCE_SINCE`. If `ANNOUNCE_SINCE` is unset → **fail**, never
    "announce everything".
-2. No broadcast in the team is named `post:<path>` (paginate the full list).
+2. No broadcast in the team is named `post:<first 12 hex of SHA-256(path)>`
+   (paginate the full list). If the list is non-empty but no broadcast has a
+   name, fail: the duplicate check would otherwise fail open. Every skipped
+   post is logged with its reason.
 3. `GET <url>` returns 200 (retry every 30 s for up to 5 min; still failing →
    job fails, nothing sent for that post).
 
@@ -234,8 +271,9 @@ anything**.
 ### 8.3 Sending (per candidate)
 
 - `POST /broadcasts`: `segment_id` = readers, `topic_id` = New posts,
-  `from`, `reply_to`, `subject` = post title, `name` = `post:<path>`, `html` +
-  `text`, `send: true`, `scheduled_at: "in 2 hours"`.
+  `from`, `reply_to`, `subject` = post title, `name` = `post:<12 hex>`, `html` +
+  `text`, `send: true`, `scheduled_at` = the ISO time 2 hours from now (the
+  heads-up quotes the same instant).
 - Heads-up transactional email to `NOTIFY_REPLY_TO`: *"Scheduled for ~HH:MM
   UTC: {title}. Cancel: https://resend.com/broadcasts/{id}"*.
 - Append title, scheduled time, broadcast ID to `$GITHUB_STEP_SUMMARY`.
@@ -262,7 +300,10 @@ after that deploy.
 
 ## 9. Testing (TDD)
 
-- **Worker** — Vitest with `@cloudflare/vitest-pool-workers` (runs in workerd):
+- **Worker** — Vitest in plain Node (the Worker uses only standard Web APIs;
+  `wrangler deploy --dry-run` in CI catches Worker-only build errors), with a
+  stateful fake Resend so consent tests assert resulting state under both
+  possible topics-PATCH semantics:
   token round-trip; tampered and expired tokens rejected; `/subscribe` check
   order (origin → honeypot → email → Turnstile → rate limit) with Turnstile and
   Resend mocked; identical 200 body for new and existing addresses;
@@ -272,7 +313,12 @@ after that deploy.
 - **Announcer** — selection as a pure function (`ANNOUNCE_SINCE` unset → error,
   cutoff, already-announced, fuse); renderer output contains
   `{{{RESEND_UNSUBSCRIBE_URL}}}`, the UTM link, and no `<img>`.
-- **CI** — `build.yml` runs `workers/subscribe` tests on every PR.
+- **Site JS** — `assets/js/subscribe.js` runs in a happy-dom test with
+  Turnstile and fetch stubbed (lazy load, local validation, blocked script,
+  widget error, each server answer, timeout).
+- **CI** — `build.yml` runs `workers/subscribe` tests on every PR, and
+  `.github/scripts/check-build-test.sh` proves the `posts.json` checks still
+  fail on bad fixtures.
   `check-build.sh` asserts `posts.json` exists and parses, contains no post
   dated in the future, and (when `subscribe.enabled`) the form include renders
   on post pages; with it disabled, no form markup appears.

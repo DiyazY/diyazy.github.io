@@ -1,23 +1,31 @@
 // Minimal Resend REST client: only the calls the Worker and notify script
-// make. Retries 429s (the API allows 5 requests/second per team) and turns
-// any other non-2xx into a ResendError carrying the status.
+// make. Every call has a timeout. A 429 is retried (the API allows 5
+// requests/second per team) unless it is a quota error; a 429 still failing
+// after 4 attempts, and any other non-2xx, becomes a ResendError. Exceptions:
+// getContact maps 404 to null, and addContactToSegment accepts 409.
 import type { Fetch } from './env.ts';
 
 const API = 'https://api.resend.com';
 const MAX_ATTEMPTS = 4;
+const TIMEOUT_MS = 10_000;
+const MAX_RETRY_DELAY_MS = 5_000;
 
 export class ResendError extends Error {
   readonly status: number;
-  constructor(status: number, message: string) {
+  readonly code: string | undefined; // Resend's error `name`, e.g. "validation_error"
+  constructor(status: number, message: string, code?: string) {
     super(message);
     this.name = 'ResendError';
     this.status = status;
+    this.code = code;
   }
 }
 
+export type Subscription = 'opt_in' | 'opt_out';
+
 export interface TopicSubscription {
   id: string;
-  subscription: 'opt_in' | 'opt_out';
+  subscription: Subscription;
 }
 
 export interface EmailInput {
@@ -58,6 +66,7 @@ export interface BroadcastInput {
 export interface BroadcastSummary {
   id: string;
   name: string | null;
+  status?: string;
 }
 
 export interface ResendClient {
@@ -73,12 +82,31 @@ export interface ResendClient {
   createBroadcast(input: BroadcastInput): Promise<{ id: string }>;
 }
 
-async function errorMessage(res: Response): Promise<string> {
+async function errorDetails(res: Response): Promise<{ message: string; code: string | undefined }> {
   try {
     const data = (await res.json()) as { message?: string; name?: string };
-    return data.message || data.name || `HTTP ${res.status}`;
+    return { message: data.message || data.name || `HTTP ${res.status}`, code: data.name };
   } catch {
-    return `HTTP ${res.status}`;
+    return { message: `HTTP ${res.status}`, code: undefined };
+  }
+}
+
+// Retry-After is either seconds or an HTTP date. Capped so a Worker request
+// never hangs on Resend's say-so; 1 s when the header is absent or unreadable.
+function retryDelayMs(header: string | null): number {
+  if (!header || header.trim() === '') return 1000;
+  const seconds = Number(header);
+  let ms = Number.isFinite(seconds) ? seconds * 1000 : Date.parse(header) - Date.now();
+  if (!Number.isFinite(ms) || ms <= 0) ms = 1000;
+  return Math.min(ms, MAX_RETRY_DELAY_MS);
+}
+
+async function isQuotaError(res: Response): Promise<boolean> {
+  try {
+    const data = (await res.clone().json()) as { name?: string };
+    return typeof data.name === 'string' && data.name.endsWith('_quota_exceeded');
+  } catch {
+    return false;
   }
 }
 
@@ -93,16 +121,17 @@ export function createResendClient(options: {
         method,
         headers: { Authorization: `Bearer ${options.apiKey}`, 'Content-Type': 'application/json' },
         body: body === undefined ? undefined : JSON.stringify(body),
+        signal: AbortSignal.timeout(TIMEOUT_MS),
       });
-      if (res.status !== 429 || attempt >= MAX_ATTEMPTS) return res;
-      const retryAfter = Number(res.headers.get('Retry-After'));
-      await options.sleep(Number.isFinite(retryAfter) && retryAfter > 0 ? retryAfter * 1000 : 1000);
+      if (res.status !== 429 || attempt >= MAX_ATTEMPTS || (await isQuotaError(res))) return res;
+      await options.sleep(retryDelayMs(res.headers.get('Retry-After')));
     }
   }
 
   async function expectOk(res: Response, allow: number[] = []): Promise<Response> {
     if (res.ok || allow.includes(res.status)) return res;
-    throw new ResendError(res.status, await errorMessage(res));
+    const { message, code } = await errorDetails(res);
+    throw new ResendError(res.status, message, code);
   }
 
   async function json<T>(method: string, path: string, body?: unknown): Promise<T> {
@@ -119,7 +148,10 @@ export function createResendClient(options: {
       const res = await call('GET', contact(email));
       if (res.status === 404) return null;
       await expectOk(res);
-      return (await res.json()) as Contact;
+      const data = (await res.json()) as Partial<Contact>;
+      // confirm.ts branches on this flag, so never guess it.
+      if (typeof data.unsubscribed !== 'boolean') throw new Error('Resend contact response has no unsubscribed flag');
+      return data as Contact;
     },
 
     createContact: (input) => json('POST', '/contacts', input),
@@ -129,19 +161,26 @@ export function createResendClient(options: {
     },
 
     async addContactToSegment(email, segmentId) {
-      // 409 = already in the segment: re-confirming must stay idempotent.
+      // The duplicate-add answer is undocumented; 409 is the likely one. confirm.ts
+      // checks membership first, so this is only a fallback for races.
       await expectOk(await call('POST', `${contact(email)}/segments/${encodeURIComponent(segmentId)}`), [409]);
     },
 
-    // One page is enough: this team has one segment and two topics.
+    // Neither call paginates: limit=100 is far beyond this team's 1 segment and 2 topics.
     async listContactSegmentIds(email) {
       const page = await json<{ data: { id: string }[] }>('GET', `${contact(email)}/segments?limit=100`);
       return page.data.map((segment) => segment.id);
     },
 
     async getContactTopics(email) {
-      const page = await json<{ data: TopicSubscription[] }>('GET', `${contact(email)}/topics?limit=100`);
-      return page.data.map(({ id, subscription }) => ({ id, subscription }));
+      const page = await json<{ data: { id: string; subscription: unknown }[] }>('GET', `${contact(email)}/topics?limit=100`);
+      return page.data.map(({ id, subscription }) => {
+        // confirm.ts decides whether to carry a Programmes opt-in on this value.
+        if (subscription !== 'opt_in' && subscription !== 'opt_out') {
+          throw new Error('Resend returned an unexpected topic subscription value');
+        }
+        return { id, subscription };
+      });
     },
 
     async updateContactTopics(email, topics) {

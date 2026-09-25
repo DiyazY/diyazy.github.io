@@ -127,6 +127,87 @@ describe('createResendClient', () => {
     expect(calls[1].url).toBe('https://api.resend.com/broadcasts?limit=100&after=b2');
   });
 
+  it('passes a timeout signal on every call', async () => {
+    const { resend, calls } = setup(() => jsonResponse({ id: 'em_1' }));
+    await resend.sendEmail(EMAIL);
+    expect(calls[0].signal).toBeInstanceOf(AbortSignal);
+  });
+
+  it('caps a long Retry-After at 5 seconds', async () => {
+    let n = 0;
+    const { resend, sleeps } = setup(() =>
+      ++n === 1 ? jsonResponse({ message: 'slow down' }, 429, { 'Retry-After': '120' }) : jsonResponse({ id: 'em_1' }),
+    );
+    await resend.sendEmail(EMAIL);
+    expect(sleeps).toEqual([5000]);
+  });
+
+  it('reads Retry-After given as an HTTP date', async () => {
+    let n = 0;
+    const when = new Date(Date.now() + 3000).toUTCString();
+    const { resend, sleeps } = setup(() =>
+      ++n === 1 ? jsonResponse({ message: 'slow down' }, 429, { 'Retry-After': when }) : jsonResponse({ id: 'em_1' }),
+    );
+    await resend.sendEmail(EMAIL);
+    expect(sleeps[0]).toBeGreaterThan(1000);
+    expect(sleeps[0]).toBeLessThanOrEqual(3000);
+  });
+
+  it('falls back to 1 second when Retry-After is missing or unreadable', async () => {
+    let n = 0;
+    const { resend, sleeps } = setup(() => {
+      n++;
+      if (n === 1) return jsonResponse({ message: 'slow down' }, 429);
+      if (n === 2) return jsonResponse({ message: 'slow down' }, 429, { 'Retry-After': 'soon' });
+      return jsonResponse({ id: 'em_1' });
+    });
+    await resend.sendEmail(EMAIL);
+    expect(sleeps).toEqual([1000, 1000]);
+  });
+
+  it('does not retry a quota error, and reports its code', async () => {
+    const { resend, calls } = setup(() =>
+      jsonResponse({ name: 'daily_quota_exceeded', message: 'You have reached your daily email sending quota.' }, 429),
+    );
+    await expect(resend.sendEmail(EMAIL)).rejects.toMatchObject({ status: 429, code: 'daily_quota_exceeded' });
+    expect(calls).toHaveLength(1);
+  });
+
+  it("carries Resend's error name as the error code", async () => {
+    const { resend } = setup(() => jsonResponse({ name: 'validation_error', message: 'Invalid `to` field.' }, 422));
+    await expect(resend.sendEmail(EMAIL)).rejects.toMatchObject({ status: 422, code: 'validation_error' });
+  });
+
+  it('treats only 404 as "no such contact"; a server error throws', async () => {
+    const { resend } = setup(() => jsonResponse({ message: 'boom' }, 500));
+    await expect(resend.getContact('r@example.com')).rejects.toMatchObject({ status: 500 });
+  });
+
+  it('rejects a contact response without an unsubscribed flag', async () => {
+    const { resend } = setup(() => jsonResponse({ id: 'c_1', email: 'r@example.com' }));
+    await expect(resend.getContact('r@example.com')).rejects.toThrow(/unsubscribed/);
+  });
+
+  it('rejects topic subscription values it does not understand', async () => {
+    const { resend } = setup(() =>
+      jsonResponse({ object: 'list', has_more: false, data: [{ id: 't1', subscription: 'pending' }] }),
+    );
+    await expect(resend.getContactTopics('r@example.com')).rejects.toThrow(/subscription/);
+  });
+
+  it('keeps each broadcast status from the listing', async () => {
+    const { resend } = setup(() =>
+      jsonResponse({ object: 'list', has_more: false, data: [{ id: 'b1', name: 'post:aaa', status: 'sent' }] }),
+    );
+    expect(await resend.listBroadcasts()).toEqual([{ id: 'b1', name: 'post:aaa', status: 'sent' }]);
+  });
+
+  it('stops paging on an empty page even if has_more says otherwise', async () => {
+    const { resend, calls } = setup(() => jsonResponse({ object: 'list', has_more: true, data: [] }));
+    expect(await resend.listBroadcasts()).toEqual([]);
+    expect(calls).toHaveLength(1);
+  });
+
   it('creates a broadcast', async () => {
     const { resend, calls } = setup(() => jsonResponse({ id: 'b_new' }));
     const input = {

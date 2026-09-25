@@ -8,6 +8,7 @@ export interface Call {
   method: string;
   body: string | null;
   headers: Record<string, string>; // lowercase keys
+  signal: AbortSignal | null;
 }
 
 // A fetch stand-in that records every call and answers via `handler`.
@@ -23,6 +24,7 @@ export function fakeFetch(handler: (call: Call) => Response | Promise<Response>)
       method: init.method ?? 'GET',
       body: init.body == null ? null : String(init.body),
       headers,
+      signal: init.signal ?? null,
     };
     calls.push(call);
     return handler(call);

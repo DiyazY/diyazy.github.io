@@ -1,6 +1,6 @@
 ---
 title: Privacy
-description: "What diyaz.dev collects: cookieless analytics, and your email address only if you subscribe. Who processes it, how long it is kept, and your rights."
+description: "What diyaz.dev collects: cookieless analytics on every page, a bot check and your email address only if you use the subscribe form, and what the site's host and comments see."
 permalink: /privacy/
 ---
 <link rel="stylesheet" href="{{ site.baseurl }}/assets/css/subscribe.css">
@@ -8,20 +8,25 @@ permalink: /privacy/
 <div class="panel-container simple-page">
   <div class="simple-page-container">
     <h1>Privacy</h1>
-    <p>This is a personal site run by {{ site.author.name }}. It collects as little as it can. Last updated September 24, 2026.</p>
+    <p>This is a personal site run by {{ site.author.name }}. It collects as little as it can. Last updated September 25, 2026.</p>
 
     <h2>If you subscribe by email</h2>
-    <p><strong>What I store:</strong> your email address and which topics you chose ("New posts", and "Programmes" only if you ticked the box). Your address is added to the list only after you click the link in the confirmation email. If you never click it, no subscriber record is created, though the confirmation email itself stays in Resend's delivery log for a while.</p>
-    <p><strong>Why:</strong> to send you what you asked for. The legal basis is your consent, which you can withdraw at any time with the link at the bottom of every email.</p>
+    <p><strong>What I store:</strong> your email address and which topics you chose ("New posts", and "Programmes" only if you ticked the box). Your address is added to the list only after you open the link in the confirmation email and press Confirm. If you never do, no subscriber record is created, though the confirmation email itself stays in Resend's delivery log for a while.</p>
+    <p><strong>Why:</strong> to send you what you asked for. The legal basis is your consent, which you can withdraw at any time with the link at the bottom of every newsletter email, or by replying to one.</p>
     <p><strong>Who processes it:</strong></p>
     <ul>
-      <li><strong>Resend</strong> (Resend, Inc.) keeps the subscriber list and delivers the emails, sending from its EU region.</li>
-      <li><strong>Cloudflare</strong> runs the small service behind the form and the Turnstile check that tells people from bots. Turnstile looks at signals from your browser for that one purpose; in this setup it sets no cookies.</li>
+      <li><strong>Resend</strong> (Resend, Inc., a US company) keeps the subscriber list and delivers the emails, sending from its EU region. Because Resend is based in the US, your address may be processed there under Resend's data processing terms.</li>
+      <li><strong>Cloudflare</strong> runs the small service behind the form and the Turnstile check that tells people from bots. Turnstile loads only when you use the form (the first time you click or tap into it), and its check runs when you press Subscribe. It looks at signals from your browser for that one purpose; in this setup it sets no cookies.</li>
     </ul>
-    <p><strong>How long:</strong> while you're subscribed. After you unsubscribe, your address is kept only as a do-not-email record, so nothing is ever sent to it again; ask me and I'll delete it completely. Emails have no open or click tracking.</p>
+    <p><strong>How long:</strong> while you're subscribed. After you unsubscribe, your address stays in Resend marked as unsubscribed, so no more newsletters are sent to it. If someone enters it in the form again, one confirmation email is sent, and nothing more unless it's confirmed. Ask me and I'll delete it completely.</p>
+    <p><strong>Tracking:</strong> emails have no open or click tracking. Links in newsletter emails carry a campaign tag (like <code>utm_source=newsletter</code>) so I can count visits that came from the newsletter; it doesn't identify who clicked.</p>
 
     <h2>Analytics</h2>
     <p>The site uses <a href="https://posthog.com" rel="noopener">PostHog</a> (EU cloud) in cookieless mode: no cookies, no local storage, IP addresses anonymised, and a visitor identifier that is a daily-rotating hash. It records things like page views, searches and whether a post was read to the end, so I can see what's useful.</p>
+
+    <h2>Hosting and comments</h2>
+    <p>The site is served by <strong>GitHub Pages</strong> (GitHub, Inc.), which, like any web server, sees your IP address and browser details when you load a page.</p>
+    <p>Posts embed <strong>Giscus</strong> comments, which load from giscus.app as you scroll to the comments and are stored as GitHub Discussions. Reading them needs no account; commenting means signing in with GitHub, under GitHub's own privacy terms.</p>
 
     <h2>Your rights</h2>
     <p>You can ask to see, correct or delete what's stored about you, or object to its use. If you're a subscriber, reply to any email; otherwise message me on <a href="https://www.linkedin.com/in/{{ site.author.linkedin }}/" rel="noopener">LinkedIn</a>. You can also complain to your data protection authority (in Finland, the Data Protection Ombudsman).</p>

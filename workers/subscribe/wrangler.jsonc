@@ -5,10 +5,14 @@
   "compatibility_date": "2026-09-24",
   "workers_dev": false,
   "routes": [{ "pattern": "subscribe.diyaz.dev", "custom_domain": true }],
-  "observability": { "enabled": true },
+  // Keep our own step/status console lines; turn off invocation logs, which
+  // would record every /confirm?t=<token> URL (spec §6.5: tokens are never logged).
+  "observability": { "enabled": true, "logs": { "invocation_logs": false } },
   "vars": {
-    // Comma-separated. Task 12 temporarily adds http://localhost:4000 via
-    // `wrangler deploy --var`, never by editing this file.
+    // Comma-separated bare origins. The Turnstile hostname check derives from
+    // this list. For a local end-to-end test, deploy with
+    //   npx wrangler deploy --var "ALLOWED_ORIGINS:https://diyaz.dev,http://localhost:4000"
+    // and revert with a plain `npx wrangler deploy`. Never commit localhost here.
     "ALLOWED_ORIGINS": "https://diyaz.dev",
     // Resend team "diyaz.dev" IDs (not secrets). Empty = Worker fails closed.
     "RESEND_SEGMENT_ID": "",

@@ -349,10 +349,12 @@ fi
 
 # --- posts.json feeds the newsletter announcer ----------------------------
 # workers/subscribe/scripts/notify.ts reads this file from the build output
-# to decide which posts to email. A malformed file stops announcements; a
-# future-dated entry would announce a post before it is public. The --future
-# validation build legitimately contains future posts, so CI sets
-# CHECK_ALLOW_FUTURE=1 for that run only.
+# to decide which posts to email. A malformed file stops announcements. A
+# future-dated entry means this build published a post before its date (the
+# announcer skips it, but the page is live). A failure here blocks the whole
+# deploy, not just announcements. The --future validation build legitimately
+# contains future posts, so CI sets CHECK_ALLOW_FUTURE=1 for that run only.
+# .github/scripts/check-build-test.sh proves these branches still fail.
 if [ -f "$SITE/posts.json" ]; then
   if ruby -rjson -rtime -e '
       posts = JSON.parse(File.read(ARGV[0]))
@@ -378,10 +380,15 @@ else
 fi
 
 # --- subscribe form follows the subscribe.enabled switch ------------------
-# The form ships dark (enabled: false) until the Worker is tested end to end.
 # Disabled: no page may render it. Enabled: every post must, and the public
-# Turnstile site key must be set or the form can never get a token.
-sub_enabled=$(ruby -ryaml -e 'puts((YAML.load_file(ARGV[0])["subscribe"] || {})["enabled"] == true)' "$REPO/_config.yml")
+# Turnstile site key must be set or the form can never get a token. The switch
+# is read from the repo's _config.yml, so a build made with extra --config
+# overrides can disagree with this check; CI never uses overrides.
+sub_enabled=$(ruby -ryaml -e 'puts((YAML.load_file(ARGV[0])["subscribe"] || {})["enabled"] == true)' "$REPO/_config.yml" 2>/dev/null)
+case "$sub_enabled" in
+  true|false) ;;
+  *) fail "could not read subscribe.enabled from _config.yml" ;;
+esac
 if [ "$sub_enabled" = "true" ]; then
   missing=0
   for f in "$SITE"/2*/*/*/*.html; do
@@ -394,7 +401,7 @@ if [ "$sub_enabled" = "true" ]; then
   else
     fail "subscribe.enabled is true but subscribe.turnstile_site_key is empty"
   fi
-else
+elif [ "$sub_enabled" = "false" ]; then
   if grep -rl 'data-subscribe-form' "$SITE" --include='*.html' >"$tmp"; then
     fail "subscribe form rendered while subscribe.enabled is false:"
     sed 's/^/          /' "$tmp"

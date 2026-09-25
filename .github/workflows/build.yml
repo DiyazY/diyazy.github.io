@@ -62,6 +62,10 @@ jobs:
       - name: Check generated output
         run: ./.github/scripts/check-build.sh _site
 
+      # Proves the posts.json checks above still fail on bad input.
+      - name: Test the build checks
+        run: ./.github/scripts/check-build-test.sh _site
+
       # Validate scheduled posts too. The production build above sets
       # future: false, so future-dated posts (e.g. a drip series) are excluded
       # and never build in CI — a broken one would stay green until it reveals.
@@ -112,8 +116,9 @@ jobs:
         id: deployment
         uses: actions/deploy-pages@v4
 
-  # Subscribe Worker + announcer (workers/subscribe/): types, tests, and a
-  # dry-run bundle so a Worker-only build error fails CI, not the deploy.
+  # Subscribe Worker + announcer (workers/subscribe/): types, tests (including
+  # the site's form script in a DOM), and a dry-run bundle, so a Worker-only
+  # build error fails CI instead of the next manual `wrangler deploy`.
   worker:
     runs-on: ubuntu-latest
     defaults:
@@ -138,11 +143,13 @@ jobs:
 
   # Emails newly published posts to subscribers (a Resend broadcast scheduled
   # 2 hours out, plus a heads-up to the author). Runs after every deploy of
-  # main, including the Wednesday cron that reveals scheduled posts. Skipped
-  # until ANNOUNCE_SINCE exists (i.e. before launch); the script also refuses
-  # to run without it. Logs are public: the script prints titles and IDs only.
+  # main, including the Wednesday cron that reveals scheduled posts. Switched
+  # on by the repo variable NOTIFY_ENABLED=true; once on, a missing
+  # ANNOUNCE_SINCE fails the job loudly instead of skipping it. Logs are
+  # public: the script prints titles, URLs, broadcast IDs and address-redacted
+  # errors, never keys or addresses.
   notify:
-    if: github.ref == 'refs/heads/main' && vars.ANNOUNCE_SINCE != ''
+    if: github.ref == 'refs/heads/main' && vars.NOTIFY_ENABLED == 'true'
     needs: [deploy, worker]
     runs-on: ubuntu-latest
     permissions:
@@ -154,14 +161,13 @@ jobs:
       - name: Checkout repository
         uses: actions/checkout@v4
 
+      # No npm ci: scripts/notify.ts imports only node: builtins and local .ts
+      # files, and installing packages right before the step that holds the
+      # Resend key would only add supply-chain exposure.
       - name: Set up Node
         uses: actions/setup-node@v4
         with:
           node-version: '24'
-          cache: npm
-          cache-dependency-path: workers/subscribe/package-lock.json
-
-      - run: npm ci
 
       - name: Download posts.json from this build
         uses: actions/download-artifact@v4

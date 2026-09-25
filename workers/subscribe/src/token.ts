@@ -24,10 +24,7 @@ function fromBase64Url(text: string): Uint8Array<ArrayBuffer> | null {
   if (!/^[A-Za-z0-9_-]+$/.test(text)) return null;
   const padded = text.replace(/-/g, '+').replace(/_/g, '/') + '='.repeat((4 - (text.length % 4)) % 4);
   try {
-    const binary = atob(padded);
-    const bytes = new Uint8Array(binary.length);
-    for (let i = 0; i < binary.length; i++) bytes[i] = binary.charCodeAt(i);
-    return bytes;
+    return Uint8Array.from(atob(padded), (c) => c.charCodeAt(0));
   } catch {
     return null;
   }

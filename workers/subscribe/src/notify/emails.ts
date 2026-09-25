@@ -27,12 +27,17 @@ export function renderPostEmail(post: PostEntry): RenderedEmail {
   return { subject: post.title, html, text };
 }
 
+// "16:05 UTC": how the heads-up email and the job summary both give the send time.
+export function utcTime(date: Date): string {
+  return `${date.toISOString().slice(11, 16)} UTC`;
+}
+
 export function renderHeadsUpEmail(
   post: PostEntry,
   sendAt: Date,
   broadcastId: string,
 ): RenderedEmail {
-  const when = `${sendAt.toISOString().slice(11, 16)} UTC`;
+  const when = utcTime(sendAt);
   const note = 'Sent by the notify job in DiyazY/diyazy.github.io.';
   const { html, text } = renderEmail({
     bodyHtml:

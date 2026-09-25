@@ -195,8 +195,8 @@
       .then(function (r) {
         clearTimeout(timer);
         if (r.status === 200 && r.data.ok === true) return succeed(form, programmes);
-        var reason = r.data.error === 'network' ? 'network' : SERVER_REASONS.indexOf(r.data.error) >= 0 ? r.data.error : 'server';
-        fail(form, reason, r.status ? { http_status: r.status } : undefined);
+        var known = r.data.error === 'network' || SERVER_REASONS.indexOf(r.data.error) >= 0;
+        fail(form, known ? r.data.error : 'server', r.status ? { http_status: r.status } : undefined);
       });
   }
 })();

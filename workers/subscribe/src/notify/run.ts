@@ -5,7 +5,7 @@ import { FROM } from '../config.ts';
 import type { Fetch } from '../env.ts';
 import { ResendError } from '../resend.ts';
 import type { ResendClient } from '../resend.ts';
-import { renderHeadsUpEmail, renderPostEmail } from './emails.ts';
+import { renderHeadsUpEmail, renderPostEmail, utcTime } from './emails.ts';
 import type { PostEntry } from './posts.ts';
 import { broadcastName, selectCandidates } from './select.ts';
 
@@ -23,14 +23,11 @@ export function redact(text: string): string {
 // rejection names the account's own address). Node's fetch puts the real
 // network reason (ENOTFOUND, ECONNRESET, ...) in err.cause.code.
 export function publicErrorMessage(err: unknown): string {
-  let text =
-    err instanceof ResendError
-      ? `Resend HTTP ${err.status}${err.code ? ` ${err.code}` : ''}: ${err.message}`
-      : err instanceof Error
-        ? err.message
-        : String(err);
-  const cause = err instanceof Error ? (err.cause as { code?: unknown } | undefined) : undefined;
-  if (cause && typeof cause.code === 'string') text += ` [${cause.code}]`;
+  if (!(err instanceof Error)) return redact(String(err));
+  let text = err.message;
+  if (err instanceof ResendError) text = `Resend HTTP ${err.status}${err.code ? ` ${err.code}` : ''}: ${text}`;
+  const cause = err.cause as { code?: unknown } | undefined;
+  if (typeof cause?.code === 'string') text += ` [${cause.code}]`;
   return redact(text);
 }
 
@@ -128,7 +125,7 @@ export async function runNotify(
     // this run's log and summary are the only CI record (Resend's Broadcasts
     // list has it too).
     deps.log(`scheduled: ${post.title} (${id})`);
-    deps.summary(`- **${post.title}**: sends ~${sendAt.toISOString().slice(11, 16)} UTC, broadcast \`${id}\``);
+    deps.summary(`- **${post.title}**: sends ~${utcTime(sendAt)}, broadcast \`${id}\``);
     try {
       await deps.resend.sendEmail({ from: FROM, to: config.replyTo, ...renderHeadsUpEmail(post, sendAt, id) });
     } catch (err) {

@@ -8,6 +8,7 @@ import type { Fetch } from './env.ts';
 const API = 'https://api.resend.com';
 const MAX_ATTEMPTS = 4;
 const TIMEOUT_MS = 10_000;
+const DEFAULT_RETRY_DELAY_MS = 1_000;
 const MAX_RETRY_DELAY_MS = 5_000;
 
 export class ResendError extends Error {
@@ -19,6 +20,14 @@ export class ResendError extends Error {
     this.status = status;
     this.code = code;
   }
+}
+
+// What a Worker log line records about a failed call (see LogEntry in env.ts):
+// Resend's status and error name, or 0 and the error class for anything else
+// (a timeout, a network failure). Never the message, which can quote an address.
+export function errorLogFields(err: unknown): { status: number; reason: string } {
+  if (err instanceof ResendError) return { status: err.status, reason: err.code ?? 'unknown' };
+  return { status: 0, reason: err instanceof Error ? err.name : 'unknown' };
 }
 
 export type Subscription = 'opt_in' | 'opt_out';
@@ -94,10 +103,10 @@ async function errorDetails(res: Response): Promise<{ message: string; code: str
 // Retry-After is either seconds or an HTTP date. Capped so a Worker request
 // never hangs on Resend's say-so; 1 s when the header is absent or unreadable.
 function retryDelayMs(header: string | null): number {
-  if (!header || header.trim() === '') return 1000;
-  const seconds = Number(header);
-  let ms = Number.isFinite(seconds) ? seconds * 1000 : Date.parse(header) - Date.now();
-  if (!Number.isFinite(ms) || ms <= 0) ms = 1000;
+  if (!header) return DEFAULT_RETRY_DELAY_MS;
+  const seconds = Number(header); // a blank header reads as 0, caught below
+  const ms = Number.isFinite(seconds) ? seconds * 1000 : Date.parse(header) - Date.now();
+  if (!Number.isFinite(ms) || ms <= 0) return DEFAULT_RETRY_DELAY_MS;
   return Math.min(ms, MAX_RETRY_DELAY_MS);
 }
 

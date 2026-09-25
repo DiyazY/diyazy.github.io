@@ -8,7 +8,7 @@ import { allowedOrigins, configProblems } from '../env.ts';
 import { renderConfirmationEmail } from '../email/confirmation.ts';
 import { sha256Hex } from '../hash.ts';
 import { corsHeaders, json } from '../http.ts';
-import { ResendError, createResendClient } from '../resend.ts';
+import { createResendClient, errorLogFields } from '../resend.ts';
 import { issueToken } from '../token.ts';
 import { verifyTurnstile } from '../turnstile.ts';
 import { normalizeEmail } from '../validate.ts';
@@ -90,11 +90,7 @@ export async function handleSubscribe(request: Request, env: Env, deps: Deps): P
       ...message,
     });
   } catch (err) {
-    deps.log({
-      step: 'subscribe.send',
-      status: err instanceof ResendError ? err.status : 0,
-      reason: err instanceof ResendError ? (err.code ?? 'unknown') : err instanceof Error ? err.name : 'unknown',
-    });
+    deps.log({ step: 'subscribe.send', ...errorLogFields(err) });
     return reply({ ok: false, error: 'server' }, 502);
   }
 

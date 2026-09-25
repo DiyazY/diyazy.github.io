@@ -36,6 +36,7 @@ function services(options: { turnstile?: unknown; emailStatus?: number; emailBod
 
 const sentEmail = (calls: { url: string; body: string | null }[]) =>
   JSON.parse(calls.find((c) => c.url === 'https://api.resend.com/emails')!.body!);
+const confirmToken = (email: { text: string }) => /confirm\?t=([A-Za-z0-9_-]+)/.exec(email.text)![1];
 
 describe('POST /subscribe', () => {
   it('rejects an origin that is not allowed, before doing any work', async () => {
@@ -114,7 +115,7 @@ describe('POST /subscribe', () => {
     expect(email.to).toBe('reader@example.com');
     expect(email.from).toBe(FROM);
     expect(email.reply_to).toBe('owner@example.net');
-    const token = /confirm\?t=([A-Za-z0-9_-]+)/.exec(email.text)![1];
+    const token = confirmToken(email);
     expect(email.html).toContain(`https://subscribe.diyaz.dev/confirm?t=${token}`);
     expect(await decryptToken(token, TEST_KEY)).toEqual({
       email: 'reader@example.com',
@@ -128,14 +129,14 @@ describe('POST /subscribe', () => {
     await route(subscribeRequest({ ...VALID, email: 'Reader+News@Example.COM' }), makeEnv(), makeDeps(fetch));
     const email = sentEmail(calls);
     expect(email.to).toBe('reader+news@example.com');
-    const token = /confirm\?t=([A-Za-z0-9_-]+)/.exec(email.text)![1];
+    const token = confirmToken(email);
     expect((await decryptToken(token, TEST_KEY))!.email).toBe('reader+news@example.com');
   });
 
   it('records programmes=false when the box is unticked', async () => {
     const { fetch, calls } = services();
     await route(subscribeRequest({ ...VALID, programmes: '' }), makeEnv(), makeDeps(fetch));
-    const token = /confirm\?t=([A-Za-z0-9_-]+)/.exec(sentEmail(calls).text)![1];
+    const token = confirmToken(sentEmail(calls));
     expect((await decryptToken(token, TEST_KEY))!.programmes).toBe(false);
   });
 

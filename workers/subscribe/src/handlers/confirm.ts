@@ -6,7 +6,7 @@ import type { Deps, Env } from '../env.ts';
 import { configProblems } from '../env.ts';
 import { html } from '../http.ts';
 import { confirmPage, errorPage, expiredPage, retryPage } from '../pages.ts';
-import { ResendError, createResendClient } from '../resend.ts';
+import { ResendError, createResendClient, errorLogFields } from '../resend.ts';
 import type { ResendClient, TopicSubscription } from '../resend.ts';
 import { readToken } from '../token.ts';
 
@@ -42,12 +42,8 @@ export async function handleConfirmPost(request: Request, env: Env, deps: Deps):
   try {
     await saveSubscriber(resend, env, email, programmes, step);
   } catch (err) {
-    deps.log({
-      step: 'confirm.save',
-      status: err instanceof ResendError ? err.status : 0,
-      call: step.call,
-      reason: err instanceof ResendError ? (err.code ?? 'unknown') : err instanceof Error ? err.name : 'unknown',
-    });
+    const { status, reason } = errorLogFields(err);
+    deps.log({ step: 'confirm.save', status, call: step.call, reason });
     return html(retryPage(token), 502);
   }
 

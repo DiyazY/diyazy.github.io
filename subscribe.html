@@ -10,7 +10,7 @@ permalink: /subscribe/
     <h1>Subscribe</h1>
     <p>One short email when a new post goes up: the title, a line about it, and a link. Nothing else unless you ask for it.</p>
     {% if site.subscribe.enabled %}
-      {% include subscribe.html location="page" %}
+      {% include subscribe.html location="page" skip_css=true %}
     {% else %}
       <p>Email subscriptions open soon. Until then, you can follow the <a href="{{ '/feed.xml' | relative_url }}">RSS feed</a>.</p>
     {% endif %}

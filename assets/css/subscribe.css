@@ -51,9 +51,10 @@
 .subscribe-status { min-height: 1.5em; margin: 12px 0 0; font-size: var(--font-size-sm); }
 .subscribe-status[data-kind="ok"] { color: var(--color-text); font-weight: var(--font-weight-medium); }
 .subscribe-status[data-kind="error"] { color: var(--subscribe-error); }
-.subscribe-note { margin: 8px 0 0; font-size: var(--font-size-xs); color: var(--color-text-muted); }
+.subscribe-note { margin: 8px 0 0; font-size: var(--font-size-xs); color: var(--color-text-light); } /* --color-text-muted fails 4.5:1 at this size */
 
-/* Plain single-column pages (same shape as the series hub pages). */
+/* Plain single-column pages. .panel-container is a 3-col grid; override to a
+   centered single column, as the series hub pages do. */
 .simple-page { display: block; padding: 10px; }
 .simple-page-container {
   max-width: 720px;

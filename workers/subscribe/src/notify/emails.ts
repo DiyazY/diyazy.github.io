@@ -1,4 +1,5 @@
 import { button, escapeHtml, renderEmail } from '../email/layout.ts';
+import type { RenderedEmail } from '../email/layout.ts';
 import type { PostEntry } from './posts.ts';
 
 export function postLink(post: PostEntry): string {
@@ -10,7 +11,7 @@ export function postLink(post: PostEntry): string {
   return url.toString();
 }
 
-export function renderPostEmail(post: PostEntry): { subject: string; html: string; text: string } {
+export function renderPostEmail(post: PostEntry): RenderedEmail {
   const link = postLink(post);
   const why = "You're getting this because you subscribed on diyaz.dev. Just hit reply to reach me.";
   const { html, text } = renderEmail({
@@ -30,7 +31,7 @@ export function renderHeadsUpEmail(
   post: PostEntry,
   sendAt: Date,
   broadcastId: string,
-): { subject: string; html: string; text: string } {
+): RenderedEmail {
   const when = `${sendAt.toISOString().slice(11, 16)} UTC`;
   const note = 'Sent by the notify job in DiyazY/diyazy.github.io.';
   const { html, text } = renderEmail({

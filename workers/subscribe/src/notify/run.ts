@@ -1,5 +1,6 @@
 // Orchestrates one notify run. Output (log lines, job summary) is public in
-// GitHub Actions, so it carries post titles and broadcast IDs only.
+// GitHub Actions: it carries post titles, post URLs, broadcast IDs and
+// address-redacted errors, never keys or addresses.
 import { FROM } from '../config.ts';
 import type { Fetch } from '../env.ts';
 import { ResendError } from '../resend.ts';
@@ -8,20 +9,29 @@ import { renderHeadsUpEmail, renderPostEmail } from './emails.ts';
 import type { PostEntry } from './posts.ts';
 import { broadcastName, selectCandidates } from './select.ts';
 
-const DELAY_MS = 2 * 60 * 60 * 1000; // must match scheduled_at below
-const ADDRESS = /[^\s@()<>,;"']+@[^\s@()<>,;"']+/g;
+// How long a broadcast waits before sending: the author's window to cancel.
+// The heads-up email and scheduled_at both derive from this one value.
+const SEND_DELAY_MS = 2 * 60 * 60 * 1000;
+const ADDRESS = /[^\s@()<>,;"'/]+(?:@|%40)[^\s@()<>,;"'/]+/gi;
+
+export function redact(text: string): string {
+  return text.replace(ADDRESS, '[redacted]');
+}
 
 // Everything the notify script prints lands in public GitHub Actions logs, and
 // Resend's error messages can quote an address (e.g. its unverified-domain
-// rejection names the account's own address).
+// rejection names the account's own address). Node's fetch puts the real
+// network reason (ENOTFOUND, ECONNRESET, ...) in err.cause.code.
 export function publicErrorMessage(err: unknown): string {
-  const text =
+  let text =
     err instanceof ResendError
-      ? `Resend HTTP ${err.status}: ${err.message}`
+      ? `Resend HTTP ${err.status}${err.code ? ` ${err.code}` : ''}: ${err.message}`
       : err instanceof Error
         ? err.message
         : String(err);
-  return text.replace(ADDRESS, '[redacted]');
+  const cause = err instanceof Error ? (err.cause as { code?: unknown } | undefined) : undefined;
+  if (cause && typeof cause.code === 'string') text += ` [${cause.code}]`;
+  return redact(text);
 }
 
 export interface NotifyConfig {
@@ -33,7 +43,7 @@ export interface NotifyConfig {
 }
 
 export interface NotifyDeps {
-  resend: ResendClient;
+  resend: Pick<ResendClient, 'listBroadcasts' | 'createBroadcast' | 'sendEmail'>;
   fetch: Fetch;
   sleep: (ms: number) => Promise<void>;
   now: () => Date;
@@ -42,20 +52,22 @@ export interface NotifyDeps {
 }
 
 // GitHub Pages can take a minute or two to serve a fresh deploy. Never email
-// a link that 404s.
+// a link that 404s. The probe parameter keeps a 404 cached at the CDN edge
+// (from before the post existed) from answering every attempt.
 export async function waitUntilLive(
   url: string,
-  deps: Pick<NotifyDeps, 'fetch' | 'sleep' | 'log'>,
+  deps: Pick<NotifyDeps, 'fetch' | 'sleep' | 'log' | 'now'>,
   attempts = 10,
   intervalMs = 30_000,
 ): Promise<void> {
+  const probe = `${url}${url.includes('?') ? '&' : '?'}probe=${deps.now().getTime()}`;
   for (let i = 1; i <= attempts; i++) {
     try {
-      const res = await deps.fetch(url, { method: 'GET', redirect: 'follow' });
+      const res = await deps.fetch(probe, { method: 'GET', redirect: 'follow' });
       if (res.status === 200) return;
       deps.log(`not live yet (${res.status}): ${url}`);
-    } catch {
-      deps.log(`not reachable yet: ${url}`);
+    } catch (err) {
+      deps.log(`not reachable yet (${publicErrorMessage(err)}): ${url}`);
     }
     if (i < attempts) await deps.sleep(intervalMs);
   }
@@ -67,8 +79,20 @@ export async function runNotify(
   config: NotifyConfig,
   deps: NotifyDeps,
 ): Promise<{ scheduled: number }> {
-  const announced = new Set((await deps.resend.listBroadcasts()).map((b) => b.name ?? ''));
-  const candidates = await selectCandidates(posts, announced, { since: config.since, now: deps.now() });
+  const broadcasts = await deps.resend.listBroadcasts();
+  if (broadcasts.length > 0 && broadcasts.every((b) => !b.name)) {
+    // The duplicate check keys on names; without them it would fail open and
+    // re-send every recent post on each deploy.
+    throw new Error('Resend listed broadcasts without names; refusing to send (cannot tell what was announced)');
+  }
+  const announced = new Map(
+    broadcasts.filter((b) => b.name).map((b) => [b.name as string, `${b.id} (${b.status ?? 'unknown status'})`]),
+  );
+  const candidates = await selectCandidates(posts, announced, {
+    since: config.since,
+    now: deps.now(),
+    onSkip: (post, reason) => deps.log(`skipped ${post.title}: ${reason}`),
+  });
   deps.log(`${candidates.length} post(s) to announce`);
   if (candidates.length === 0) return { scheduled: 0 };
 
@@ -87,6 +111,7 @@ export async function runNotify(
   let scheduled = 0;
   const headsUpFailed: string[] = [];
   for (const post of candidates) {
+    const sendAt = new Date(deps.now().getTime() + SEND_DELAY_MS);
     const { id } = await deps.resend.createBroadcast({
       segment_id: config.segmentId,
       topic_id: config.topicId,
@@ -95,12 +120,13 @@ export async function runNotify(
       name: await broadcastName(post),
       ...renderPostEmail(post),
       send: true,
-      scheduled_at: 'in 2 hours',
+      scheduled_at: sendAt.toISOString(),
     });
     scheduled++;
-    // Record the broadcast before anything else can fail: a re-run skips this
-    // post (its name now exists), so this line is the only place its ID shows.
-    const sendAt = new Date(deps.now().getTime() + DELAY_MS);
+    // Print the ID before the heads-up send, which can fail: a re-run skips
+    // this post (its broadcast name now exists) and won't print it again, so
+    // this run's log and summary are the only CI record (Resend's Broadcasts
+    // list has it too).
     deps.log(`scheduled: ${post.title} (${id})`);
     deps.summary(`- **${post.title}**: sends ~${sendAt.toISOString().slice(11, 16)} UTC, broadcast \`${id}\``);
     try {

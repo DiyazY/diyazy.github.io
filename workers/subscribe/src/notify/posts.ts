@@ -9,6 +9,21 @@ export interface PostEntry {
 
 const KEYS = ['url', 'path', 'title', 'description', 'date'] as const;
 
+const NAMED: Record<string, string> = { amp: '&', lt: '<', gt: '>', quot: '"', apos: "'", nbsp: '\u00a0' };
+
+// posts.json falls back to the excerpt, which kramdown has already HTML-encoded
+// and strip_html leaves encoded. Decode once here so emails don't show "&amp;"
+// (their HTML part escapes again on the way out).
+export function decodeEntities(text: string): string {
+  return text.replace(/&(#x[0-9a-f]+|#[0-9]+|[a-z]+);/gi, (entity, body: string) => {
+    if (body[0] === '#') {
+      const code = body[1] === 'x' || body[1] === 'X' ? parseInt(body.slice(2), 16) : parseInt(body.slice(1), 10);
+      return Number.isFinite(code) && code > 0 && code <= 0x10ffff ? String.fromCodePoint(code) : entity;
+    }
+    return NAMED[body.toLowerCase()] ?? entity;
+  });
+}
+
 export function parsePosts(data: unknown): PostEntry[] {
   if (!Array.isArray(data)) throw new Error('posts.json: expected an array');
   return data.map((raw: unknown, i) => {
@@ -20,8 +35,8 @@ export function parsePosts(data: unknown): PostEntry[] {
     return {
       url: entry.url as string,
       path: entry.path as string,
-      title: entry.title as string,
-      description: entry.description as string,
+      title: decodeEntities(entry.title as string),
+      description: decodeEntities(entry.description as string),
       date: entry.date as string,
     };
   });

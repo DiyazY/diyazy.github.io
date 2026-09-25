@@ -1,22 +1,13 @@
 // Entry point for the `notify` job in .github/workflows/build.yml:
 //   node scripts/notify.ts <path/to/posts.json>
-// Env: RESEND_API_KEY, NOTIFY_REPLY_TO (secrets); ANNOUNCE_SINCE,
-// RESEND_SEGMENT_ID, TOPIC_NEW_POSTS_ID (repo variables); DRY_RUN=1 to only
-// report. Logs are public: never print secrets or addresses.
+// Settings come from the environment (see src/notify/config.ts); DRY_RUN=1
+// only reports. Logs are public: never print secrets or addresses.
 import { appendFileSync, readFileSync } from 'node:fs';
 import type { Fetch } from '../src/env.ts';
+import { configFromEnv } from '../src/notify/config.ts';
 import { parsePosts } from '../src/notify/posts.ts';
-import { publicErrorMessage, runNotify } from '../src/notify/run.ts';
-import { createResendClient } from '../src/resend.ts';
-
-function required(name: string): string {
-  const value = process.env[name];
-  if (!value) {
-    console.error(`Missing environment variable ${name}`);
-    process.exit(1);
-  }
-  return value;
-}
+import { publicErrorMessage, redact, runNotify } from '../src/notify/run.ts';
+import { ResendError, createResendClient } from '../src/resend.ts';
 
 const postsPath = process.argv[2];
 if (!postsPath) {
@@ -29,29 +20,22 @@ const sleep = (ms: number) => new Promise<void>((resolve) => setTimeout(resolve,
 const summaryFile = process.env.GITHUB_STEP_SUMMARY;
 
 try {
+  const { apiKey, config } = configFromEnv(process.env);
   const posts = parsePosts(JSON.parse(readFileSync(postsPath, 'utf8')));
-  const result = await runNotify(
-    posts,
-    {
-      since: process.env.ANNOUNCE_SINCE,
-      segmentId: required('RESEND_SEGMENT_ID'),
-      topicId: required('TOPIC_NEW_POSTS_ID'),
-      replyTo: required('NOTIFY_REPLY_TO'),
-      dryRun: process.env.DRY_RUN === '1',
+  const result = await runNotify(posts, config, {
+    resend: createResendClient({ apiKey, fetch: fetchFn, sleep }),
+    fetch: fetchFn,
+    sleep,
+    now: () => new Date(),
+    log: (line) => console.log(line),
+    summary: (markdown) => {
+      if (summaryFile) appendFileSync(summaryFile, `${markdown}\n`);
     },
-    {
-      resend: createResendClient({ apiKey: required('RESEND_API_KEY'), fetch: fetchFn, sleep }),
-      fetch: fetchFn,
-      sleep,
-      now: () => new Date(),
-      log: (line) => console.log(line),
-      summary: (markdown) => {
-        if (summaryFile) appendFileSync(summaryFile, `${markdown}\n`);
-      },
-    },
-  );
+  });
   console.log(`done: ${result.scheduled} scheduled`);
 } catch (err) {
   console.error(publicErrorMessage(err));
+  // A bug (not an API answer) is easier to fix with its stack; still redacted.
+  if (err instanceof Error && !(err instanceof ResendError) && err.stack) console.error(redact(err.stack));
   process.exit(1);
 }

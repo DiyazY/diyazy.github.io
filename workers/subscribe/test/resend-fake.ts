@@ -21,7 +21,8 @@ export function statefulResend(
   options: {
     contacts?: FakeContact[];
     topicsPatch?: 'merge' | 'replace';
-    failOn?: string; // any call whose "METHOD /path" starts with this answers 500
+    failOn?: string; // the call "METHOD /path" (query string ignored) answers failStatus
+    failStatus?: number; // default 500
     createRace?: boolean; // a parallel confirm creates the contact just before our POST /contacts
     first429?: boolean;
   } = {},
@@ -37,8 +38,9 @@ export function statefulResend(
       throttled = true;
       return jsonResponse({ message: 'slow down' }, 429, { 'Retry-After': '1' });
     }
-    if (options.failOn && key.startsWith(options.failOn)) {
-      return jsonResponse({ name: 'application_error', message: 'boom' }, 500);
+    if (options.failOn && (key === options.failOn || key.startsWith(`${options.failOn}?`))) {
+      const status = options.failStatus ?? 500;
+      return jsonResponse({ name: status < 500 ? 'validation_error' : 'application_error', message: 'boom' }, status);
     }
 
     const m = /^\/contacts(?:\/([^/?]+))?(?:\/(segments|topics))?(?:\/([^/?]+))?(?:\?.*)?$/.exec(path);

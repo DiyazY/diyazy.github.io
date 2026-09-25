@@ -49,16 +49,17 @@ export interface NotifyDeps {
 }
 
 // GitHub Pages can take a minute or two to serve a fresh deploy. Never email
-// a link that 404s. The probe parameter keeps a 404 cached at the CDN edge
-// (from before the post existed) from answering every attempt.
+// a link that 404s. Each attempt uses a fresh probe parameter, so a 404 cached
+// at the CDN edge (Pages sends max-age=600) can't answer the retries.
 export async function waitUntilLive(
   url: string,
   deps: Pick<NotifyDeps, 'fetch' | 'sleep' | 'log' | 'now'>,
   attempts = 10,
   intervalMs = 30_000,
 ): Promise<void> {
-  const probe = `${url}${url.includes('?') ? '&' : '?'}probe=${deps.now().getTime()}`;
+  const started = deps.now().getTime();
   for (let i = 1; i <= attempts; i++) {
+    const probe = `${url}${url.includes('?') ? '&' : '?'}probe=${started}-${i}`;
     try {
       const res = await deps.fetch(probe, { method: 'GET', redirect: 'follow' });
       if (res.status === 200) return;

@@ -182,6 +182,24 @@ describe('POST /confirm: write order and failures', () => {
     }
   });
 
+  it('keeps a contact unsubscribed when only the final re-subscribe write fails', async () => {
+    const resend = statefulResend({ contacts: [reader({ unsubscribed: true })], failOn: `PATCH /contacts/${ENC}` });
+    const deps = makeDeps(resend.fetch);
+    const res = await route(confirmPost(await tokenFor(false)), makeEnv(), deps);
+    expect(res.status).toBe(502);
+    expect(resend.topicOf(ADDR, PROGRAMMES)).toBe('opt_out'); // topics were written first
+    expect(resend.contacts.get(ADDR)!.unsubscribed).toBe(true);
+    expect(deps.logs).toContainEqual({ step: 'confirm.save', status: 500, call: 'updateContact', reason: 'application_error' });
+  });
+
+  it('names createContact in the log when the create fails with a 4xx that is not a race', async () => {
+    const resend = statefulResend({ failOn: 'POST /contacts', failStatus: 422 });
+    const deps = makeDeps(resend.fetch);
+    const res = await route(confirmPost(await tokenFor(true)), makeEnv(), deps);
+    expect(res.status).toBe(502);
+    expect(deps.logs).toContainEqual({ step: 'confirm.save', status: 422, call: 'createContact', reason: 'validation_error' });
+  });
+
   it('fails closed when the contact lookup errors (only 404 means "new")', async () => {
     const resend = statefulResend({ failOn: `GET /contacts/${ENC}` });
     const res = await route(confirmPost(await tokenFor(true)), makeEnv(), makeDeps(resend.fetch));

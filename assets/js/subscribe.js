@@ -80,10 +80,17 @@
     });
   };
 
+  // First sign of intent to use the form loads Turnstile, so it's usually
+  // ready by submit. Links inside the form (the Privacy link) don't count:
+  // reading about Turnstile must not load it.
+  function onIntent(e) {
+    if (e.target && e.target.closest && e.target.closest('a')) return;
+    loadTurnstile();
+  }
+
   forms.forEach(function (form) {
-    // First sign of intent loads Turnstile, so it's usually ready by submit.
-    form.addEventListener('focusin', loadTurnstile);
-    form.addEventListener('pointerdown', loadTurnstile);
+    form.addEventListener('focusin', onIntent);
+    form.addEventListener('pointerdown', onIntent);
     form.addEventListener('submit', function (e) {
       e.preventDefault();
       submit(form);

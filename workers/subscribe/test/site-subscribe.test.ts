@@ -19,6 +19,7 @@ const MARKUP = `
   <div class="subscribe-hp"><input type="text" name="hp"></div>
   <div class="subscribe-turnstile"></div>
   <p class="subscribe-status" role="status"></p>
+  <p class="subscribe-note">You'll get an email to confirm. <a href="/privacy/">Privacy</a></p>
 </form>`;
 
 interface WidgetOptions {
@@ -114,6 +115,13 @@ describe('subscribe form script', () => {
     input.dispatchEvent(new Event('focusin', { bubbles: true }));
     expect(appended).toHaveLength(1);
     expect(appended[0].src).toContain('https://challenges.cloudflare.com/turnstile/v0/api.js?render=explicit');
+  });
+
+  it('does not load Turnstile when the reader only clicks or tabs to the Privacy link', () => {
+    const link = document.querySelector('.subscribe-note a') as HTMLAnchorElement;
+    link.dispatchEvent(new Event('pointerdown', { bubbles: true }));
+    link.dispatchEvent(new Event('focusin', { bubbles: true }));
+    expect(appended).toHaveLength(0);
   });
 
   it('checks the address locally before spending a bot check', () => {

@@ -229,7 +229,8 @@ in `wrangler.jsonc`, since they would record every `/confirm?t=<token>` URL.
   pageview. Announcer links carry
   `utm_source=newsletter&utm_medium=email&utm_campaign=<slug>`.
 - **Turnstile** is loaded by `assets/js/subscribe.js` on the reader's first
-  touch of the form (or on submit), rendered with `execution: 'execute'` so
+  click, tap or tab into the form's fields or buttons (links inside it, like
+  Privacy, don't count) or on submit, rendered with `execution: 'execute'` so
   the check runs on submit, with an error callback and 20 s timeouts; readers
   who never use the form never load it. `/privacy/` says exactly this.
 
@@ -237,7 +238,7 @@ in `wrangler.jsonc`, since they would record every `/confirm?t=<token>` URL.
 
 ### 8.1 Placement
 
-New job in `.github/workflows/build.yml`: `needs: deploy`, runs only on
+New job in `.github/workflows/build.yml`: `needs: [deploy, worker]`, runs only on
 `refs/heads/main` (push, the Wednesday `0 14 * * 3` cron, `workflow_dispatch`)
 and only when the repo variable `NOTIFY_ENABLED` is `true`. It sets up Node but
 installs no packages (the script needs none).
@@ -274,8 +275,10 @@ anything**.
   `from`, `reply_to`, `subject` = post title, `name` = `post:<12 hex>`, `html` +
   `text`, `send: true`, `scheduled_at` = the ISO time 2 hours from now (the
   heads-up quotes the same instant).
-- Heads-up transactional email to `NOTIFY_REPLY_TO`: *"Scheduled for ~HH:MM
-  UTC: {title}. Cancel: https://resend.com/broadcasts/{id}"*.
+- Heads-up transactional email to `NOTIFY_REPLY_TO` (subject *"Scheduled
+  ~HH:MM UTC: {title}"*), saying when it sends and to cancel broadcast `{id}`
+  under Resend → Broadcasts (https://resend.com/broadcasts) in the diyaz.dev
+  team.
 - Append title, scheduled time, broadcast ID to `$GITHUB_STEP_SUMMARY`.
 
 Any Resend error → job fails (GitHub notifies Diyaz). Re-running is safe:

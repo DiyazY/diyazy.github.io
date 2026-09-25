@@ -72,7 +72,7 @@ describe('runNotify', () => {
   it('checks the post is live, schedules one broadcast, and sends a heads-up', async () => {
     const s = setup();
     expect(await runNotify([post(30)], CONFIG, s.deps)).toEqual({ scheduled: 1 });
-    expect(s.siteCalls.map((c) => c.url)).toEqual([`${post(30).url}?probe=${NOW.getTime()}`]);
+    expect(s.siteCalls.map((c) => c.url)).toEqual([`${post(30).url}?probe=${NOW.getTime()}-1`]);
     expect(s.broadcasts).toHaveLength(1);
     expect(s.broadcasts[0]).toMatchObject({
       segment_id: 'seg_readers',
@@ -160,6 +160,15 @@ describe('runNotify', () => {
     };
     await expect(runNotify([post(30)], CONFIG, s.deps)).rejects.toThrow(/heads-up/);
     expect([...s.logs, ...s.summary].join('\n')).not.toContain('@');
+  });
+
+  it('uses a fresh probe URL on every attempt, so a CDN-cached 404 cannot answer the retries', async () => {
+    let n = 0;
+    const s = setup({ status: () => (++n === 1 ? 404 : 200) });
+    expect(await runNotify([post(30)], CONFIG, s.deps)).toEqual({ scheduled: 1 });
+    const urls = s.siteCalls.map((c) => c.url);
+    expect(urls).toHaveLength(2);
+    expect(new Set(urls).size).toBe(2);
   });
 
   it('probes every 30 s and logs why a probe failed', async () => {

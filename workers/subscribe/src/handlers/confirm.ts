@@ -87,7 +87,10 @@ async function saveSubscriber(
       if (!(err instanceof ResendError) || err.status < 400 || err.status >= 500) throw err;
       step.call = 'getContact';
       existing = await resend.getContact(email);
-      if (!existing) throw err;
+      if (!existing) {
+        step.call = 'createContact'; // not a race after all: report the create's failure
+        throw err;
+      }
     }
   }
 

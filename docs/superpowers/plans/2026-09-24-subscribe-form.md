@@ -106,7 +106,7 @@ Manual, account-level work. Claude must not create accounts or handle API keys. 
 
 - [ ] **Step 1: Create the Resend team.** Resend dashboard → team switcher → *Create team* → name `diyaz.dev`. (If the plan offers no multi-team option, create a separate Resend account instead; nothing else changes.) Check the plan's limits (domains, contacts, marketing sends) cover one domain and a few hundred contacts.
 
-- [ ] **Step 2: Add the sending domain.** In the new team: Domains → *Add domain* → `news.diyaz.dev`, region **EU (Ireland)**. Copy each DNS record into Cloudflare → diyaz.dev zone → DNS, **Proxy status: DNS only (grey)**. Back in Resend, *Verify*. In the domain's settings, confirm **Open tracking: off** and **Click tracking: off**.
+- [ ] **Step 2: Add the sending domain.** In the new team: Domains → *Add domain* → `news.diyaz.dev`, region **EU (Ireland)**. Copy each DNS record into Cloudflare → diyaz.dev zone → DNS, **Proxy status: DNS only (grey)**. Back in Resend, *Verify*. In the domain's settings, confirm **Open tracking: off** and **Click tracking: off**. Also add a DMARC record in Cloudflare if there is none: TXT `_dmarc.diyaz.dev` = `v=DMARC1; p=none;` (monitor-only; diyaz.dev sends no other mail, and both DKIM `d=news.diyaz.dev` and SPF on `send.news.diyaz.dev` align with it).
 
 - [ ] **Step 3: Create the segment.** Audience → Segments → *Create* → `diyaz.dev readers`. Copy its ID.
 

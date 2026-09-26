@@ -111,12 +111,12 @@ Manual, account-level work in Diyaz's **existing** Resend team (revised 2026-09-
 
 - [x] **Step 3: Create the segment** (Claude, via the Resend connector; done 2026-09-26, ID in `wrangler.jsonc`). Audience → Segments → *Create* → `diyaz.dev readers`. Copy its ID.
 
-- [x] **Step 4: Create the two topics (defaults are permanent — read twice)** (Claude, via the Resend connector; done 2026-09-26, defaults verified, IDs in `wrangler.jsonc`). The connector can't set visibility: Diyaz switches both to **Public** in the dashboard.
+- [x] **Step 4: Create the two topics (defaults are permanent — read twice)** (Claude, via the Resend connector; done 2026-09-26, defaults verified, IDs in `wrangler.jsonc`). Revised the same day: both **Opt-out** and **Private** (spec §5, shared team); the first "New posts" topic was opt-in, so every contact in the team counted as subscribed. Diyaz keeps it for other products; the Worker uses the new one.
 
   | Name | Default subscription | Visibility | Description |
   |---|---|---|---|
-  | `New posts` | **Opt-in** | Public | An email when a new post goes up on diyaz.dev. |
-  | `Programmes` | **Opt-out** | Public | Occasional news about my coaching programmes. |
+  | `New posts on diyaz.dev` | **Opt-out** | Private | An email when a new post goes up on diyaz.dev. |
+  | `Programmes` | **Opt-out** | Private | Occasional news about my coaching programmes. |
 
   Copy both IDs.
 

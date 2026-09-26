@@ -71,11 +71,11 @@ here, in its own Resend team).
    "Confirm" link ───────────────────► GET /confirm?t=…  → page with [Confirm] button
                                        POST /confirm     → decrypt + expiry ─────────────► upsert contact:
                                           └─► 303 → diyaz.dev/subscribed/                    segment "diyaz.dev readers"
-                                                                                             topic "New posts" opt_in
+                                                                                             topic "New posts on diyaz.dev" opt_in
                                                                                              topic "Programmes" opt_in if ticked
 
  GitHub Actions build.yml
-   push main / Wed cron / dispatch ─► build ─► deploy ─► notify ── new, live, unannounced? ─► broadcast "New posts",
+   push main / Wed cron / dispatch ─► build ─► deploy ─► notify ── new, live, unannounced? ─► broadcast to the posts topic,
                                                                                               scheduled in 2 h
                                                                                             ► heads-up email to Diyaz
 ```
@@ -103,12 +103,19 @@ The team is on Pro transactional (10 req/s, 10 domains) and Free marketing
   `_dmarc.diyaz.dev`.
 - **Segment** "diyaz.dev readers" — the one list. It takes the third of the
   Free marketing plan's three segments.
-- **Topics** (default subscription is **permanent** — verify before creating):
+- **Topics** (default subscription is **permanent** — verify before creating).
+  Both are **opt_out and private** because the team is shared (revised
+  2026-09-26): an opt_in default counts every contact of every product as
+  subscribed, and a private topic shows on the unsubscribe page only to
+  contacts opted in to it, so other products' readers never see these.
 
   | Topic | `default_subscription` | `visibility` | Meaning |
   |---|---|---|---|
-  | New posts | `opt_in` | `public` | Receives post broadcasts unless opted out. |
-  | Programmes | `opt_out` | `public` | Receives programme emails **only** if explicitly opted in; public so post-only readers can opt in later from the preferences page. |
+  | New posts on diyaz.dev | `opt_out` | `private` | Receives post broadcasts once confirmed: every confirm writes an explicit `opt_in`. |
+  | Programmes | `opt_out` | `private` | Receives programme emails **only** if explicitly opted in. A post-only reader opts in later by submitting the form again with the box ticked. |
+
+  An earlier topic "New posts" (`opt_in`) was created by mistake on 2026-09-26
+  and is kept for other products at Diyaz's request; this design doesn't use it.
 
 - **API keys** (full access; Resend's sending-only keys cannot manage
   contacts or broadcasts), one per consumer so each can be revoked alone:
@@ -172,7 +179,7 @@ POSTs `t` to `/confirm`. Headers: `Cache-Control: no-store`,
    again" page linking `SITE_URL/subscribe/`.
 2. Upsert the contact in Resend:
    - add to segment "diyaz.dev readers";
-   - topic "New posts" → `opt_in`;
+   - topic "New posts on diyaz.dev" → `opt_in` (explicit on every confirm);
    - topic "Programmes" → `opt_in` if `programmes` is true. When false, new
      contacts fall back to its `opt_out` default, and a **still-subscribed**
      contact keeps an existing opt-in.
@@ -290,7 +297,7 @@ anything**.
 
 ### 8.3 Sending (per candidate)
 
-- `POST /broadcasts`: `segment_id` = readers, `topic_id` = New posts,
+- `POST /broadcasts`: `segment_id` = readers, `topic_id` = New posts on diyaz.dev,
   `from`, `reply_to`, `subject` = post title, `name` = `post:<12 hex>`, `html` +
   `text`, `send: true`, `scheduled_at` = the ISO time 2 hours from now (the
   heads-up quotes the same instant).

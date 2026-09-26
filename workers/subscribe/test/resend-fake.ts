@@ -7,8 +7,9 @@ import { fakeFetch, jsonResponse } from './helpers.ts';
 
 type Subscription = 'opt_in' | 'opt_out';
 
-// Matches the Resend team setup in spec §5.
-export const TOPIC_DEFAULTS: Record<string, Subscription> = { topic_posts: 'opt_in', topic_programmes: 'opt_out' };
+// Matches the Resend setup in spec §5: both topics are opt_out by default in
+// the shared team, so a reader is in them only after an explicit opt-in.
+export const TOPIC_DEFAULTS: Record<string, Subscription> = { topic_posts: 'opt_out', topic_programmes: 'opt_out' };
 
 export interface FakeContact {
   email: string;

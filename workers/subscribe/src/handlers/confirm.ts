@@ -65,9 +65,9 @@ export async function handleConfirmPost(request: Request, env: Env, deps: Deps):
 // hand after the reader replies (spec §6.4).
 type SaveOutcome = 'subscribed' | 'held';
 
-// The form only ever adds opt-ins. New contacts get New posts, plus Programmes
-// only when ticked (otherwise the topic's opt_out default applies; the
-// Programmes topic must be created as opt_out in Resend, spec §5).
+// The form only ever adds opt-ins. Every confirm writes an explicit New posts
+// opt-in, plus Programmes when ticked. Both topics are opt_out by default (spec
+// §5), so the team's other contacts are in neither.
 async function saveSubscriber(
   resend: ResendClient,
   env: Env,

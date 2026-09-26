@@ -1,0 +1,28 @@
+{
+  "$schema": "./node_modules/wrangler/config-schema.json",
+  "name": "diyaz-subscribe",
+  "main": "src/index.ts",
+  "compatibility_date": "2026-09-24",
+  "workers_dev": false,
+  "routes": [{ "pattern": "subscribe.diyaz.dev", "custom_domain": true }],
+  // Keep our own step/status console lines; turn off invocation logs, which
+  // would record every /confirm?t=<token> URL (spec §6.5: tokens are never logged).
+  "observability": { "enabled": true, "logs": { "invocation_logs": false } },
+  "vars": {
+    // Comma-separated bare origins. The Turnstile hostname check derives from
+    // this list. For a local end-to-end test, deploy with
+    //   npx wrangler deploy --var "ALLOWED_ORIGINS:https://diyaz.dev,http://localhost:4000"
+    // and revert with a plain `npx wrangler deploy`. Never commit localhost here.
+    "ALLOWED_ORIGINS": "https://diyaz.dev",
+    // Resend IDs: segment "diyaz.dev readers" and the two topics (not secrets). Empty = Worker fails closed.
+    "RESEND_SEGMENT_ID": "f63bf4ba-aca7-4be8-9144-0f7502136ad0",
+    "TOPIC_NEW_POSTS_ID": "02cfd47e-50b9-4315-ae38-bf06cc261200",
+    "TOPIC_PROGRAMMES_ID": "cddce096-20ad-469b-86a8-020291936332"
+  },
+  // Secrets (wrangler secret put): RESEND_API_KEY, TOKEN_KEY,
+  // TURNSTILE_SECRET, REPLY_TO.
+  "ratelimits": [
+    { "name": "RL_IP", "namespace_id": "1001", "simple": { "limit": 5, "period": 60 } },
+    { "name": "RL_EMAIL", "namespace_id": "1002", "simple": { "limit": 2, "period": 60 } }
+  ]
+}

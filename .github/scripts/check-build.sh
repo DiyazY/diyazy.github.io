@@ -347,6 +347,79 @@ if [ -f "$SITE/about.html" ]; then
   fi
 fi
 
+# --- posts.json feeds the newsletter announcer ----------------------------
+# workers/subscribe/scripts/notify.ts reads this file from the build output
+# to decide which posts to email. A malformed file stops announcements. A
+# future-dated entry means this build published a post before its date (the
+# announcer skips it, but the page is live). A failure here blocks the whole
+# deploy, not just announcements. The --future validation build legitimately
+# contains future posts, so CI sets CHECK_ALLOW_FUTURE=1 for that run only.
+# .github/scripts/check-build-test.sh proves these branches still fail.
+if [ -f "$SITE/posts.json" ]; then
+  if ruby -rjson -rtime -e '
+      posts = JSON.parse(File.read(ARGV[0]))
+      abort "not an array" unless posts.is_a?(Array)
+      abort "empty" if posts.empty?
+      abort "#{posts.size} entries (max 10)" if posts.size > 10
+      posts.each_with_index do |p, i|
+        %w[url path title description date].each do |k|
+          abort "entry #{i} missing #{k}" if p[k].to_s.strip.empty?
+        end
+        abort "entry #{i} url not on https://diyaz.dev/" unless p["url"].start_with?("https://diyaz.dev/")
+        t = (Time.iso8601(p["date"]) rescue abort("entry #{i} date not ISO 8601: #{p["date"]}"))
+        abort "entry #{i} is future-dated (#{p["date"]})" if ENV["CHECK_ALLOW_FUTURE"] != "1" && t > Time.now
+      end
+      puts "#{posts.size} entries"
+    ' "$SITE/posts.json" >"$tmp" 2>&1; then
+    pass "posts.json valid ($(cat "$tmp"))"
+  else
+    fail "posts.json invalid: $(cat "$tmp")"
+  fi
+else
+  fail "posts.json missing from build"
+fi
+
+# --- subscribe form follows the subscribe.enabled switch ------------------
+# Disabled: no page may render it. Enabled: every post must, and the public
+# Turnstile site key must be set or the form can never get a token. The switch
+# is read from the repo's _config.yml, so a build made with extra --config
+# overrides can disagree with this check; CI never uses overrides.
+sub_enabled=$(ruby -ryaml -e 'puts((YAML.load_file(ARGV[0])["subscribe"] || {})["enabled"] == true)' "$REPO/_config.yml" 2>/dev/null)
+case "$sub_enabled" in
+  true|false) ;;
+  *) fail "could not read subscribe.enabled from _config.yml" ;;
+esac
+if [ "$sub_enabled" = "true" ]; then
+  missing=0
+  for f in "$SITE"/2*/*/*/*.html; do
+    [ -f "$f" ] || continue
+    grep -q 'data-subscribe-form' "$f" || missing=$((missing + 1))
+  done
+  if [ "$missing" -eq 0 ]; then pass "subscribe form on every post"; else fail "$missing post(s) missing the subscribe form"; fi
+  if ruby -ryaml -e 'k = ((YAML.load_file(ARGV[0])["subscribe"] || {})["turnstile_site_key"]).to_s; abort if k.strip.empty?' "$REPO/_config.yml"; then
+    pass "subscribe.turnstile_site_key is set"
+  else
+    fail "subscribe.enabled is true but subscribe.turnstile_site_key is empty"
+  fi
+elif [ "$sub_enabled" = "false" ]; then
+  if grep -rl 'data-subscribe-form' "$SITE" --include='*.html' >"$tmp"; then
+    fail "subscribe form rendered while subscribe.enabled is false:"
+    sed 's/^/          /' "$tmp"
+  else
+    pass "no subscribe form while subscribe.enabled is false"
+  fi
+fi
+
+for f in subscribe/index.html subscribed/index.html privacy/index.html; do
+  if [ -s "$SITE/$f" ]; then pass "$f exists and is non-empty"; else fail "$f missing or empty"; fi
+done
+
+if [ -f "$SITE/sitemap.xml" ] && grep -q '/subscribed/' "$SITE/sitemap.xml"; then
+  fail "/subscribed/ (a post-confirmation page) is in sitemap.xml"
+else
+  pass "sitemap.xml omits /subscribed/"
+fi
+
 echo
 if [ "$fails" -gt 0 ]; then
   echo "$fails check(s) failed"

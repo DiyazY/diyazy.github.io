@@ -13,7 +13,8 @@
 
   capture_pageview records pageviews and autocapture records generic clicks;
   assets/js/analytics.js adds the named custom events that matter for this blog
-  (search, theme, sharing, outbound clicks, post read-completion).
+  (search, theme, sharing, outbound clicks, post read-completion, email
+  subscribe attempts).
 
   Gated on jekyll.environment so `jekyll serve` locally (development) never
   loads analytics — only production builds do (CI sets JEKYLL_ENV=production in

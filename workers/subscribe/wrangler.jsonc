@@ -15,9 +15,9 @@
     // and revert with a plain `npx wrangler deploy`. Never commit localhost here.
     "ALLOWED_ORIGINS": "https://diyaz.dev",
     // Resend IDs: segment "diyaz.dev readers" and the two topics (not secrets). Empty = Worker fails closed.
-    "RESEND_SEGMENT_ID": "",
-    "TOPIC_NEW_POSTS_ID": "",
-    "TOPIC_PROGRAMMES_ID": ""
+    "RESEND_SEGMENT_ID": "f63bf4ba-aca7-4be8-9144-0f7502136ad0",
+    "TOPIC_NEW_POSTS_ID": "576b4d3a-ac8a-4920-bb42-7b2bb44f2333",
+    "TOPIC_PROGRAMMES_ID": "cddce096-20ad-469b-86a8-020291936332"
   },
   // Secrets (wrangler secret put): RESEND_API_KEY, TOKEN_KEY,
   // TURNSTILE_SECRET, REPLY_TO.

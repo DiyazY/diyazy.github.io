@@ -5,7 +5,7 @@ import { SITE_URL } from '../config.ts';
 import type { Deps, Env } from '../env.ts';
 import { configProblems } from '../env.ts';
 import { html } from '../http.ts';
-import { confirmPage, errorPage, expiredPage, retryPage } from '../pages.ts';
+import { confirmPage, errorPage, expiredPage, heldPage, retryPage } from '../pages.ts';
 import { ResendError, createResendClient, errorLogFields } from '../resend.ts';
 import type { ResendClient, TopicSubscription } from '../resend.ts';
 import { readToken } from '../token.ts';
@@ -39,20 +39,31 @@ export async function handleConfirmPost(request: Request, env: Env, deps: Deps):
 
   const resend = createResendClient({ apiKey: env.RESEND_API_KEY, fetch: deps.fetch, sleep: deps.sleep });
   const step = { call: 'getContact' }; // which Resend call is in flight, for the log
+  let outcome: SaveOutcome;
   try {
-    await saveSubscriber(resend, env, email, programmes, step);
+    outcome = await saveSubscriber(resend, env, email, programmes, step);
   } catch (err) {
     const { status, reason } = errorLogFields(err);
     deps.log({ step: 'confirm.save', status, call: step.call, reason });
     return html(retryPage(token), 502);
   }
 
+  if (outcome === 'held') {
+    deps.log({ step: 'confirm.held', status: 200, reason: 'unsubscribed' });
+    return html(heldPage(), 200);
+  }
   deps.log({ step: 'confirm.saved', status: 303 });
   return new Response(null, {
     status: 303,
     headers: { Location: `${SITE_URL}/subscribed/`, 'Cache-Control': 'no-store', 'Referrer-Policy': 'no-referrer' },
   });
 }
+
+// 'held': the contact had used "unsubscribe from all". Their choices are
+// recorded, but the flag stays: the Resend team is shared with Diyaz's other
+// products, so lifting it would restart those emails too. Diyaz lifts it by
+// hand after the reader replies (spec §6.4).
+type SaveOutcome = 'subscribed' | 'held';
 
 // The form only ever adds opt-ins. New contacts get New posts, plus Programmes
 // only when ticked (otherwise the topic's opt_out default applies; the
@@ -63,7 +74,7 @@ async function saveSubscriber(
   email: string,
   programmes: boolean,
   step: { call: string },
-): Promise<void> {
+): Promise<SaveOutcome> {
   const optIns = (withProgrammes: boolean): TopicSubscription[] => [
     { id: env.TOPIC_NEW_POSTS_ID, subscription: 'opt_in' },
     ...(withProgrammes ? [{ id: env.TOPIC_PROGRAMMES_ID, subscription: 'opt_in' as const }] : []),
@@ -80,7 +91,7 @@ async function saveSubscriber(
         segments: [{ id: env.RESEND_SEGMENT_ID }],
         topics: optIns(programmes),
       });
-      return;
+      return 'subscribed';
     } catch (err) {
       // Two confirms of the same link racing (a double click): both saw 404
       // and the other one created the contact first. Carry on as an update.
@@ -112,17 +123,11 @@ async function saveSubscriber(
   const topics = optIns(programmes || keepProgrammes);
   if (existing.unsubscribed && !programmes) {
     // The one opt_out this form writes: it restores the reader's own last choice,
-    // so the stale opt-in can't come back when the global flag is cleared below.
+    // so the stale opt-in can't come back when Diyaz lifts the global flag.
     topics.push({ id: env.TOPIC_PROGRAMMES_ID, subscription: 'opt_out' });
   }
   step.call = 'updateContactTopics';
   await resend.updateContactTopics(email, topics);
 
-  // Re-subscribe last, so a failure above never leaves the contact
-  // re-subscribed with its old topic state. The flag only spans this team
-  // (diyaz.dev), so clearing it can't re-subscribe anyone to other products.
-  if (existing.unsubscribed) {
-    step.call = 'updateContact';
-    await resend.updateContact(email, { unsubscribed: false });
-  }
+  return existing.unsubscribed ? 'held' : 'subscribed';
 }

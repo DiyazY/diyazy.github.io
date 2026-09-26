@@ -14,7 +14,7 @@
     //   npx wrangler deploy --var "ALLOWED_ORIGINS:https://diyaz.dev,http://localhost:4000"
     // and revert with a plain `npx wrangler deploy`. Never commit localhost here.
     "ALLOWED_ORIGINS": "https://diyaz.dev",
-    // Resend team "diyaz.dev" IDs (not secrets). Empty = Worker fails closed.
+    // Resend IDs: segment "diyaz.dev readers" and the two topics (not secrets). Empty = Worker fails closed.
     "RESEND_SEGMENT_ID": "",
     "TOPIC_NEW_POSTS_ID": "",
     "TOPIC_PROGRAMMES_ID": ""

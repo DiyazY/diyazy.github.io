@@ -76,13 +76,6 @@ describe('createResendClient', () => {
     expect(JSON.parse(calls[0].body!)).toEqual(input);
   });
 
-  it('patches the global unsubscribed flag', async () => {
-    const { resend, calls } = setup(() => jsonResponse({ id: 'c_1' }));
-    await resend.updateContact('r@example.com', { unsubscribed: false });
-    expect(calls[0]).toMatchObject({ method: 'PATCH', url: 'https://api.resend.com/contacts/r%40example.com' });
-    expect(JSON.parse(calls[0].body!)).toEqual({ unsubscribed: false });
-  });
-
   it('sends topic updates as a bare array', async () => {
     const { resend, calls } = setup(() => jsonResponse({ id: 'c_1' }));
     await resend.updateContactTopics('r@example.com', [{ id: 't1', subscription: 'opt_in' }]);

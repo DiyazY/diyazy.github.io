@@ -74,10 +74,6 @@ export function statefulResend(
     if (!sub && call.method === 'GET') {
       return jsonResponse({ id: 'c_1', email: contact.email, unsubscribed: contact.unsubscribed });
     }
-    if (!sub && call.method === 'PATCH') {
-      contact.unsubscribed = (JSON.parse(call.body!) as { unsubscribed: boolean }).unsubscribed;
-      return jsonResponse({ id: 'c_1' });
-    }
     if (sub === 'segments' && call.method === 'GET') {
       return jsonResponse({
         object: 'list',

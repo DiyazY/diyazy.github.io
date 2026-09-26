@@ -53,6 +53,15 @@ export function retryPage(token: string): string {
   );
 }
 
+// Shown instead of the redirect when the address had used "unsubscribe from
+// all" (see handlers/confirm.ts). The confirmation email's Reply-To is Diyaz.
+export function heldPage(): string {
+  return page(
+    'One more step',
+    `<h1>One more step</h1><p>This address was unsubscribed from all emails earlier, so the form can't switch them back on by itself. Reply to the confirmation email and I'll turn them on by hand.</p>`,
+  );
+}
+
 export function errorPage(): string {
   return page(
     'Something went wrong',

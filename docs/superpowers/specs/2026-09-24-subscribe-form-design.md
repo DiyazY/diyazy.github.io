@@ -1,6 +1,6 @@
 # Subscribe form — design spec
 
-_Status: approved design, implemented in PR #49 · Date: 2026-09-24, revised 2026-09-25 · Author: Diyaz Yakubov (with Claude)_
+_Status: approved design, implemented in PR #49 · Date: 2026-09-24, revised 2026-09-25 and 2026-09-26 · Author: Diyaz Yakubov (with Claude)_
 
 Internal planning document. Not published (see `exclude` in `_config.yml`).
 
@@ -13,6 +13,12 @@ Internal planning document. Not published (see `exclude` in `_config.yml`).
 > broadcast list and logs every skipped post (§8); tests include the site's
 > form script and a self-test of the build checks (§9). The plan's
 > "Deviations" table lists the rest.
+>
+> **Revised 2026-09-26 at setup.** The list lives in Diyaz's **existing**
+> Resend team, not a separate one: an extra team needs its own paid plan, and
+> the existing team has room (§3, §5). Because contacts and "unsubscribe from
+> all" span that whole team, confirming **never lifts** "unsubscribe from
+> all"; such a reader is asked to reply and Diyaz lifts it by hand (§6.4).
 
 ## 1. Goal
 
@@ -48,7 +54,7 @@ here, in its own Resend team).
 | **Purpose** | A (new-post alerts) + C (optional programmes opt-in) | Two Resend topics; only A is automated. |
 | **Whose list** | Diyaz's personal list | Emails come from Diyaz on `news.diyaz.dev`, not TopTop. Programmes reach only readers who ticked the box. |
 | **Approach** | Cloudflare Worker + Resend (contacts, topics, broadcasts) + GitHub Actions announcer | No new vendor; hosted unsubscribe/preferences from Resend; ~230 lines of code. |
-| **Resend account** | **Separate Resend team "diyaz.dev"** | Contact `unsubscribed` is account-wide ("unsubscribed from all Broadcasts"); a separate team keeps consent, abuse blast radius, and full-access keys away from toptop.dev, BusyPipe, Salpön, Eurojackpot Stats. |
+| **Resend account** | **Existing Resend team** (shared with toptop.dev, BusyPipe, Salpön, Eurojackpot Stats, mdfi.ai). _Revised 2026-09-26; was a separate team "diyaz.dev", but an extra team needs its own paid plan._ | Contacts and `unsubscribed` ("unsubscribe from all") span the whole team, so: confirming never lifts `unsubscribed` (§6.4); "unsubscribe from all" in any product's email stops all of them; the two full-access keys reach every product's contacts; diyaz.dev readers share the team's marketing contact and segment limits. |
 | **Replies** | Reach Diyaz | `reply_to` set to Diyaz's inbox. The address is a secret (Worker + GitHub), never committed; `author.email` in `_config.yml` stays empty. |
 | **Consent** | Double opt-in, encrypted stateless token, POST-confirm | No subscriber exists until the reader clicks **Confirm** on a page; link scanners that only GET cannot subscribe anyone. Turnstile loads only when a reader touches the form and runs on submit. |
 | **Email content** | Teaser: title + `description` + link | Readers land on the site (read-completion + programme links measurable). Text-first, no images, no open/click tracking. |
@@ -58,7 +64,7 @@ here, in its own Resend team).
 ## 4. Architecture
 
 ```
- reader on a post                     subscribe.diyaz.dev (Worker)                      Resend team "diyaz.dev"
+ reader on a post                     subscribe.diyaz.dev (Worker)                      Resend (existing team)
  [email] [☐ Programmes] [Subscribe] ─► POST /subscribe ── validate, Turnstile, rate ─► confirmation email
                                                                                           │
  reader's inbox ◄─────────────────────────────────────────────────────────────────────────┘
@@ -86,12 +92,17 @@ The Worker runs on a **subdomain** because the `diyaz.dev` apex is a
 DNS-only (grey-cloud) record pointing at GitHub Pages, which issues its own
 certificate; routing a Worker on the apex would require proxying it.
 
-## 5. Resend team "diyaz.dev" (manual setup by Diyaz)
+## 5. Resend setup (existing team)
+
+The team is on Pro transactional (10 req/s, 10 domains) and Free marketing
+(1,000 contacts, 3 segments), shared with Diyaz's other products.
 
 - **Sending domain** `news.diyaz.dev`, region **EU** (matches the other five
   domains, all `eu-west-1`). DNS records added in Cloudflare as DNS-only.
-  Open tracking **off**, click tracking **off**.
-- **Segment** "diyaz.dev readers" — the one list.
+  Open tracking **off**, click tracking **off**. DMARC `p=none` on
+  `_dmarc.diyaz.dev`.
+- **Segment** "diyaz.dev readers" — the one list. It takes the third of the
+  Free marketing plan's three segments.
 - **Topics** (default subscription is **permanent** — verify before creating):
 
   | Topic | `default_subscription` | `visibility` | Meaning |
@@ -170,17 +181,25 @@ POSTs `t` to `/confirm`. Headers: `Cache-Control: no-store`,
      from all" and re-confirms with the box unticked gets Programmes written
      as `opt_out`, because a leftover topic opt-in from before the global
      unsubscribe is not consent (it would otherwise come back when the flag is
-     cleared).
+     lifted).
    - Existing contacts: read their segments and topics before writing
      (Resend documents neither the duplicate segment-add answer nor whether a
      topics PATCH replaces the list); add to the segment only if missing.
-   - `unsubscribed: false` **last**, only for a contact that was unsubscribed,
-     so a failure part-way never leaves them re-subscribed with old topics
-     (safe: the flag is scoped to this team only).
+     Segments of Diyaz's other products are left alone.
+   - **Never write `unsubscribed`.** The flag spans the shared team, so lifting
+     it would restart other products' emails to someone who stopped them. A
+     contact that had used "unsubscribe from all" still gets the segment and
+     topic writes above (so their choices are ready), then sees a "One more
+     step" page asking them to reply to the confirmation email (its
+     `reply_to` is Diyaz). Logged as `confirm.held`.
+     **Diyaz, on such a reply:** in Resend → Contacts, open the address; if it
+     is in another product's segment, remove it there unless they want those
+     emails too; then switch "Unsubscribed" off.
    - A double click can race two confirms past the 404; a 4xx from the create
      re-reads the contact and continues as an update.
 3. On Resend failure → page with a **Try again** button (same token, still valid).
-4. Success → `303` to `SITE_URL/subscribed/`.
+4. Success → `303` to `SITE_URL/subscribed/` (the "One more step" page above
+   is the only other `200` outcome).
 
 ### 6.5 Logging
 
@@ -330,7 +349,7 @@ after that deploy.
 
 | # | Step | Owner |
 |---|---|---|
-| 1 | Create Resend team "diyaz.dev"; add + verify `news.diyaz.dev` (EU) via Cloudflare DNS; create segment and both topics (review §5 table first); create the two API keys. Create the Turnstile widget (pre-clearance off). | Diyaz (account creation and API keys stay with Diyaz; Claude provides exact steps) |
+| 1 | In the existing Resend team: add + verify `news.diyaz.dev` (EU) via Cloudflare DNS, plus DMARC; create the two API keys. Create the Turnstile widget (pre-clearance off). Segment and both topics (review §5 table first): created by Claude through the Resend connector. | Diyaz (DNS, secrets and API keys stay with Diyaz); Claude for segment and topics |
 | 2 | `wrangler secret put` for the Worker; `gh secret set` / `gh variable set` for the repo. | Diyaz (commands prepared by Claude) |
 | 3 | PR: Worker, site changes, `posts.json`, announcer, tests — with `subscribe.enabled: false`. | Claude |
 | 4 | Deploy the Worker; end-to-end test from a local build (localhost temporarily allowed): Diyaz subscribes with their own address, confirms, the contact appears in Resend with the right topics; revert `ALLOWED_ORIGINS`. | Claude + Diyaz |
@@ -338,9 +357,9 @@ after that deploy.
 | 6 | Wed 2026-09-30 ~14:10 UTC heads-up email; ~16:00 UTC Part 2 goes to subscribers. | Automatic |
 | 7 | Update ROADMAP Phase 6, the wiki article `wiki/domains/tech/diyaz-dev`, and the Project Registry. | Claude |
 
-The Resend connector available to Claude reaches the **existing** account
-only; the new team is invisible to it unless connected separately. Nothing in
-this design depends on that.
+The Resend connector available to Claude reaches this team, so Claude can
+create the segment and topics and read back their IDs; it never creates API
+keys (their values would pass through the conversation).
 
 ## 11. Out of scope
 
@@ -354,13 +373,14 @@ this design depends on that.
 
 ## 12. To confirm while planning
 
-- Resend supports several teams under one login. If not, use a separate Resend
-  account; the design is unchanged either way.
+- ~~Resend supports several teams under one login.~~ Answered 2026-09-26: it
+  does, but each extra team needs its own paid plan, so the existing team is
+  used (§3).
 - Workers rate-limiting binding: supported `period` values → pick the window.
 - Resend: contact upsert semantics (create on an existing email), broadcast
   `name` length limit, broadcasts list pagination, whether the hosted
   preferences page lists `public` topics as expected.
-- Resend plan limits for the new team (domains, contacts, monthly sends) —
-  expected volume is tiny, but the free plan's limits must fit.
+- ~~Resend plan limits.~~ Answered 2026-09-26: the existing team has 6/10
+  domains, 41/1,000 marketing contacts, 2/3 segments (§5).
 - Retrieving `posts.json` in the `notify` job from the Pages artifact
   (`github-pages` tarball) vs a separate small artifact uploaded by `build`.

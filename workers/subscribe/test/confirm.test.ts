@@ -105,23 +105,36 @@ for (const topicsPatch of ['merge', 'replace'] as const) {
       expect(resend.topicOf(ADDR, PROGRAMMES)).toBe('opt_in');
     });
 
-    it('does not bring back a Programmes opt-in after "unsubscribe from all"', async () => {
+    it('adds a contact from another product to the list without touching their other segments', async () => {
+      const resend = statefulResend({ topicsPatch, contacts: [reader({ segments: ['seg_other'], topics: {} })] });
+      const res = await route(confirmPost(await tokenFor(false)), makeEnv(), makeDeps(resend.fetch));
+      expect(res.status).toBe(303);
+      expect(resend.contacts.get(ADDR)!.segments).toEqual(['seg_other', 'seg_readers']);
+      expect(resend.topicOf(ADDR, POSTS)).toBe('opt_in');
+      expect(resend.topicOf(ADDR, PROGRAMMES)).toBe('opt_out');
+    });
+
+    // The Resend team is shared with Diyaz's other products, so "unsubscribe
+    // from all" covers their emails too: lifting it here would restart them.
+    it('never lifts "unsubscribe from all", and asks the reader to reply instead', async () => {
+      const resend = statefulResend({ topicsPatch, contacts: [reader({ unsubscribed: true, segments: ['seg_other'] })] });
+      const res = await route(confirmPost(await tokenFor(true)), makeEnv(), makeDeps(resend.fetch));
+      expect(res.status).toBe(200);
+      expect(await res.text()).toContain('Reply to the confirmation email');
+      expect(resend.contacts.get(ADDR)).toMatchObject({ unsubscribed: true, segments: ['seg_other', 'seg_readers'] });
+      expect(resend.topicOf(ADDR, PROGRAMMES)).toBe('opt_in'); // their choice, ready for when Diyaz lifts the flag
+    });
+
+    it('does not keep a Programmes opt-in from before "unsubscribe from all"', async () => {
       const resend = statefulResend({
         topicsPatch,
         contacts: [reader({ unsubscribed: true, topics: { [POSTS]: 'opt_in', [PROGRAMMES]: 'opt_in' } })],
       });
       const res = await route(confirmPost(await tokenFor(false)), makeEnv(), makeDeps(resend.fetch));
-      expect(res.status).toBe(303);
-      expect(resend.contacts.get(ADDR)!.unsubscribed).toBe(false);
+      expect(res.status).toBe(200);
+      expect(resend.contacts.get(ADDR)!.unsubscribed).toBe(true);
       expect(resend.topicOf(ADDR, POSTS)).toBe('opt_in');
       expect(resend.topicOf(ADDR, PROGRAMMES)).toBe('opt_out');
-    });
-
-    it('re-subscribes an unsubscribed reader to Programmes only when ticked again', async () => {
-      const resend = statefulResend({ topicsPatch, contacts: [reader({ unsubscribed: true })] });
-      await route(confirmPost(await tokenFor(true)), makeEnv(), makeDeps(resend.fetch));
-      expect(resend.contacts.get(ADDR)!.unsubscribed).toBe(false);
-      expect(resend.topicOf(ADDR, PROGRAMMES)).toBe('opt_in');
     });
 
     it('confirming the same link twice ends on /subscribed/ both times with one contact', async () => {
@@ -138,15 +151,13 @@ for (const topicsPatch of ['merge', 'replace'] as const) {
 }
 
 describe('POST /confirm: write order and failures', () => {
-  it('clears the global unsubscribe only after the segment and topics are written', async () => {
+  it('writes only the segment and topics for an unsubscribed contact, never the flag, and logs it', async () => {
     const resend = statefulResend({ contacts: [reader({ unsubscribed: true, segments: [] })] });
-    await route(confirmPost(await tokenFor(false)), makeEnv(), makeDeps(resend.fetch));
+    const deps = makeDeps(resend.fetch);
+    await route(confirmPost(await tokenFor(false)), makeEnv(), deps);
     const writes = resend.calls.filter((c) => c.method !== 'GET').map(keyOf);
-    expect(writes).toEqual([
-      `POST /contacts/${ENC}/segments/seg_readers`,
-      `PATCH /contacts/${ENC}/topics`,
-      `PATCH /contacts/${ENC}`,
-    ]);
+    expect(writes).toEqual([`POST /contacts/${ENC}/segments/seg_readers`, `PATCH /contacts/${ENC}/topics`]);
+    expect(deps.logs).toContainEqual({ step: 'confirm.held', status: 200, reason: 'unsubscribed' });
   });
 
   it('leaves an unsubscribed contact unsubscribed if the topics write fails', async () => {
@@ -168,7 +179,6 @@ describe('POST /confirm: write order and failures', () => {
       [`POST /contacts/${ENC}/segments/seg_readers`, reader({ segments: [] })],
       [`GET /contacts/${ENC}/topics`, reader()],
       [`PATCH /contacts/${ENC}/topics`, reader()],
-      [`PATCH /contacts/${ENC}`, reader({ unsubscribed: true })],
     ];
     for (const [failOn, contact] of steps) {
       const resend = statefulResend({ contacts: [contact], failOn });
@@ -180,16 +190,6 @@ describe('POST /confirm: write order and failures', () => {
       expect(page).toContain(`value="${token}"`);
       expect(keyOf(resend.calls.at(-1)!).startsWith(failOn), failOn).toBe(true);
     }
-  });
-
-  it('keeps a contact unsubscribed when only the final re-subscribe write fails', async () => {
-    const resend = statefulResend({ contacts: [reader({ unsubscribed: true })], failOn: `PATCH /contacts/${ENC}` });
-    const deps = makeDeps(resend.fetch);
-    const res = await route(confirmPost(await tokenFor(false)), makeEnv(), deps);
-    expect(res.status).toBe(502);
-    expect(resend.topicOf(ADDR, PROGRAMMES)).toBe('opt_out'); // topics were written first
-    expect(resend.contacts.get(ADDR)!.unsubscribed).toBe(true);
-    expect(deps.logs).toContainEqual({ step: 'confirm.save', status: 500, call: 'updateContact', reason: 'application_error' });
   });
 
   it('names createContact in the log when the create fails with a 4xx that is not a race', async () => {

@@ -42,10 +42,10 @@ export function renderHeadsUpEmail(
   const { html, text } = renderEmail({
     bodyHtml:
       `<p>The email for <strong>${escapeHtml(post.title)}</strong> goes to subscribers at about <strong>${when}</strong>.</p>` +
-      `<p>To stop it, open <a href="https://resend.com/broadcasts">Resend → Broadcasts</a> in the diyaz.dev team and cancel broadcast <code>${escapeHtml(broadcastId)}</code>.</p>`,
+      `<p>To stop it, open <a href="https://resend.com/broadcasts">Resend → Broadcasts</a> and cancel broadcast <code>${escapeHtml(broadcastId)}</code>.</p>`,
     bodyText:
       `The email for "${post.title}" goes to subscribers at about ${when}.\n\n` +
-      `To stop it, open https://resend.com/broadcasts in the diyaz.dev team and cancel broadcast ${broadcastId}.`,
+      `To stop it, open https://resend.com/broadcasts and cancel broadcast ${broadcastId}.`,
     footerHtml: escapeHtml(note),
     footerText: note,
   });

@@ -4,7 +4,7 @@
 
 **Goal:** Let diyaz.dev readers subscribe by email (double opt-in) and email every newly published post to them automatically, with a separate opt-in for coaching-programme news.
 
-**Architecture:** A stateless Cloudflare Worker at `subscribe.diyaz.dev` handles signup (Turnstile + rate limits → AES-GCM-encrypted confirmation link) and confirmation (POST-only → upsert contact in a dedicated Resend team). A `notify` job in `build.yml` reads the build's `posts.json` after deploy and schedules a Resend broadcast (2 h out) per newly published post. Jekyll gets a form include behind `subscribe.enabled`, plus `/subscribe/`, `/subscribed/`, `/privacy/`.
+**Architecture:** A stateless Cloudflare Worker at `subscribe.diyaz.dev` handles signup (Turnstile + rate limits → AES-GCM-encrypted confirmation link) and confirmation (POST-only → upsert contact in the existing Resend team). A `notify` job in `build.yml` reads the build's `posts.json` after deploy and schedules a Resend broadcast (2 h out) per newly published post. Jekyll gets a form include behind `subscribe.enabled`, plus `/subscribe/`, `/subscribed/`, `/privacy/`.
 
 **Tech Stack:** TypeScript on Node 24 (type stripping, no build step for scripts), Cloudflare Workers + Wrangler, Vitest, Resend REST API, Cloudflare Turnstile, Jekyll 4 / Liquid, GitHub Actions, Bash + Ruby (existing `check-build.sh`).
 
@@ -19,14 +19,15 @@
 | §6.2 honeypot (unnamed) | Field name `hp` | Browsers autofill fields named like `website`/`url`; an autofilled honeypot would silently drop a real human. |
 | §8.2 broadcast name `post:<path>` | `post:<first 12 hex of SHA-256(path)>` | Immune to any broadcast-name length limit; path-based, so retitling never re-sends. |
 | §8.1 job runs on every main push | `notify` job runs only when repo variable `NOTIFY_ENABLED` is `true` (revised in PR review; was "until `ANNOUNCE_SINCE` exists") | Prevents red CI between merge and launch, and a deleted `ANNOUNCE_SINCE` after launch now fails loudly instead of silently skipping. The script also refuses to run without `ANNOUNCE_SINCE`. |
-| — (PR #49 review, 2026-09-25) | Turnstile loads on first form interaction and runs on submit; confirm reads segments/topics first, clears `unsubscribed` last and never revives a Programmes opt-in after a global unsubscribe (writes `opt_out` in that one case); `scheduled_at` is an ISO timestamp; `happy-dom` dev dependency for site-JS tests; Cloudflare invocation logs off | Findings from the five-agent PR review; the spec was revised to match. |
+| — (PR #49 review, 2026-09-25) | Turnstile loads on first form interaction and runs on submit; confirm reads segments/topics first, clears `unsubscribed` last (superseded 2026-09-26: never cleared, see next row) and never revives a Programmes opt-in after a global unsubscribe (writes `opt_out` in that one case); `scheduled_at` is an ISO timestamp; `happy-dom` dev dependency for site-JS tests; Cloudflare invocation logs off | Findings from the five-agent PR review; the spec was revised to match. |
+| §3 separate Resend team "diyaz.dev" (2026-09-26, at setup) | Existing team; confirm **never writes `unsubscribed`**: a contact that had used "unsubscribe from all" gets its segment and topics written, then a "One more step" page asking for a reply (logged `confirm.held`); `ResendClient.updateContact` removed | An extra Resend team needs its own paid plan. Contacts and `unsubscribed` span the shared team, so lifting the flag would restart other products' emails. |
 | §8.3 heads-up links `…/broadcasts/{id}` | Links `https://resend.com/broadcasts` + prints the ID | The per-broadcast URL format is unverified; the list page certainly exists. |
 | §7 form "after `{{ content }}`" | After the share section | `post_read_completed` fires when `.share-section` scrolls into view; inserting the form above it would shift that metric. |
 | — | Turnstile `action` must equal `subscribe`; allowed hostnames derive from `ALLOWED_ORIGINS` | Cloudflare's recommended siteverify checks; one variable toggles localhost for the E2E test. |
 
 ## Verified API facts (2026-09-24, from vendor docs)
 
-- Resend: `POST /contacts` body `{email, unsubscribed, segments:[{id}], topics:[{id, subscription}]}`; `GET /contacts/{id_or_email}` (404 if absent); `PATCH /contacts/{id_or_email}` accepts `unsubscribed`; `POST /contacts/{id_or_email}/segments/{segment_id}`; `PATCH /contacts/{id_or_email}/topics` body is a **bare array** `[{id, subscription}]`; `POST /emails` accepts `reply_to`; `POST /broadcasts` accepts `segment_id, topic_id, from, reply_to, subject, name, html, text, send, scheduled_at` (`scheduled_at` natural language like `"in 2 hours"`, requires `send: true`); `GET /broadcasts?limit=100&after=<id>` → `{has_more, data:[{id, name, …}]}`; placeholder `{{{RESEND_UNSUBSCRIBE_URL}}}`; rate limit 5 req/s **per team** → 429. Duplicate-create behaviour is undocumented → always `GET` first.
+- Resend: `POST /contacts` body `{email, unsubscribed, segments:[{id}], topics:[{id, subscription}]}`; `GET /contacts/{id_or_email}` (404 if absent); `PATCH /contacts/{id_or_email}` accepts `unsubscribed`; `POST /contacts/{id_or_email}/segments/{segment_id}`; `PATCH /contacts/{id_or_email}/topics` body is a **bare array** `[{id, subscription}]`; `POST /emails` accepts `reply_to`; `POST /broadcasts` accepts `segment_id, topic_id, from, reply_to, subject, name, html, text, send, scheduled_at` (`scheduled_at` natural language like `"in 2 hours"`, requires `send: true`); `GET /broadcasts?limit=100&after=<id>` → `{has_more, data:[{id, name, …}]}`; placeholder `{{{RESEND_UNSUBSCRIBE_URL}}}`; rate limit **per team** (10 req/s on the current Pro plan, shared with Diyaz's other products) → 429. Duplicate-create behaviour is undocumented → always `GET` first.
 - Cloudflare: rate-limit binding `ratelimits: [{name, namespace_id, simple:{limit, period}}]`, `period` ∈ {10, 60}, `env.X.limit({key}) → {success}`; Custom Domain via `routes: [{pattern, custom_domain: true}]`; Siteverify `POST https://challenges.cloudflare.com/turnstile/v0/siteverify` (form or JSON: `secret, response, remoteip`) → `{success, hostname, action, "error-codes"}`; tokens single-use, 5-min validity, ≤ 2048 chars; explicit-render pages must `turnstile.reset(widgetId)` after each attempt; test keys: site `1x00000000000000000000AA` / secret `1x0000000000000000000000000000000AA` always pass.
 
 ## Global Constraints
@@ -37,7 +38,7 @@
 - Constants (verbatim): `SITE_URL = 'https://diyaz.dev'`, `WORKER_URL = 'https://subscribe.diyaz.dev'`, `FROM = 'Diyaz Yakubov <diyaz@news.diyaz.dev>'`, token TTL **48 h**, AES-GCM **256-bit** key, Turnstile action `subscribe`.
 - Never log, print, or put in the job summary: email addresses, tokens, API keys, the reply-to address. The repo and its Actions logs are **public**.
 - Emails: text-first, **no images**, open/click tracking off. Post emails carry `{{{RESEND_UNSUBSCRIBE_URL}}}`; the confirmation email does not.
-- The form only ever **adds** opt-ins; it never sets a topic to `opt_out`.
+- The form only ever **adds** opt-ins; it never sets a topic to `opt_out` (one exception, spec §6.4: Programmes for a contact that had used "unsubscribe from all"). It never writes the contact's `unsubscribed` flag.
 - Resend topics (permanent defaults): **New posts** = `opt_in`, public; **Programmes** = `opt_out`, public.
 - Announcer: `scheduled_at: "in 2 hours"`; fuse = more than **3** candidates fails before sending; missing/invalid `ANNOUNCE_SINCE` fails.
 - Site: every built HTML page has exactly **one `<h1>`** (enforced by `check-build.sh`); site JS follows `assets/js/analytics.js` style (IIFE, `'use strict'`, `var`, `function`); CSS uses tokens from `assets/css/variables.css`; screen-reader text uses the existing `.sr-only` class.
@@ -94,9 +95,9 @@ subscribe.html, subscribed.html, privacy.html
 
 ---
 
-### Task 1: Resend team, sending domain, topics, keys, Turnstile widget (owner: Diyaz)
+### Task 1: Resend sending domain, segment, topics, keys, Turnstile widget (owner: Diyaz; segment and topics: Claude)
 
-Manual, account-level work. Claude must not create accounts or handle API keys. Tasks 2–11 do not depend on this and can run in parallel; Tasks 12–13 do.
+Manual, account-level work in Diyaz's **existing** Resend team (revised 2026-09-26: an extra team needs its own paid plan). Claude must not create accounts or handle API keys; it creates the segment and topics through the Resend connector. Tasks 2–11 do not depend on this and can run in parallel; Tasks 12–13 do.
 
 **Files:** none.
 
@@ -104,13 +105,13 @@ Manual, account-level work. Claude must not create accounts or handle API keys. 
 - Produces (non-secret, share with Claude): `RESEND_SEGMENT_ID`, `TOPIC_NEW_POSTS_ID`, `TOPIC_PROGRAMMES_ID`, Turnstile **site key**.
 - Produces (secret, stays with Diyaz until Task 12/13): Resend key `diyaz-subscribe-worker`, Resend key `diyaz-notify-gha`, Turnstile **secret**, `TOKEN_KEY`, reply-to address.
 
-- [ ] **Step 1: Create the Resend team.** Resend dashboard → team switcher → *Create team* → name `diyaz.dev`. (If the plan offers no multi-team option, create a separate Resend account instead; nothing else changes.) Check the plan's limits (domains, contacts, marketing sends) cover one domain and a few hundred contacts.
+- [x] **Step 1: Use the existing Resend team.** No new team (2026-09-26). Its limits fit: 6/10 domains, 41/1,000 marketing contacts, 2/3 segments (this list takes the third).
 
-- [ ] **Step 2: Add the sending domain.** In the new team: Domains → *Add domain* → `news.diyaz.dev`, region **EU (Ireland)**. Copy each DNS record into Cloudflare → diyaz.dev zone → DNS, **Proxy status: DNS only (grey)**. Back in Resend, *Verify*. In the domain's settings, confirm **Open tracking: off** and **Click tracking: off**. Also add a DMARC record in Cloudflare if there is none: TXT `_dmarc.diyaz.dev` = `v=DMARC1; p=none;` (monitor-only; diyaz.dev sends no other mail, and both DKIM `d=news.diyaz.dev` and SPF on `send.news.diyaz.dev` align with it).
+- [x] **Step 2: Add the sending domain.** (Done 2026-09-26: verified, `eu-west-1`, tracking off; DMARC still to add.) Domains → *Add domain* → `news.diyaz.dev`, region **EU (Ireland)**. Copy each DNS record into Cloudflare → diyaz.dev zone → DNS, **Proxy status: DNS only (grey)**. Back in Resend, *Verify*. In the domain's settings, confirm **Open tracking: off** and **Click tracking: off**. Also add a DMARC record in Cloudflare if there is none: TXT `_dmarc.diyaz.dev` = `v=DMARC1; p=none;` (monitor-only; diyaz.dev sends no other mail, and both DKIM `d=news.diyaz.dev` and SPF on `send.news.diyaz.dev` align with it).
 
-- [ ] **Step 3: Create the segment.** Audience → Segments → *Create* → `diyaz.dev readers`. Copy its ID.
+- [ ] **Step 3: Create the segment** (Claude, via the Resend connector). Audience → Segments → *Create* → `diyaz.dev readers`. Copy its ID.
 
-- [ ] **Step 4: Create the two topics (defaults are permanent — read twice).**
+- [ ] **Step 4: Create the two topics (defaults are permanent — read twice)** (Claude, via the Resend connector).
 
   | Name | Default subscription | Visibility | Description |
   |---|---|---|---|
@@ -137,7 +138,7 @@ Manual, account-level work. Claude must not create accounts or handle API keys. 
   openssl rand -base64 32
   ```
 
-- [ ] **Step 8: Hand over** the four non-secret values (segment ID, two topic IDs, Turnstile site key) to Claude in chat.
+- [ ] **Step 8: Hand over** the Turnstile site key to Claude in chat (Claude reads the segment and topic IDs itself).
 
 ---
 
@@ -3337,7 +3338,7 @@ Requires Task 1. Deploying is outward-facing: get Diyaz's explicit go-ahead in c
   6. Blocks `challenges.cloudflare.com` (browser devtools request blocking, or an ad blocker), reloads, submits → sees the "bot check didn't load" message; no request to `subscribe.diyaz.dev` in the network tab (Review Focus 5).
   7. Submits a bogus address like `nope` → "That email address doesn't look right."
   8. With the Network tab open on a post, confirms **no** request to `challenges.cloudflare.com` until clicking into the form (lazy Turnstile, which `/privacy/` promises).
-  9. Consent round-trip (the PR-review critical case): subscribe with Programmes **ticked** and confirm → in Resend, open the preferences link from a test broadcast (or mark the contact unsubscribed in the dashboard) and unsubscribe from all → subscribe again with the box **unticked** and confirm → the contact is subscribed, New posts `opt_in`, **Programmes `opt_out`**.
+  9. Consent round-trip (the PR-review critical case): subscribe with Programmes **ticked** and confirm → in Resend, open the preferences link from a test broadcast (or mark the contact unsubscribed in the dashboard) and unsubscribe from all → subscribe again with the box **unticked** and confirm → the "One more step" page; in Resend the contact is **still unsubscribed**, New posts `opt_in`, **Programmes `opt_out`**, and any other segment untouched. Then follow the manual path in spec §6.4 (switch "Unsubscribed" off) and check the topics stay as they are.
   10. Note in the ledger what Resend actually does for a topics PATCH (merge or replace) and for a duplicate segment add; the code is correct either way, but record it.
   If step 3 or 4 shows a Resend API mismatch (e.g. a status other than 404/409 for "not found"/"already in segment"), fix `src/resend.ts` with a failing test first, redeploy, repeat.
 
@@ -3408,7 +3409,7 @@ Requires Tasks 11–12 and Diyaz's approval of the PR.
 - [ ] **Step 1: ROADMAP.md** — replace the deferred "Newsletter signup" item (the Buttondown/EmailOctopus/ConvertKit sub-list and example embed) with:
 
   ```markdown
-  - [x] **Newsletter signup** — own list in a dedicated Resend team (`news.diyaz.dev`)
+  - [x] **Newsletter signup** — own list in the existing Resend team (`news.diyaz.dev`)
       - [x] Double opt-in via the `subscribe.diyaz.dev` Worker (`workers/subscribe/`),
         Turnstile + rate limits, POST-only confirmation
       - [x] Topics: "New posts" (default) and "Programmes" (opt-in only)
@@ -3419,6 +3420,6 @@ Requires Tasks 11–12 and Diyaz's approval of the PR.
   ```
   Commit: `git add ROADMAP.md && git commit -m "ROADMAP: newsletter signup shipped" && git push`.
 
-- [ ] **Step 2: Wiki article** (`wiki/domains/tech/diyaz-dev.md` in the vault): update **Status** (last change: email subscriptions), add a "Newsletter" bullet under Key Details (Resend team "diyaz.dev", `news.diyaz.dev`, Worker at `subscribe.diyaz.dev`, `notify` job, topics), flip the Plans-vs-reality row "Phase 6: newsletter signup" to ✅, and remove the resolved Open Question ("build it here, or reuse toptop.dev's Resend newsletter?" → answered: here, separate team). Update the Project Registry row's date.
+- [ ] **Step 2: Wiki article** (`wiki/domains/tech/diyaz-dev.md` in the vault): update **Status** (last change: email subscriptions), add a "Newsletter" bullet under Key Details (existing Resend team, `news.diyaz.dev`, Worker at `subscribe.diyaz.dev`, `notify` job, topics), flip the Plans-vs-reality row "Phase 6: newsletter signup" to ✅, and remove the resolved Open Question ("build it here, or reuse toptop.dev's Resend newsletter?" → answered: here, own segment in the existing Resend team). Update the Project Registry row's date.
 
-- [ ] **Step 3: Memory.** Write `newsletter-diyaz-dev.md` (type `project`): what exists and where (Worker `diyaz-subscribe` on `subscribe.diyaz.dev`, Resend team "diyaz.dev" separate from the main account because contact `unsubscribed` is team-wide, the `ANNOUNCE_SINCE` gate, the 2 h cancel window, secrets live in Worker secrets + GitHub secrets, the Resend connector in Claude reaches only the old account). Link `[[posthog-diyaz-dev]]` and `[[diyaz-dev-migration]]`. Add its one-line pointer to `MEMORY.md`.
+- [ ] **Step 3: Memory.** Write `newsletter-diyaz-dev.md` (type `project`): what exists and where (Worker `diyaz-subscribe` on `subscribe.diyaz.dev`, the list lives in the shared Resend team, and because contact `unsubscribed` is team-wide the Worker never lifts it (the manual path in spec §6.4), the `ANNOUNCE_SINCE` gate, the 2 h cancel window, secrets live in Worker secrets + GitHub secrets, the Resend connector in Claude reaches this team). Link `[[posthog-diyaz-dev]]` and `[[diyaz-dev-migration]]`. Add its one-line pointer to `MEMORY.md`.

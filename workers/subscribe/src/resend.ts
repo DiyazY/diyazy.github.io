@@ -1,6 +1,7 @@
 // Minimal Resend REST client: only the calls the Worker and notify script
-// make. Every call has a timeout. A 429 is retried (the API allows 5
-// requests/second per team) unless it is a quota error; a 429 still failing
+// make. Every call has a timeout. A 429 is retried (the rate limit is per team,
+// 10 requests/second on its plan, shared with Diyaz's other products) unless
+// it is a quota error; a 429 still failing
 // after 4 attempts, and any other non-2xx, becomes a ResendError. Exceptions:
 // getContact maps 404 to null, and addContactToSegment accepts 409.
 import type { Fetch } from './env.ts';
@@ -82,7 +83,6 @@ export interface ResendClient {
   sendEmail(input: EmailInput): Promise<{ id: string }>;
   getContact(email: string): Promise<Contact | null>;
   createContact(input: ContactInput): Promise<{ id: string }>;
-  updateContact(email: string, patch: { unsubscribed: boolean }): Promise<void>;
   addContactToSegment(email: string, segmentId: string): Promise<void>;
   listContactSegmentIds(email: string): Promise<string[]>;
   getContactTopics(email: string): Promise<TopicSubscription[]>;
@@ -164,10 +164,6 @@ export function createResendClient(options: {
     },
 
     createContact: (input) => json('POST', '/contacts', input),
-
-    async updateContact(email, patch) {
-      await expectOk(await call('PATCH', contact(email), patch));
-    },
 
     async addContactToSegment(email, segmentId) {
       // The duplicate-add answer is undocumented; 409 is the likely one. confirm.ts

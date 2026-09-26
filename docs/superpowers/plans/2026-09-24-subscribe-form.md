@@ -120,6 +120,8 @@ Manual, account-level work in Diyaz's **existing** Resend team (revised 2026-09-
 
   Copy both IDs.
 
+- [ ] **Step 4b: Make the team's unsubscribe page neutral** (Diyaz; no connector tool). Settings → Unsubscribe page, shared with BusyPipe: remove the logo, title `Email preferences`, description `Choose which emails you'd like to keep getting.`, neutral colours (background `#ffffff`, text `#1a1a1a`, accent `#333333`), and remove the "Powered by Resend" footer if the plan allows.
+
 - [ ] **Step 5: Create two API keys** (Full access — sending-only keys cannot manage contacts or broadcasts): `diyaz-subscribe-worker`, `diyaz-notify-gha`. Store them in your password manager.
 
 - [ ] **Step 6: Create the Turnstile widget.**
@@ -3339,6 +3341,7 @@ Requires Task 1. Deploying is outward-facing: get Diyaz's explicit go-ahead in c
   7. Submits a bogus address like `nope` → "That email address doesn't look right."
   8. With the Network tab open on a post, confirms **no** request to `challenges.cloudflare.com` until clicking into the form (lazy Turnstile, which `/privacy/` promises).
   9. Consent round-trip (the PR-review critical case): subscribe with Programmes **ticked** and confirm → in Resend, open the preferences link from a test broadcast (or mark the contact unsubscribed in the dashboard) and unsubscribe from all → subscribe again with the box **unticked** and confirm → the "One more step" page; in Resend the contact is **still unsubscribed**, New posts `opt_in`, **Programmes `opt_out`**, and any other segment untouched. Then follow the manual path in spec §6.4 (switch "Unsubscribed" off) and check the topics stay as they are.
+  9b. From a test broadcast (or the preferences link), open the unsubscribe page: neutral branding; "New posts on diyaz.dev" is listed; unticking it stops post emails without touching "unsubscribed".
   10. Note in the ledger what Resend actually does for a topics PATCH (merge or replace) and for a duplicate segment add; the code is correct either way, but record it.
   If step 3 or 4 shows a Resend API mismatch (e.g. a status other than 404/409 for "not found"/"already in segment"), fix `src/resend.ts` with a failing test first, redeploy, repeat.
 

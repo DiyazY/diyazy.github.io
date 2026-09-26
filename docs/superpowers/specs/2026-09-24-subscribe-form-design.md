@@ -115,7 +115,11 @@ The team is on Pro transactional (10 req/s, 10 domains) and Free marketing
   | Programmes | `opt_out` | `private` | Receives programme emails **only** if explicitly opted in. A post-only reader opts in later by submitting the form again with the box ticked. |
 
   An earlier topic "New posts" (`opt_in`) was created by mistake on 2026-09-26
-  and is kept for other products at Diyaz's request; this design doesn't use it.
+  and now serves BusyPipe; this design doesn't use it.
+- **Unsubscribe page:** Resend has one per team, shared with BusyPipe, so it
+  is kept **brand-neutral** (no product logo; generic title and text). Readers
+  also see the team's opt_in topics there (BusyPipe's "New posts",
+  "Onboarding"); accepted, since a separate team costs a paid plan.
 
 - **API keys** (full access; Resend's sending-only keys cannot manage
   contacts or broadcasts), one per consumer so each can be revoked alone:

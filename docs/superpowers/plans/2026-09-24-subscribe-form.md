@@ -109,9 +109,9 @@ Manual, account-level work in Diyaz's **existing** Resend team (revised 2026-09-
 
 - [x] **Step 2: Add the sending domain.** (Done 2026-09-26: verified, `eu-west-1`, tracking off; DMARC still to add.) Domains → *Add domain* → `news.diyaz.dev`, region **EU (Ireland)**. Copy each DNS record into Cloudflare → diyaz.dev zone → DNS, **Proxy status: DNS only (grey)**. Back in Resend, *Verify*. In the domain's settings, confirm **Open tracking: off** and **Click tracking: off**. Also add a DMARC record in Cloudflare if there is none: TXT `_dmarc.diyaz.dev` = `v=DMARC1; p=none;` (monitor-only; diyaz.dev sends no other mail, and both DKIM `d=news.diyaz.dev` and SPF on `send.news.diyaz.dev` align with it).
 
-- [ ] **Step 3: Create the segment** (Claude, via the Resend connector). Audience → Segments → *Create* → `diyaz.dev readers`. Copy its ID.
+- [x] **Step 3: Create the segment** (Claude, via the Resend connector; done 2026-09-26, ID in `wrangler.jsonc`). Audience → Segments → *Create* → `diyaz.dev readers`. Copy its ID.
 
-- [ ] **Step 4: Create the two topics (defaults are permanent — read twice)** (Claude, via the Resend connector).
+- [x] **Step 4: Create the two topics (defaults are permanent — read twice)** (Claude, via the Resend connector; done 2026-09-26, defaults verified, IDs in `wrangler.jsonc`). The connector can't set visibility: Diyaz switches both to **Public** in the dashboard.
 
   | Name | Default subscription | Visibility | Description |
   |---|---|---|---|

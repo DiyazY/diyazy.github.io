@@ -107,7 +107,7 @@ Manual, account-level work in Diyaz's **existing** Resend team (revised 2026-09-
 
 - [x] **Step 1: Use the existing Resend team.** No new team (2026-09-26). Its limits fit: 6/10 domains, 41/1,000 marketing contacts, 2/3 segments (this list takes the third).
 
-- [x] **Step 2: Add the sending domain.** (Done 2026-09-26: verified, `eu-west-1`, tracking off; DMARC still to add.) Domains → *Add domain* → `news.diyaz.dev`, region **EU (Ireland)**. Copy each DNS record into Cloudflare → diyaz.dev zone → DNS, **Proxy status: DNS only (grey)**. Back in Resend, *Verify*. In the domain's settings, confirm **Open tracking: off** and **Click tracking: off**. Also add a DMARC record in Cloudflare if there is none: TXT `_dmarc.diyaz.dev` = `v=DMARC1; p=none;` (monitor-only; diyaz.dev sends no other mail, and both DKIM `d=news.diyaz.dev` and SPF on `send.news.diyaz.dev` align with it).
+- [x] **Step 2: Add the sending domain.** (Done 2026-09-26: verified, `eu-west-1`, tracking off. DMARC added 2026-10-01 by Claude through the Cloudflare API connector.) Domains → *Add domain* → `news.diyaz.dev`, region **EU (Ireland)**. Copy each DNS record into Cloudflare → diyaz.dev zone → DNS, **Proxy status: DNS only (grey)**. Back in Resend, *Verify*. In the domain's settings, confirm **Open tracking: off** and **Click tracking: off**. Also add a DMARC record in Cloudflare if there is none: TXT `_dmarc.diyaz.dev` = `v=DMARC1; p=none;` (monitor-only; diyaz.dev sends no other mail, and both DKIM `d=news.diyaz.dev` and SPF on `send.news.diyaz.dev` align with it).
 
 - [x] **Step 3: Create the segment** (Claude, via the Resend connector; done 2026-09-26, ID in `wrangler.jsonc`). Audience → Segments → *Create* → `diyaz.dev readers`. Copy its ID.
 
@@ -124,7 +124,7 @@ Manual, account-level work in Diyaz's **existing** Resend team (revised 2026-09-
 
 - [ ] **Step 5: Create two API keys** (Full access — sending-only keys cannot manage contacts or broadcasts): `diyaz-subscribe-worker`, `diyaz-notify-gha`. Store them in your password manager.
 
-- [ ] **Step 6: Create the Turnstile widget.**
+- [x] **Step 6: Create the Turnstile widget.** (Done 2026-10-01 by Claude through the Cloudflare API connector: `diyaz-subscribe`, managed, pre-clearance off, domains `diyaz.dev`, `localhost`, `127.0.0.1`; site key in `_config.yml`. The secret was never read out; at deploy it goes from Cloudflare into the Worker with `wrangler turnstile widget get` piped to `wrangler secret put`.)
 
   ```bash
   npx wrangler login

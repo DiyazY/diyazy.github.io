@@ -57,7 +57,7 @@ None of these is "the" replacement for the feed. Individually they're a widget, 
 
 Every one of them is profitable or well-funded doing the *opposite* of what the incumbents optimize. What none of them has done yet is put it all in one place, on shared infrastructure, at platform scale. That gap — the openings nobody has fully built — is the next part.
 
-_Next in the series: **Part 4 — three openings nobody has fully built**, where the pieces above get combined into products that could actually scale. [See all parts &rarr;](/after-the-feed.html)_
+_Next in the series: **Part 4 — three openings nobody has fully built**, where the pieces above get combined into products that could actually scale. [See all parts &rarr;](/after-the-feed.html) · [Get new parts by email](/subscribe/)_
 
 ## References
 

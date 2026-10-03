@@ -44,7 +44,7 @@ Whether that's a verified-camera network, a darkroom that mails you things, an a
 
 So the next time you open a *social* app and it hands you a stranger and a deep fryer, remember it doesn't have to be like that. It's like that because of a business model — and business models, as the last three takeovers showed, are exactly the thing that gets replaced.
 
-_&larr; Back to the start: [the full After the Feed series](/after-the-feed.html)_
+_&larr; Back to the start: [the full After the Feed series](/after-the-feed.html) · [Get new posts by email](/subscribe/)_
 
 ## References
 

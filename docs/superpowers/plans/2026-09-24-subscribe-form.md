@@ -3346,7 +3346,7 @@ Requires Task 1. Deploying is outward-facing: get Diyaz's explicit go-ahead in c
   **Results (2026-10-03):** steps 1–5, 7, 8 and 9 pass (8 checked in the browser pane; 6 and 9b not run: 6 is covered by `site-subscribe.test.ts`, 9b waits for the first real broadcast). First confirm failed with `401 restricted_api_key`: the Worker key had been created with **Sending access**; replaced with a **Full access** key (Resend fixes a key's permission at creation). Step 9: "One more step" page; contact stayed unsubscribed; New posts on diyaz.dev `opt_in`, Programmes `opt_out` (Resend activity: "Opted out of Programmes"); after lifting the flag by hand the topics stayed. Step 10: segment add on a new member → 201; duplicate add never attempted (membership read first); topics PATCH merge/replace still undetermined (the other topics sat at their defaults); Resend's log viewer shows bare-array request bodies as `{}`.
   If step 3 or 4 shows a Resend API mismatch (e.g. a status other than 404/409 for "not found"/"already in segment"), fix `src/resend.ts` with a failing test first, redeploy, repeat.
 
-- [ ] **Step 6: Lock origins back down to production**
+- [x] **Step 6: Lock origins back down to production** (2026-10-03, run by Diyaz; localhost → 403 verified)
 
   ```bash
   cd workers/subscribe && npx wrangler deploy
@@ -3362,14 +3362,14 @@ Requires Tasks 11–12 and Diyaz's approval of the PR.
 **Files:**
 - Modify: `_config.yml` (`subscribe.enabled: true`, `turnstile_site_key`)
 
-- [ ] **Step 1: Repo variables** (non-secret; Claude may run these with Diyaz's go-ahead):
+- [x] **Step 1: Repo variables** (2026-10-03; `TOPIC_NEW_POSTS_ID` is the "New posts on diyaz.dev" topic):
 
   ```bash
   gh variable set RESEND_SEGMENT_ID --body "<segment id>"
   gh variable set TOPIC_NEW_POSTS_ID --body "<New posts topic id>"
   ```
 
-- [ ] **Step 2: Repo secrets** (Diyaz runs these; each prompts for the value):
+- [x] **Step 2: Repo secrets** (2026-10-03, Diyaz; the notify key recreated with Full access):
 
   ```bash
   gh secret set RESEND_API_KEY_NOTIFY

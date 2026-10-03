@@ -1,0 +1,68 @@
+/* Email subscribe form (_includes/subscribe.html) and the plain pages
+   /subscribe/, /subscribed/, /privacy/. Tokens from variables.css. */
+
+.subscribe-box {
+  --subscribe-error: #b3261e;
+  margin: 32px 0;
+  padding: 20px;
+  border: 1px solid var(--color-border-strong);
+  border-radius: var(--radius-lg);
+  background: var(--color-bg-secondary);
+}
+[data-theme="dark"] .subscribe-box { --subscribe-error: #f2b8b5; }
+@media (prefers-color-scheme: dark) {
+  :root:not([data-theme="light"]) .subscribe-box { --subscribe-error: #f2b8b5; }
+}
+
+.subscribe-title { margin: 0 0 12px; font-size: var(--font-size-lg); }
+.subscribe-row { display: flex; flex-wrap: wrap; gap: var(--spacing-sm); }
+.subscribe-row input[type="email"] {
+  flex: 1 1 220px;
+  min-width: 0;
+  padding: 10px 12px;
+  font: inherit;
+  color: var(--color-text);
+  background: var(--color-bg);
+  border: 1px solid var(--color-border-strong);
+  border-radius: var(--radius-md);
+}
+.subscribe-row button {
+  padding: 10px 18px;
+  font: inherit;
+  font-weight: var(--font-weight-semibold);
+  color: var(--color-bg);
+  background: var(--color-primary);
+  border: 0;
+  border-radius: var(--radius-md);
+  cursor: pointer;
+}
+.subscribe-row button:disabled { opacity: 0.6; cursor: wait; }
+.subscribe-check {
+  display: flex;
+  gap: var(--spacing-sm);
+  align-items: flex-start;
+  margin-top: 12px;
+  font-size: var(--font-size-sm);
+  color: var(--color-text-light);
+}
+.subscribe-hp { position: absolute; left: -9999px; width: 1px; height: 1px; overflow: hidden; }
+.subscribe-turnstile:empty { display: none; }
+.subscribe-turnstile { margin-top: 12px; }
+.subscribe-status { min-height: 1.5em; margin: 12px 0 0; font-size: var(--font-size-sm); }
+.subscribe-status[data-kind="ok"] { color: var(--color-text); font-weight: var(--font-weight-medium); }
+.subscribe-status[data-kind="error"] { color: var(--subscribe-error); }
+.subscribe-note { margin: 8px 0 0; font-size: var(--font-size-xs); color: var(--color-text-light); } /* --color-text-muted fails 4.5:1 at this size */
+
+/* Plain single-column pages. .panel-container is a 3-col grid; override to a
+   centered single column, as the series hub pages do. */
+.simple-page { display: block; padding: 10px; }
+.simple-page-container {
+  max-width: 720px;
+  margin: 0 auto;
+  padding: 30px;
+  background-color: var(--color-panel-bg);
+  border-radius: 10px;
+}
+@media (max-width: 600px) {
+  .simple-page-container { padding: 20px 16px; }
+}

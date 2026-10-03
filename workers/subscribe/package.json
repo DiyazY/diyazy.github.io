@@ -1,0 +1,22 @@
+{
+  "name": "diyaz-subscribe",
+  "private": true,
+  "type": "module",
+  "engines": {
+    "node": ">=24"
+  },
+  "scripts": {
+    "test": "vitest run",
+    "typecheck": "tsc --noEmit",
+    "build:check": "wrangler deploy --dry-run --outdir dist",
+    "deploy": "wrangler deploy",
+    "notify": "node scripts/notify.ts"
+  },
+  "devDependencies": {
+    "@types/node": "^26.6.2",
+    "happy-dom": "^20.14.5",
+    "typescript": "^7.0.2",
+    "vitest": "^4.1.11",
+    "wrangler": "^4.139.0"
+  }
+}

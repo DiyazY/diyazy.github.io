@@ -16,6 +16,11 @@ on:
     branches: [main]
   pull_request:
   workflow_dispatch:
+    inputs:
+      dry_run:
+        description: "notify job: list the posts it would announce, send nothing"
+        type: boolean
+        default: false
   # Weekly rollout of future-dated posts (e.g. the "After the Feed" series):
   # rebuild every Wednesday 14:00 UTC so a post dated that morning reveals on
   # its date. Scheduled runs use the default branch (main), so the deploy job
@@ -57,6 +62,10 @@ jobs:
       - name: Check generated output
         run: ./.github/scripts/check-build.sh _site
 
+      # Proves the posts.json checks above still fail on bad input.
+      - name: Test the build checks
+        run: ./.github/scripts/check-build-test.sh _site
+
       # Validate scheduled posts too. The production build above sets
       # future: false, so future-dated posts (e.g. a drip series) are excluded
       # and never build in CI — a broken one would stay green until it reveals.
@@ -69,6 +78,8 @@ jobs:
           ./.github/scripts/check-build.sh _site_future
         env:
           JEKYLL_ENV: production
+          # posts.json in this throwaway build legitimately lists future posts.
+          CHECK_ALLOW_FUTURE: '1'
 
       # Only main produces a publishable artifact; PR runs stop at the checks.
       - name: Upload Pages artifact
@@ -76,6 +87,16 @@ jobs:
         uses: actions/upload-pages-artifact@v3
         with:
           path: _site
+
+      # The notify job reads posts.json from this exact build, not the live
+      # site (GitHub Pages caches responses for ~10 minutes).
+      - name: Upload posts.json for notify
+        if: github.ref == 'refs/heads/main'
+        uses: actions/upload-artifact@v4
+        with:
+          name: posts-json
+          path: _site/posts.json
+          retention-days: 1
 
   deploy:
     if: github.ref == 'refs/heads/main'
@@ -94,3 +115,72 @@ jobs:
       - name: Deploy to GitHub Pages
         id: deployment
         uses: actions/deploy-pages@v4
+
+  # Subscribe Worker + announcer (workers/subscribe/): types, tests (including
+  # the site's form script in a DOM), and a dry-run bundle, so a Worker-only
+  # build error fails CI instead of the next manual `wrangler deploy`.
+  worker:
+    runs-on: ubuntu-latest
+    defaults:
+      run:
+        working-directory: workers/subscribe
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Set up Node
+        uses: actions/setup-node@v4
+        with:
+          node-version: '24'
+          cache: npm
+          cache-dependency-path: workers/subscribe/package-lock.json
+
+      - run: npm ci
+      - run: npm run typecheck
+      - run: npm test
+      - name: Bundle without deploying
+        run: npm run build:check
+
+  # Emails newly published posts to subscribers (a Resend broadcast scheduled
+  # 2 hours out, plus a heads-up to the author). Runs after every deploy of
+  # main, including the Wednesday cron that reveals scheduled posts. Switched
+  # on by the repo variable NOTIFY_ENABLED=true; once on, a missing
+  # ANNOUNCE_SINCE fails the job loudly instead of skipping it. Logs are
+  # public: the script prints titles, URLs, broadcast IDs and address-redacted
+  # errors, never keys or addresses.
+  notify:
+    if: github.ref == 'refs/heads/main' && vars.NOTIFY_ENABLED == 'true'
+    needs: [deploy, worker]
+    runs-on: ubuntu-latest
+    permissions:
+      contents: read
+    defaults:
+      run:
+        working-directory: workers/subscribe
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      # No npm ci: scripts/notify.ts imports only node: builtins and local .ts
+      # files, and installing packages right before the step that holds the
+      # Resend key would only add supply-chain exposure.
+      - name: Set up Node
+        uses: actions/setup-node@v4
+        with:
+          node-version: '24'
+
+      - name: Download posts.json from this build
+        uses: actions/download-artifact@v4
+        with:
+          name: posts-json
+          path: ${{ runner.temp }}/posts
+
+      - name: Announce new posts
+        run: node scripts/notify.ts "$RUNNER_TEMP/posts/posts.json"
+        env:
+          RESEND_API_KEY: ${{ secrets.RESEND_API_KEY_NOTIFY }}
+          NOTIFY_REPLY_TO: ${{ secrets.NOTIFY_REPLY_TO }}
+          ANNOUNCE_SINCE: ${{ vars.ANNOUNCE_SINCE }}
+          RESEND_SEGMENT_ID: ${{ vars.RESEND_SEGMENT_ID }}
+          TOPIC_NEW_POSTS_ID: ${{ vars.TOPIC_NEW_POSTS_ID }}
+          DRY_RUN: ${{ inputs.dry_run && '1' || '' }}

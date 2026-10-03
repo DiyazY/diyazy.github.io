@@ -4,7 +4,8 @@
 // (via autocapture), both configured in _includes/analytics.html. This module
 // adds the *named* events with structured properties that make a personal blog
 // measurable: what people search for, which theme they prefer, what they share,
-// where they click out to, and whether they actually finish reading a post.
+// where they click out to, whether they actually finish reading a post, and
+// whether they subscribe by email.
 //
 // Loaded (deferred) only when analytics is enabled, so window.posthog — at
 // least its queueing stub — is always present by the time this runs. The stub
@@ -151,6 +152,28 @@
         has_results: detail.resultsCount > 0
       });
     }, 800);
+  });
+
+  // --- Email subscribe form ---------------------------------------------
+  // subscribe.js dispatches `site:subscribe` after each attempt. A confirmed
+  // subscription shows up as a pageview of /subscribed/ (the Worker's
+  // redirect target), so no event is needed for that step.
+  // `reason` is one of the server's validation | turnstile | rate_limit |
+  // server, or a browser-side network | pending | blocked | widget (no request
+  // reached the Worker). `code` is Turnstile's error code for `widget`;
+  // `http_status` is set when the Worker answered.
+  document.addEventListener('site:subscribe', function (e) {
+    var detail = e.detail || {};
+    if (detail.status === 'submitted') {
+      capture('subscribe_submitted', { programmes: !!detail.programmes, location: detail.location });
+    } else if (detail.status === 'failed') {
+      capture('subscribe_failed', {
+        reason: detail.reason,
+        location: detail.location,
+        code: detail.code,
+        http_status: detail.http_status
+      });
+    }
   });
 
   // --- Post read completion ---------------------------------------------

@@ -314,20 +314,14 @@ To enable comments, you need to:
 
 ### Tasks
 
-- [ ] **Newsletter signup** (deferred)
-    - [ ] Choose provider:
-        - **Buttondown** (recommended) - Free 100 subs, developer-friendly, Markdown
-        - **EmailOctopus** - Free 2,500 subs, generous tier
-        - **ConvertKit** - Free 1,000 subs, creator-focused
-    - [ ] Sign up and get embed form code
-    - [ ] Add form to footer or dedicated section
-    - [ ] Example embed:
-      ```html
-      <form action="https://buttondown.email/api/emails/embed-subscribe/USERNAME" method="post">
-        <input type="email" name="email" placeholder="Your email">
-        <button type="submit">Subscribe</button>
-      </form>
-      ```
+- [x] **Newsletter signup** — own list in the existing Resend team (`news.diyaz.dev`), live 2026-10-03
+    - [x] Double opt-in via the `subscribe.diyaz.dev` Worker (`workers/subscribe/`),
+      Turnstile + rate limits, POST-only confirmation
+    - [x] Topics: "New posts on diyaz.dev" and "Programmes" (both opt-in only)
+    - [x] New posts emailed automatically by the `notify` job after each deploy
+      (scheduled 2 h out, heads-up email, cancel in Resend)
+    - [x] Form on every post and on `/subscribe/`; `/privacy/` page
+    - Design: `docs/superpowers/specs/2026-09-24-subscribe-form-design.md`
 
 - [x] **Analytics** — PostHog, cookieless + EU cloud (see `_config.yml`,
   `_includes/analytics.html`, `assets/js/analytics.js`)
@@ -376,7 +370,7 @@ To enable comments, you need to:
 - `_layouts/post.html`
 - `_includes/footer.html`
 - `_config.yml`
-- New: `_includes/newsletter.html`
+- New: `_includes/subscribe.html`
 - New: `_includes/analytics.html`
 - New: `feed.xml` (improve existing)
 
@@ -500,7 +494,7 @@ To enable comments, you need to:
 - [Lunr.js](https://lunrjs.com/) - Client-side search
 - [Giscus](https://giscus.app/) - GitHub-based comments
 - [Plausible](https://plausible.io/) - Privacy-friendly analytics
-- [Buttondown](https://buttondown.email/) - Simple newsletter
+- [Resend](https://resend.com/) - Newsletter (contacts, topics, broadcasts)
 
 ### Inspiration
 

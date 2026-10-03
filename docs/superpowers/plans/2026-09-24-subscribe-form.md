@@ -3277,21 +3277,21 @@ Requires Task 1. Deploying is outward-facing: get Diyaz's explicit go-ahead in c
 - Consumes: IDs and site key from Task 1; the whole Worker.
 - Produces: live `https://subscribe.diyaz.dev`; verified subscriber flow.
 
-- [ ] **Step 1: Fill the IDs** from Task 1 into `wrangler.jsonc` `vars` (`RESEND_SEGMENT_ID`, `TOPIC_NEW_POSTS_ID`, `TOPIC_PROGRAMMES_ID`), then:
+- [x] **Step 1: Fill the IDs** from Task 1 into `wrangler.jsonc` `vars` (`RESEND_SEGMENT_ID`, `TOPIC_NEW_POSTS_ID`, `TOPIC_PROGRAMMES_ID`), then:
 
   ```bash
   cd workers/subscribe && npm test && npm run build:check
   git add wrangler.jsonc && git commit -m "Configure subscribe Worker with Resend team IDs" && git push
   ```
 
-- [ ] **Step 2: First deploy, with localhost allowed for testing** (Diyaz is logged in via `npx wrangler login`):
+- [x] **Step 2: First deploy, with localhost allowed for testing** (2026-10-03, run by Diyaz: the session's permission check refuses production deploys from Claude) (Diyaz is logged in via `npx wrangler login`):
 
   ```bash
   cd workers/subscribe && npx wrangler deploy --var "ALLOWED_ORIGINS:https://diyaz.dev,http://localhost:4000"
   ```
   Expected: output lists the custom domain `subscribe.diyaz.dev` and the `RL_IP`/`RL_EMAIL` bindings.
 
-- [ ] **Step 3: Diyaz sets the Worker secrets** (each command prompts for the value; Claude never sees them):
+- [x] **Step 3: Diyaz sets the Worker secrets** (2026-10-03; TURNSTILE_SECRET piped from `wrangler turnstile widget get`, TOKEN_KEY from `openssl rand`, neither displayed) (each command prompts for the value; Claude never sees them):
 
   ```bash
   cd workers/subscribe && npx wrangler secret put RESEND_API_KEY
@@ -3306,7 +3306,7 @@ Requires Task 1. Deploying is outward-facing: get Diyaz's explicit go-ahead in c
   cd workers/subscribe && npx wrangler secret put REPLY_TO
   ```
 
-- [ ] **Step 4: Smoke-test the endpoints** (no personal data involved):
+- [x] **Step 4: Smoke-test the endpoints** (2026-10-03: all as expected, plus a missing bot token → `turnstile`, localhost preflight → 204) (no personal data involved):
 
   ```bash
   curl -s -o /dev/null -w '%{http_code}\n' https://subscribe.diyaz.dev/nope
@@ -3318,7 +3318,7 @@ Requires Task 1. Deploying is outward-facing: get Diyaz's explicit go-ahead in c
   ```
   Expected, in order: `404`; `302 https://diyaz.dev/subscribe/`; `403`; `{"ok":false,"error":"validation"}`; `1`; `1`.
 
-- [ ] **Step 5: End-to-end from a local build.** Create `$TMPDIR/_config.e2e.yml` with the **real** site key from Task 1 and analytics off:
+- [x] **Step 5: End-to-end from a local build.** (2026-10-03, results below the list) Create `$TMPDIR/_config.e2e.yml` with the **real** site key from Task 1 and analytics off:
 
   ```yaml
   subscribe:
@@ -3343,6 +3343,7 @@ Requires Task 1. Deploying is outward-facing: get Diyaz's explicit go-ahead in c
   9. Consent round-trip (the PR-review critical case): subscribe with Programmes **ticked** and confirm → in Resend, open the preferences link from a test broadcast (or mark the contact unsubscribed in the dashboard) and unsubscribe from all → subscribe again with the box **unticked** and confirm → the "One more step" page; in Resend the contact is **still unsubscribed**, New posts `opt_in`, **Programmes `opt_out`**, and any other segment untouched. Then follow the manual path in spec §6.4 (switch "Unsubscribed" off) and check the topics stay as they are.
   9b. From a test broadcast (or the preferences link), open the unsubscribe page: neutral branding; "New posts on diyaz.dev" is listed; unticking it stops post emails without touching "unsubscribed".
   10. Note in the ledger what Resend actually does for a topics PATCH (merge or replace) and for a duplicate segment add; the code is correct either way, but record it.
+  **Results (2026-10-03):** steps 1–5, 7, 8 and 9 pass (8 checked in the browser pane; 6 and 9b not run: 6 is covered by `site-subscribe.test.ts`, 9b waits for the first real broadcast). First confirm failed with `401 restricted_api_key`: the Worker key had been created with **Sending access**; replaced with a **Full access** key (Resend fixes a key's permission at creation). Step 9: "One more step" page; contact stayed unsubscribed; New posts on diyaz.dev `opt_in`, Programmes `opt_out` (Resend activity: "Opted out of Programmes"); after lifting the flag by hand the topics stayed. Step 10: segment add on a new member → 201; duplicate add never attempted (membership read first); topics PATCH merge/replace still undetermined (the other topics sat at their defaults); Resend's log viewer shows bare-array request bodies as `{}`.
   If step 3 or 4 shows a Resend API mismatch (e.g. a status other than 404/409 for "not found"/"already in segment"), fix `src/resend.ts` with a failing test first, redeploy, repeat.
 
 - [ ] **Step 6: Lock origins back down to production**

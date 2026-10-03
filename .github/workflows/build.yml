@@ -43,7 +43,7 @@ jobs:
 
     steps:
       - name: Checkout repository
-        uses: actions/checkout@v4
+        uses: actions/checkout@v7
 
       - name: Set up Ruby
         uses: ruby/setup-ruby@v1
@@ -84,7 +84,7 @@ jobs:
       # Only main produces a publishable artifact; PR runs stop at the checks.
       - name: Upload Pages artifact
         if: github.ref == 'refs/heads/main'
-        uses: actions/upload-pages-artifact@v3
+        uses: actions/upload-pages-artifact@v5
         with:
           path: _site
 
@@ -92,7 +92,7 @@ jobs:
       # site (GitHub Pages caches responses for ~10 minutes).
       - name: Upload posts.json for notify
         if: github.ref == 'refs/heads/main'
-        uses: actions/upload-artifact@v4
+        uses: actions/upload-artifact@v7
         with:
           name: posts-json
           path: _site/posts.json
@@ -114,7 +114,7 @@ jobs:
     steps:
       - name: Deploy to GitHub Pages
         id: deployment
-        uses: actions/deploy-pages@v4
+        uses: actions/deploy-pages@v5
 
   # Subscribe Worker + announcer (workers/subscribe/): types, tests (including
   # the site's form script in a DOM), and a dry-run bundle, so a Worker-only
@@ -126,10 +126,10 @@ jobs:
         working-directory: workers/subscribe
     steps:
       - name: Checkout repository
-        uses: actions/checkout@v4
+        uses: actions/checkout@v7
 
       - name: Set up Node
-        uses: actions/setup-node@v4
+        uses: actions/setup-node@v7
         with:
           node-version: '24'
           cache: npm
@@ -159,18 +159,18 @@ jobs:
         working-directory: workers/subscribe
     steps:
       - name: Checkout repository
-        uses: actions/checkout@v4
+        uses: actions/checkout@v7
 
       # No npm ci: scripts/notify.ts imports only node: builtins and local .ts
       # files, and installing packages right before the step that holds the
       # Resend key would only add supply-chain exposure.
       - name: Set up Node
-        uses: actions/setup-node@v4
+        uses: actions/setup-node@v7
         with:
           node-version: '24'
 
       - name: Download posts.json from this build
-        uses: actions/download-artifact@v4
+        uses: actions/download-artifact@v8
         with:
           name: posts-json
           path: ${{ runner.temp }}/posts

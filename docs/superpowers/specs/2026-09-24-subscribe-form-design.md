@@ -205,7 +205,8 @@ POSTs `t` to `/confirm`. Headers: `Cache-Control: no-store`,
      `reply_to` is Diyaz). Logged as `confirm.held`.
      **Diyaz, on such a reply:** in Resend → Contacts, open the address; if it
      is in another product's segment, remove it there unless they want those
-     emails too; then switch "Unsubscribed" off.
+     emails too; then **⋯ (More options) → Edit Contact**, turn off
+     "Unsubscribed", **Save**. The contact's topics stay as the form left them.
    - A double click can race two confirms past the 404; a 4xx from the create
      re-reads the contact and continues as an update.
 3. On Resend failure → page with a **Try again** button (same token, still valid).

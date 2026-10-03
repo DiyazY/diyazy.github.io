@@ -81,7 +81,7 @@ posthog:
 # The Worker behind `endpoint` lives in workers/subscribe/.
 # turnstile_site_key is public (Cloudflare Turnstile widget "diyaz-subscribe").
 subscribe:
-  enabled: false
+  enabled: true
   endpoint: "https://subscribe.diyaz.dev/subscribe"
   turnstile_site_key: "0x4AAAAAAFLYB53_Jd5ul0eM"
 

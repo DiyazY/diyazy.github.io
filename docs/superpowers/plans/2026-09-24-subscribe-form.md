@@ -3378,7 +3378,7 @@ Requires Tasks 11–12 and Diyaz's approval of the PR.
   gh secret set NOTIFY_REPLY_TO
   ```
 
-- [ ] **Step 3: Switch the form on.** In `_config.yml`: `enabled: true`, `turnstile_site_key: "<site key from Task 1>"`.
+- [x] **Step 3: Switch the form on.** (2026-10-03; PR #49 squash-merged as `ec656ef`; main run: build, deploy, worker green, notify skipped) In `_config.yml`: `enabled: true`, `turnstile_site_key: "<site key from Task 1>"`.
 
   Run: `JEKYLL_ENV=production bundle exec jekyll build && ./.github/scripts/check-build.sh _site`
   Expected: `ok    subscribe form on every post`, `ok    subscribe.turnstile_site_key is set`, `all checks passed`.
@@ -3388,9 +3388,9 @@ Requires Tasks 11–12 and Diyaz's approval of the PR.
   ```
   Diyaz merges the PR. Expected on `main`: `build`, `deploy`, `worker` green; `notify` **skipped** (`NOTIFY_ENABLED` not set yet).
 
-- [ ] **Step 4: Verify production.** Open `https://diyaz.dev/subscribe/` and a post in the browser pane: form present, Turnstile widget loads, footer shows Subscribe + Privacy, `https://diyaz.dev/privacy/` renders. (Don't submit a real address unless Diyaz asks — they already tested the flow in Task 12.)
+- [x] **Step 4: Verify production.** (2026-10-03: pages 200, form on posts with the real site key, no Turnstile request until the field is clicked, widget starts on diyaz.dev) Open `https://diyaz.dev/subscribe/` and a post in the browser pane: form present, Turnstile widget loads, footer shows Subscribe + Privacy, `https://diyaz.dev/privacy/` renders. (Don't submit a real address unless Diyaz asks — they already tested the flow in Task 12.)
 
-- [ ] **Step 5: Set the cutoff and dry-run the announcer.** `ANNOUNCE_SINCE` must be after Part 1 (2026-09-23 08:00 UTC) and on or before Part 2 (2026-09-30 08:00 UTC); use the launch day:
+- [x] **Step 5: Set the cutoff and dry-run the announcer.** (2026-10-03: `ANNOUNCE_SINCE=2026-10-03`, `NOTIFY_ENABLED=true`; run 37128407397: 10 posts skipped "before ANNOUNCE_SINCE", `0 post(s) to announce`, `done: 0 scheduled`; Resend logged `GET /broadcasts` 200, so the notify key has full access. The first real send is Part 3, Wed 2026-10-07) `ANNOUNCE_SINCE` must be after Part 1 (2026-09-23 08:00 UTC) and on or before Part 2 (2026-09-30 08:00 UTC); use the launch day:
 
   ```bash
   gh variable set ANNOUNCE_SINCE --body "<launch day, e.g. 2026-09-26>"
@@ -3410,7 +3410,7 @@ Requires Tasks 11–12 and Diyaz's approval of the PR.
 - Modify (Obsidian vault, outside the repo): `wiki/domains/tech/diyaz-dev.md`, `wiki/projects/_index.md`
 - Create: memory file `~/.claude/projects/-Users-diyaz-di-projects-diyazy-github-io/memory/newsletter-diyaz-dev.md` + pointer in `MEMORY.md`
 
-- [ ] **Step 1: ROADMAP.md** — replace the deferred "Newsletter signup" item (the Buttondown/EmailOctopus/ConvertKit sub-list and example embed) with:
+- [x] **Step 1: ROADMAP.md** — replace the deferred "Newsletter signup" item (the Buttondown/EmailOctopus/ConvertKit sub-list and example embed) with:
 
   ```markdown
   - [x] **Newsletter signup** — own list in the existing Resend team (`news.diyaz.dev`)
@@ -3424,6 +3424,6 @@ Requires Tasks 11–12 and Diyaz's approval of the PR.
   ```
   Commit: `git add ROADMAP.md && git commit -m "ROADMAP: newsletter signup shipped" && git push`.
 
-- [ ] **Step 2: Wiki article** (`wiki/domains/tech/diyaz-dev.md` in the vault): update **Status** (last change: email subscriptions), add a "Newsletter" bullet under Key Details (existing Resend team, `news.diyaz.dev`, Worker at `subscribe.diyaz.dev`, `notify` job, topics), flip the Plans-vs-reality row "Phase 6: newsletter signup" to ✅, and remove the resolved Open Question ("build it here, or reuse toptop.dev's Resend newsletter?" → answered: here, own segment in the existing Resend team). Update the Project Registry row's date.
+- [x] **Step 2: Wiki article** (`wiki/domains/tech/diyaz-dev.md` in the vault): update **Status** (last change: email subscriptions), add a "Newsletter" bullet under Key Details (existing Resend team, `news.diyaz.dev`, Worker at `subscribe.diyaz.dev`, `notify` job, topics), flip the Plans-vs-reality row "Phase 6: newsletter signup" to ✅, and remove the resolved Open Question ("build it here, or reuse toptop.dev's Resend newsletter?" → answered: here, own segment in the existing Resend team). Update the Project Registry row's date.
 
-- [ ] **Step 3: Memory.** Write `newsletter-diyaz-dev.md` (type `project`): what exists and where (Worker `diyaz-subscribe` on `subscribe.diyaz.dev`, the list lives in the shared Resend team, and because contact `unsubscribed` is team-wide the Worker never lifts it (the manual path in spec §6.4), the `ANNOUNCE_SINCE` gate, the 2 h cancel window, secrets live in Worker secrets + GitHub secrets, the Resend connector in Claude reaches this team). Link `[[posthog-diyaz-dev]]` and `[[diyaz-dev-migration]]`. Add its one-line pointer to `MEMORY.md`.
+- [x] **Step 3: Memory.** Write `newsletter-diyaz-dev.md` (type `project`): what exists and where (Worker `diyaz-subscribe` on `subscribe.diyaz.dev`, the list lives in the shared Resend team, and because contact `unsubscribed` is team-wide the Worker never lifts it (the manual path in spec §6.4), the `ANNOUNCE_SINCE` gate, the 2 h cancel window, secrets live in Worker secrets + GitHub secrets, the Resend connector in Claude reaches this team). Link `[[posthog-diyaz-dev]]` and `[[diyaz-dev-migration]]`. Add its one-line pointer to `MEMORY.md`.

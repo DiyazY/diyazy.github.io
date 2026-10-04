@@ -83,13 +83,17 @@ fi
 
 # --- custom domain wiring -------------------------------------------------
 # The site lives at diyaz.dev; GitHub 301s the old *.github.io URLs to it.
-# CNAME must ship in the artifact, and no generated URL may still point at
-# the old host — a leaked one would canonicalize a page back to a redirect.
+# The custom domain itself is set in the repo's Pages settings: with an
+# Actions deploy GitHub ignores any CNAME file. The file stays as the in-repo
+# record of the domain (and is needed again if Pages ever publishes from a
+# branch), so check it is in _site with the right host. No generated URL may
+# still point at the old host — a leaked one would canonicalize a page back to
+# a redirect.
 # Case-sensitive on purpose: the giscus embed's repo slug is DiyazY.github.io.
 if [ -s "$SITE/CNAME" ] && [ "$(cat "$SITE/CNAME")" = "diyaz.dev" ]; then
-  pass "CNAME ships in the artifact with 'diyaz.dev'"
+  pass "CNAME is in _site with 'diyaz.dev'"
 else
-  fail "CNAME missing from artifact or has wrong content"
+  fail "CNAME missing from _site or has wrong content"
 fi
 
 if grep -rlF 'diyazy.github.io' "$SITE" --include='*.html' --include='*.xml' --include='*.txt' --include='*.json' >"$tmp"; then

@@ -82,6 +82,12 @@ jobs:
           CHECK_ALLOW_FUTURE: '1'
 
       # Only main produces a publishable artifact; PR runs stop at the checks.
+      #
+      # Since v4 this action drops dot-named files and directories from the
+      # artifact (_site has none today). If one is ever published, e.g.
+      # .well-known/ via `include:` in _config.yml or a page permalink, set
+      # `include-hidden-files: true` (v5+). Otherwise it silently won't deploy:
+      # check-build.sh validates _site, not the uploaded artifact.
       - name: Upload Pages artifact
         if: github.ref == 'refs/heads/main'
         uses: actions/upload-pages-artifact@v5

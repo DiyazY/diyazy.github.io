@@ -1,0 +1,68 @@
+# Keeps three things current, so security fixes and runtime deprecations (like
+# Node 20 in 2026) arrive as PRs instead of alerts or warnings: the GitHub
+# Actions in .github/workflows/, the Worker's npm dev dependencies, and the
+# site's Ruby gems.
+#
+# Version updates come grouped, at most one PR per ecosystem a week, on Monday
+# mornings (the first as soon as this file reaches main). That leaves time to
+# merge and watch a main run before the Wednesday cron in build.yml reveals
+# posts and emails subscribers; avoid merging one on a Wednesday before that
+# run. Security-update PRs (off today; alerts are on) would arrive ungrouped,
+# on any day.
+#
+# Dependabot PR runs get a read-only token and no Actions secrets; nothing they
+# run needs either.
+# - npm and gem PRs are fully tested on the PR: the worker job typechecks,
+#   tests and dry-run bundles the Worker; the build job tests the Medium sync
+#   script, builds the site and runs check-build.sh. A Worker dependency only
+#   goes live with a manual `npx wrangler deploy`; gems take effect on the
+#   next main build.
+# - Action PRs only exercise checkout, setup-ruby and setup-node; the other
+#   actions in build.yml sit behind main-only `if:`s, so the main run after
+#   merging is their first test: check it's green and that "Upload Pages
+#   artifact" logs a final size close to the previous run's.
+#   create-pull-request (sync-medium.yml) runs only on a manual Medium sync:
+#   read its release notes before merging a major bump.
+version: 2
+updates:
+  - package-ecosystem: github-actions
+    directory: /
+    schedule:
+      interval: weekly
+      day: monday
+      time: "07:00"
+      timezone: Europe/Helsinki
+    groups:
+      actions:
+        patterns: ["*"]
+    commit-message:
+      prefix: "CI"
+    labels: []
+
+  - package-ecosystem: npm
+    directory: /workers/subscribe
+    schedule:
+      interval: weekly
+      day: monday
+      time: "07:00"
+      timezone: Europe/Helsinki
+    groups:
+      worker-npm:
+        patterns: ["*"]
+    commit-message:
+      prefix: "Worker deps"
+    labels: []
+
+  - package-ecosystem: bundler
+    directory: /
+    schedule:
+      interval: weekly
+      day: monday
+      time: "07:00"
+      timezone: Europe/Helsinki
+    groups:
+      site-gems:
+        patterns: ["*"]
+    commit-message:
+      prefix: "Site deps"
+    labels: []

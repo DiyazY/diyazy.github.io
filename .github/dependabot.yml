@@ -1,10 +1,20 @@
 # Keeps the GitHub Actions in .github/workflows/ current, so the next runtime
 # deprecation (like Node 20 in 2026) arrives as a PR instead of a warning.
-# All action updates come grouped in one PR a week, opened on Monday so they
-# never land on a Wednesday, when the cron build reveals posts and the notify
-# job emails subscribers. Dependabot PRs run CI without secrets; the build and
-# worker jobs don't need any. The deploy and notify jobs only run on main, so
-# check the first main run after merging (see PR #52 for what to look for).
+#
+# Version updates are grouped into at most one PR a week, opened on Monday
+# morning. That leaves time to merge it and watch a main run before the
+# Wednesday 14:00 UTC cron (post reveal + subscriber email); avoid merging one
+# on a Wednesday. Security updates, if ever switched on, are neither grouped
+# nor scheduled.
+#
+# Dependabot PR runs get a read-only token and no Actions secrets; nothing a PR
+# run executes needs one. PR runs only exercise checkout, setup-ruby and
+# setup-node: the two upload steps, deploy and notify run on main only, so
+# upload-pages-artifact, upload-artifact, deploy-pages and download-artifact
+# are first used by the main run after merging. In that run check "Upload
+# Pages artifact" (artifact about the same size as the previous run's),
+# "Deploy to GitHub Pages" ("Reported success!"), and notify's "Download
+# posts.json from this build" and "Announce new posts" steps.
 version: 2
 updates:
   - package-ecosystem: github-actions
@@ -19,4 +29,4 @@ updates:
         patterns: ["*"]
     commit-message:
       prefix: "CI"
-    open-pull-requests-limit: 5
+    labels: []

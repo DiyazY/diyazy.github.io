@@ -1,6 +1,6 @@
 {%- comment -%}
   Email subscribe form. Renders nothing unless site.subscribe.enabled.
-  Params: location ("post" | "page", used for ids and analytics),
+  Params: location ("post" | "page" | "series", used for ids and analytics),
           heading (optional title above the form),
           skip_css (true when the page already links subscribe.css).
   Posts to the Worker in workers/subscribe/ (field names are its contract).

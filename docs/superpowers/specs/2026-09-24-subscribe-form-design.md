@@ -242,6 +242,9 @@ in `wrangler.jsonc`, since they would record every `/confirm?t=<token>` URL.
   (`assets/css/variables.css`), dark mode included.
 - **Placement:** after `{{ content }}` in `_layouts/post.html`; on the new
   `/subscribe/` page; a "Subscribe" link in `_includes/footer.html` next to RSS.
+  Added 2026-10-04: under the parts list on the series page
+  `/after-the-feed.html` (`location="series"`), and a "Get new parts by email"
+  link in each After the Feed part's closing line.
 - **`/subscribed/`** — thank-you page (the redirect target after confirming).
 - **`/privacy/`** — what is collected (email, topic choices), purpose,
   processors (Resend — EU region; Cloudflare — Worker + Turnstile), retention

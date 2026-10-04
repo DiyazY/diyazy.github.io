@@ -1,20 +1,19 @@
 # Keeps the GitHub Actions in .github/workflows/ current, so the next runtime
 # deprecation (like Node 20 in 2026) arrives as a PR instead of a warning.
 #
-# Version updates are grouped into at most one PR a week, opened on Monday
-# morning. That leaves time to merge it and watch a main run before the
-# Wednesday 14:00 UTC cron (post reveal + subscriber email); avoid merging one
-# on a Wednesday. Security updates, if ever switched on, are neither grouped
-# nor scheduled.
+# Version updates come grouped, at most one PR a week, on Monday mornings (the
+# first as soon as this file reaches main). That leaves time to merge and watch
+# a main run before the Wednesday cron in build.yml reveals posts and emails
+# subscribers; avoid merging one on a Wednesday before that run. Security
+# updates (off today) would arrive ungrouped, on any day.
 #
-# Dependabot PR runs get a read-only token and no Actions secrets; nothing a PR
-# run executes needs one. PR runs only exercise checkout, setup-ruby and
-# setup-node: the two upload steps, deploy and notify run on main only, so
-# upload-pages-artifact, upload-artifact, deploy-pages and download-artifact
-# are first used by the main run after merging. In that run check "Upload
-# Pages artifact" (artifact about the same size as the previous run's),
-# "Deploy to GitHub Pages" ("Reported success!"), and notify's "Download
-# posts.json from this build" and "Announce new posts" steps.
+# Dependabot PR runs get a read-only token and no Actions secrets; nothing they
+# run needs either. They exercise only checkout, setup-ruby and setup-node; the
+# other actions in build.yml sit behind main-only `if:`s, so the main run after
+# merging is their first test: check it's green and that "Upload Pages
+# artifact" logs a final size close to the previous run's. create-pull-request
+# (sync-medium.yml) runs only on a manual Medium sync: read its release notes
+# before merging a major bump.
 version: 2
 updates:
   - package-ecosystem: github-actions

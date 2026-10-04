@@ -94,7 +94,7 @@ None of this is exotic research. It's assembled from shipping standards — an o
 
 Which leaves one honest question: if you're not selling ads, how does a thing like this pay for itself? That's the last deep dive.
 
-_Next in the series: **Part 6 (deep dive) — how it pays for itself without ads**, and whether the unit economics actually work. [See all parts &rarr;](/after-the-feed.html)_
+_Next in the series: **Part 6 (deep dive) — how it pays for itself without ads**, and whether the unit economics actually work. [See all parts &rarr;](/after-the-feed.html) · [Get new parts by email](/subscribe/)_
 
 ## References
 

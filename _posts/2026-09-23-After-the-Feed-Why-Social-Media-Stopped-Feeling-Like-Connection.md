@@ -94,7 +94,7 @@ This is a field guide, not a manifesto. Over the next parts I'll follow that one
 
 The wager underneath all of it is simple: the next platform that matters won't win by having a better feed. It'll win by not being a feed at all.
 
-_Next: [**Part 2 — how the last three social takeovers actually happened** &rarr;](/after-the-feed.html), and the pattern hiding inside WhatsApp, Instagram, and Telegram._
+_Next in the series: [**Part 2 — how the last three social takeovers actually happened**](/2026/09/30/After-the-Feed-How-the-Last-Three-Takeovers-Actually-Happened.html), and the pattern hiding inside WhatsApp, Instagram, and Telegram. [See all parts &rarr;](/after-the-feed.html) · [Get new parts by email](/subscribe/)_
 
 ## References
 

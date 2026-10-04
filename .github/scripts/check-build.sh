@@ -396,6 +396,11 @@ if [ "$sub_enabled" = "true" ]; then
     grep -q 'data-subscribe-form' "$f" || missing=$((missing + 1))
   done
   if [ "$missing" -eq 0 ]; then pass "subscribe form on every post"; else fail "$missing post(s) missing the subscribe form"; fi
+  if grep -q 'data-subscribe-form' "$SITE/after-the-feed.html" 2>/dev/null; then
+    pass "subscribe form on the After the Feed series page"
+  else
+    fail "after-the-feed.html is missing the subscribe form"
+  fi
   if ruby -ryaml -e 'k = ((YAML.load_file(ARGV[0])["subscribe"] || {})["turnstile_site_key"]).to_s; abort if k.strip.empty?' "$REPO/_config.yml"; then
     pass "subscribe.turnstile_site_key is set"
   else

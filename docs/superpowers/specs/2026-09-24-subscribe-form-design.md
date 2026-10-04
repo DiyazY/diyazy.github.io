@@ -240,8 +240,12 @@ in `wrangler.jsonc`, since they would record every `/confirm?t=<token>` URL.
   message. `<noscript>`: "Subscribing needs JavaScript. You can follow the
   [RSS feed](/feed.xml) instead." Styled with the existing CSS variables
   (`assets/css/variables.css`), dark mode included.
-- **Placement:** after `{{ content }}` in `_layouts/post.html`; on the new
+- **Placement:** after the share section in `_layouts/post.html`; on the new
   `/subscribe/` page; a "Subscribe" link in `_includes/footer.html` next to RSS.
+  Added 2026-10-04: under the parts list on the series page
+  `/after-the-feed.html` (`location="series"`), and a `/subscribe/` link in each
+  After the Feed part's closing line ("Get new parts by email"; Part 7, the
+  last, "Get new posts by email").
 - **`/subscribed/`** — thank-you page (the redirect target after confirming).
 - **`/privacy/`** — what is collected (email, topic choices), purpose,
   processors (Resend — EU region; Cloudflare — Worker + Turnstile), retention
@@ -252,7 +256,7 @@ in `wrangler.jsonc`, since they would record every `/confirm?t=<token>` URL.
   (fallback: stripped excerpt), `date` (`date_to_xmlschema`). Built with the
   production `future: false`, so future-dated posts never appear.
 - **Analytics** (`assets/js/analytics.js`): `subscribe_submitted`
-  (`{ programmes, location: "post" | "page" }`) on a 200 response;
+  (`{ programmes, location: "post" | "page" | "series" }`) on a 200 response;
   `subscribe_failed` (`{ reason, location, code?, http_status? }`, where
   `reason` is a server answer `validation | turnstile | rate_limit | server`
   or a browser-side `network | pending | blocked | widget`, and `code` is

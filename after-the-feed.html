@@ -26,6 +26,9 @@ image: /assets/images/posts/2026-09-23-After-the-Feed-Why-Social-Media-Stopped-F
   .series-item h2 { font-size: 1.2rem; margin: 0.15rem 0 0.35rem; }
   .series-item h2 a { text-decoration: none; }
   .part-summary { color: var(--color-text-muted, #6b6459); font-size: 0.95rem; line-height: 1.6; margin: 0; }
+  /* Same phone padding as .simple-page-container, so the subscribe box keeps
+     room for Turnstile's 300px challenge. */
+  @media (max-width: 600px) { .series-container { padding: 20px 16px; } }
 </style>
 
 <div class="panel-container series-page">
@@ -52,5 +55,7 @@ image: /assets/images/posts/2026-09-23-After-the-Feed-Why-Social-Media-Stopped-F
       </li>
       {%- endfor %}
     </ol>
+
+    {% include subscribe.html location="series" heading="Get each new part (and other new posts) by email" %}
   </div>
 </div>

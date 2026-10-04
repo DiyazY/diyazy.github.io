@@ -1,0 +1,22 @@
+# Keeps the GitHub Actions in .github/workflows/ current, so the next runtime
+# deprecation (like Node 20 in 2026) arrives as a PR instead of a warning.
+# All action updates come grouped in one PR a week, opened on Monday so they
+# never land on a Wednesday, when the cron build reveals posts and the notify
+# job emails subscribers. Dependabot PRs run CI without secrets; the build and
+# worker jobs don't need any. The deploy and notify jobs only run on main, so
+# check the first main run after merging (see PR #52 for what to look for).
+version: 2
+updates:
+  - package-ecosystem: github-actions
+    directory: /
+    schedule:
+      interval: weekly
+      day: monday
+      time: "07:00"
+      timezone: Europe/Helsinki
+    groups:
+      actions:
+        patterns: ["*"]
+    commit-message:
+      prefix: "CI"
+    open-pull-requests-limit: 5

@@ -48,7 +48,7 @@ A verified-camera network needs hardware attestation and a way to carry signed p
 
 That's not a hand-wave. There's an actual technical stack that makes it buildable now, and there's an actual way to hide all of it behind a normal-feeling app. That's the deep dive.
 
-_Next in the series: **Part 5 (deep dive) — how you'd actually build it**: the open protocol, the hardware signing, and how to make the cryptography invisible. [See all parts &rarr;](/after-the-feed.html) · [Get new parts by email](/subscribe/)_
+_Next in the series: {% include series-next.html part=5 title="Part 5 (deep dive) — how you'd actually build it" %}: the open protocol, the hardware signing, and how to make the cryptography invisible. [See all parts &rarr;](/after-the-feed.html) · [Get new parts by email](/subscribe/)_
 
 ## References
 

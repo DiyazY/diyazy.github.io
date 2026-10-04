@@ -425,6 +425,23 @@ else
   pass "sitemap.xml omits /subscribed/"
 fi
 
+# --- After the Feed "Next" links (_includes/series-next.html) --------------
+# A part's "Next in the series" title links to the next part only once that
+# part is in the build, so every such link must resolve to a built page.
+atf_links=0
+atf_broken=0
+for f in "$SITE"/2*/*/*/*After-the-Feed*.html; do
+  [ -f "$f" ] || continue
+  href=$(grep -o '<em>Next in the series: <a href="[^"]*"' "$f" | sed 's/.*href="//; s/"$//')
+  [ -n "$href" ] || continue
+  atf_links=$((atf_links + 1))
+  if [ ! -f "$SITE$href" ]; then
+    fail "$(basename "$f") links \"Next\" to $href, which is not in the build"
+    atf_broken=$((atf_broken + 1))
+  fi
+done
+if [ "$atf_broken" -eq 0 ]; then pass "After the Feed \"Next\" links resolve ($atf_links linked)"; fi
+
 echo
 if [ "$fails" -gt 0 ]; then
   echo "$fails check(s) failed"

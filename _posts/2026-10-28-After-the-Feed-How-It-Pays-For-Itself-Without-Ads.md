@@ -54,7 +54,7 @@ Is it proven at platform scale? Not yet. The closest live proof — Retro — is
 
 So where does it all actually go? Last part.
 
-_Next in the series: **Part 7 — where this goes next**: the roadmap, and the honest hopeful, grim, and boring-but-likely futures. [See all parts &rarr;](/after-the-feed.html) · [Get new parts by email](/subscribe/)_
+_Next in the series: {% include series-next.html part=7 title="Part 7 — where this goes next" %}: the roadmap, and the honest hopeful, grim, and boring-but-likely futures. [See all parts &rarr;](/after-the-feed.html) · [Get new parts by email](/subscribe/)_
 
 ## References
 

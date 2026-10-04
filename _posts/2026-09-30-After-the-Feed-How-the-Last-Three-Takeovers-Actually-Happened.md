@@ -64,7 +64,7 @@ The trust gap we already named in Part 1: nobody can tell what's real anymore. A
 
 That's the opening. The next parts are about who's already walking through it.
 
-_Next in the series: **Part 3 — the apps quietly proving people want out**, from a 20-friend widget to a photo app that mails you postcards. [See all parts &rarr;](/after-the-feed.html) · [Get new parts by email](/subscribe/)_
+_Next in the series: {% include series-next.html part=3 title="Part 3 — the apps quietly proving people want out" %}, from a 20-friend widget to a photo app that mails you postcards. [See all parts &rarr;](/after-the-feed.html) · [Get new parts by email](/subscribe/)_
 
 ## References
 

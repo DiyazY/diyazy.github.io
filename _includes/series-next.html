@@ -1,0 +1,14 @@
+{%- comment -%}
+  The "Next in the series" title in an After the Feed part's closing line.
+  Links to that part once it is published (in site.posts), plain bold text
+  before, so a forward link never 404s and nobody edits the previous part on
+  reveal day: the Wednesday build that publishes Part N also turns Part N-1's
+  title into a link. Parts are numbered by date, as on /after-the-feed.html.
+  Params: part (1-based part number), title (the bold text).
+  Output is a single line with no surrounding whitespace, because it sits
+  inside the post's Markdown italic line.
+{%- endcomment -%}
+{%- assign series = site.posts | where_exp: "p", "p.tags contains 'after-the-feed'" | sort: "date" -%}
+{%- assign index = include.part | minus: 1 -%}
+{%- assign next_part = series[index] -%}
+{%- if next_part -%}<a href="{{ next_part.url }}"><strong>{{ include.title }}</strong></a>{%- else -%}<strong>{{ include.title }}</strong>{%- endif -%}

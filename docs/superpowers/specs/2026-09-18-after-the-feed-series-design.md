@@ -142,6 +142,12 @@ Decided: reveal one post per Wednesday, starting 2026-09-23. Mechanism:
   (the post URL follows the frontmatter `date`, verified empirically).
 - **Forward** cross-links (to a not-yet-published part) point to the hub so they
   never 404 mid-rollout; **backward** links point directly to the earlier part.
+  The closing "Next in the series" title is the exception (2026-10-04): it is
+  rendered by `_includes/series-next.html`, which links to the next part once it
+  is in the build and leaves it as plain bold text before, so the Wednesday
+  build that reveals Part N also links Part N-1's title. The line's "See all
+  parts" link always goes to the hub. `check-build.sh` fails if any "Next"
+  link points to a page that isn't built.
 
 | Part | Reveal (Wed) | URL |
 |---|---|---|

@@ -13,10 +13,10 @@
     "notify": "node scripts/notify.ts"
   },
   "devDependencies": {
-    "@types/node": "^26.6.2",
+    "@types/node": "^26.6.3",
     "happy-dom": "^20.14.5",
     "typescript": "^7.0.2",
-    "vitest": "^4.1.11",
+    "vitest": "^5.0.3",
     "wrangler": "^4.147.0"
   }
 }

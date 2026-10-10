@@ -1,0 +1,20 @@
+# Coaching programmes sold through TopTop. Single source for the site.
+#
+# Consumed by:
+#   about.html  "Work with me" section (#programmes)
+#   llms.txt    "Programmes" bullets
+#
+# The homepage About tile and the subscribe form's "Programmes" checkbox link
+# to /about.html#programmes rather than repeating this list.
+# Summaries follow each page's own meta description on toptop.dev; update both
+# together if a programme changes.
+
+- name: The Architect Track
+  url: https://toptop.dev/architect-track
+  format: 6 months · 1:1 mentoring
+  summary: Takes senior engineers to software architect — system design, quality, delivery and people, on top of solid engineering.
+
+- name: Communication Coaching
+  url: https://toptop.dev/communication-coaching
+  format: 8 weeks · 1:1 coaching
+  summary: For engineers and tech leads who want to speak with confidence, clarity and warmth in meetings, interviews and high-stakes moments.

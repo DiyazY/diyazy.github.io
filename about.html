@@ -129,6 +129,21 @@ description: "Diyaz Yakubov — founder of busypipe, engineer, and advisor. 14+ 
       </p>
     </div>
 
+    <!-- Programmes (from _data/programmes.yml) -->
+    <div class="about-section" id="programmes">
+      <h2>Work with me</h2>
+      <p>I mentor and coach engineers one-to-one through two programmes at TopTop:</p>
+      <div class="programme-list">
+        {%- for programme in site.data.programmes %}
+        <a class="programme-item" href="{{ programme.url }}" target="_blank" rel="noopener">
+          <div class="programme-name">{{ programme.name }} &rarr;</div>
+          <div class="programme-format">{{ programme.format }}</div>
+          <div class="programme-summary">{{ programme.summary }}</div>
+        </a>
+        {%- endfor %}
+      </div>
+    </div>
+
     <!-- Experience Timeline -->
     <div class="about-section">
       <h2>Experience</h2>

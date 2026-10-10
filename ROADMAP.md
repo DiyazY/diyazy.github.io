@@ -397,6 +397,11 @@ To enable comments, you need to:
     - [ ] Monthly
     - [ ] Other: _______________
 
+- [x] **Link the coaching programmes** (2026-10-10) — Architect Track and
+  Communication Coaching on toptop.dev, from `_data/programmes.yml`: "Work with
+  me" on About (`#programmes`), homepage About tile, subscribe-form checkbox,
+  `llms.txt`, and the closing CTA of "The Things Around the Code"
+
 ### Content Ideas
 
 - [ ] Create a "Start Here" or "Best Of" page

@@ -49,4 +49,4 @@ If you're the person I keep describing — capable, trusted, standing at that ed
 
 You don't have to. The architect your team already needs is closer than you think — more often than not, it's already you, a few deliberate rooms away.
 
-If any of this sounds like where you are, that's exactly what the Track is for. And if you'd like the fuller story of why I started building things like it, I wrote about that [when I launched the Academy](https://toptop.dev/blog/introducing-toptop-academy).
+If any of this sounds like where you are, that's exactly what [the Track](https://toptop.dev/architect-track) is for. And if you'd like the fuller story of why I started building things like it, I wrote about that [when I launched the Academy](https://toptop.dev/blog/introducing-toptop-academy).

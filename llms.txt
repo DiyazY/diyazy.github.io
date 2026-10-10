@@ -66,6 +66,13 @@ Technical deep-dives covering AI engineering and LLM tooling, developer producti
 - Company (busypipe): https://busypipe.com
 - Advisory (TopTop.dev): https://toptop.dev
 
+## Programmes
+
+1:1 mentoring and coaching for engineers, sold through TopTop:
+{% for programme in site.data.programmes %}
+- {{ programme.name }} ({{ programme.format }}): {{ programme.url }} — {{ programme.summary }}
+{%- endfor %}
+
 ## Contact
 
 For busypipe design-partner interest, advisory and consulting, or project inquiries, reach out via LinkedIn or through busypipe.com.

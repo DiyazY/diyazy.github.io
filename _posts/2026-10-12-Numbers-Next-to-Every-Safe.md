@@ -19,7 +19,7 @@ This is the story of the week that followed: a crash, a migration plan that the 
 
 I run [busypipe](https://busypipe.com), a social analytics product, mostly on my own. Its biggest piece is a TimescaleDB database of social media data: posts, profiles, hashtags and their counts over time. By early October it was about 800 GB, on a server whose mirrored disk shows as 905 GB in `df`.
 
-For most of this week I worked with Claude, an AI coding assistant. The way we split the work matters for this story, so here it is. Claude read the code, Prometheus and the runbooks, planned each step, and wrote every command. I ran every command on the servers myself and pasted the output back. Claude never had access to the machines. Every decision that touched production went through my hands and my terminal.
+For most of this week I worked with Claude, an AI coding assistant. The way we split the work matters for this story, so here it is. Claude read the code and the runbooks, could query Prometheus read-only through a tunnel, planned each step, and wrote every command. I ran every command on the servers myself and pasted the output back. Claude had no shell or database access to any machine. Every decision that touched production went through my hands and my terminal.
 
 That split protected us more than once this week. It didn't prevent the crash. The command was mine to run, and I ran it.
 
@@ -39,7 +39,7 @@ The database was down for 46 minutes. The crash took a moment; the time went int
 
 The container couldn't even write its lock file, so it restarted every minute and achieved nothing. Once I had freed a few gigabytes, our autoheal container noticed the database was failing its health check and restarted it. A database in crash recovery fails its health check by design. So recovery kept starting again and never got past about 30 seconds of WAL replay, until I stopped autoheal by hand.
 
-The fastest source of free space was there the whole time: ext4 reserves 5% of the filesystem for root, about 49 GB that PostgreSQL can't use. One `tune2fs -m 1` released most of it, without deleting anything. We found it 40 minutes into the outage.
+The fastest source of free space was there the whole time: ext4 reserves 5% of the filesystem for root, about 45 GB that PostgreSQL can't use. One `tune2fs -m 1` released most of it, without deleting anything. We found it 40 minutes into the outage.
 
 Then a suggested cleanup made things worse. To free a few more gigabytes, I removed stopped containers whose names matched the app services and pruned unused images. I had just stopped the scheduler, the pipelines and the enricher to protect the disk. So they were exactly the stopped containers that filter matched, and they were deleted along with their images. No data was lost, but data collection needed a full redeploy instead of a `docker start`.
 
@@ -55,7 +55,7 @@ The disk was the problem, so a bigger disk looked like the answer. Hetzner offer
 
 So the plan started with a copy. I rented a temporary server and ran a streaming replica of the database on it. It was seeded with `pg_basebackup` over an SSH tunnel, because the production disk had no room for a local base backup. The copy took about four and a half hours at 52 MB/s. Before creating the replication slot, we capped how much WAL a slot can hold back on the primary (`max_slot_wal_keep_size = 10GB`). A stalled replica would then lose its slot instead of filling the production disk a second time.
 
-Then a rehearsal. I asked why we needed one, since the data was already on the second machine. The answer: on swap day, every step should be one that has already worked once. So we stopped the replica, cloned it on the temporary server (779 GiB in 21 minutes), started the clone as a normal database and checked it. It was ready to take connections in about ten seconds. Reads worked, a compressed chunk read back correctly, a write went through. The replica reconnected and caught up.
+Then a rehearsal. I asked why we needed one, since the data was already on the second machine. The answer: on swap day, every step should be one that has already worked once. So we stopped the replica, cloned it on the temporary server (779 GB in 21 minutes), started the clone as a normal database and checked it. It was ready to take connections in about ten seconds. Reads worked, a compressed chunk read back correctly, a write went through. The replica reconnected and caught up.
 
 The swap was booked for Thursday morning, timed to start after my family mornings. The runbook was written down to which terminal each command runs in.
 
@@ -67,7 +67,7 @@ Most of the plan was suddenly useless. The part that survived turned out to be t
 
 Everything up to the swap still worked: the replica, the tunnel, the WAL cap, the rehearsal. What changed was where the copy ended up. Instead of copying the data back onto new drives in the same server, the database moves to its own server and stays there. The app server keeps the apps, the queue, the small databases and monitoring. A new dedicated machine with 64 GB of RAM and two 1.92 TB NVMe drives runs only the Social DB. The two servers talk over WireGuard: encrypted, about ten lines of config on each side, and no database port on the public internet.
 
-I had resisted a second server, because "two servers" sounds like a different kind of system. It isn't. It's the same software on two hosts, with one more address in the connection strings. There's no clustering and no new datastore. And when this database outgrows 1.75 TB, the next move is the same move again.
+I had resisted a second server, because "two servers" sounds like a different kind of system. It isn't. It's the same software on two hosts, with one more address in the connection strings. There's no clustering and no new datastore. And when this database outgrows those 1.9 TB, the next move is the same move again.
 
 ## The copy that expired
 
@@ -83,7 +83,7 @@ The cap worked: it protected the production disk exactly as designed. It also me
 
 ## Twenty minutes on a Friday
 
-The cutover ran on Friday morning. I stopped every writer and let the queues drain. Then I stopped the old primary cleanly, so it wrote a shutdown checkpoint, and noted where that checkpoint was. On the new server, I checked the replica had replayed past it. It had, by 120 bytes: the replica stood exactly at the old primary's last record. Then I promoted it and merged the pull request that pointed the apps at the new address. The deploy rolled out.
+The cutover ran on Friday morning. I stopped every writer and let the queues drain. Then I stopped the old primary cleanly, so it wrote a shutdown checkpoint, and noted where that checkpoint was. On the new server, I checked that the replica had replayed that checkpoint, the last record the old primary ever wrote. It had. Then I promoted it and merged the pull request that pointed the apps at the new address. The deploy rolled out.
 
 Writers stopped at 05:45 UTC. The apps were green around 06:03. Consumer lag was back to zero by 06:06. That's about twenty minutes of downtime, most of it the deploy pipeline.
 
@@ -115,7 +115,7 @@ I asked whether we could test without renting another server. Restoring over the
 
 The restore ran in the evening and the recovery finished late at night. Somewhere in there, with a third server in play and commands arriving for "the server", I had to ask Claude to say which one, every time. From then on every command block was labelled with the host and the prompt I should see before pasting.
 
-The target was a point in time: 10:30:00 UTC that morning, half an hour after the first full backup finished. Recovery stopped at the first transaction after it. The newest row in the restored database was from 10:29:57. The extensions were there, the paused maintenance jobs were still paused, and a test table could be created, written and dropped.
+The target was a point in time: 10:30:00 UTC that morning, half an hour after the clean full backup finished. Recovery stopped just before the first transaction that committed after it. The newest row in the restored database was from 10:29:57. The extensions were there, the paused maintenance jobs were still paused, and a test table could be created, written and dropped.
 
 From start to a usable database took 4 hours 3 minutes. The copy from R2 took 2 h 44 min, then fsync, about 16 minutes of WAL replay, and a long end-of-recovery checkpoint. That was on spinning disks. On the production NVMe it would be faster. "Hours, not days" is now a measured number, written in the runbook header.
 

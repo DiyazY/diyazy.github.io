@@ -11,7 +11,7 @@ The command that crashed my production database was introduced as safe.
 
 <!--more-->
 
-That word did a lot of work. It came after an hour of careful staging, read-only checks and progress logs. It sounded like the rest of the plan. Because it sounded that way, I ran it. Seven minutes later PostgreSQL wrote `PANIC: could not write to file "pg_wal/…": No space left on device` and stopped.
+That word did a lot of work. It came after days of careful, staged work, read-only checks and progress logs. It sounded like the rest of the plan. Because it sounded that way, I ran it. Seven minutes later PostgreSQL wrote `PANIC: could not write to file "pg_wal/…": No space left on device` and stopped.
 
 This is the story of the week that followed: a crash, a migration plan that the hosting provider refused, a second server, a copy of the database that expired while nobody was watching, a 20-minute cutover, and the first backup that I actually trust, because I restored it.
 
@@ -21,7 +21,7 @@ I run [busypipe](https://busypipe.com), a social analytics product, mostly on my
 
 For most of this week I worked with Claude, an AI coding assistant. The way we split the work matters for this story, so here it is. Claude read the code and the runbooks, could query Prometheus read-only through a tunnel, planned each step, and wrote every command. I ran every command on the servers myself and pasted the output back. Claude had no shell or database access to any machine. Every decision that touched production went through my hands and my terminal.
 
-That split protected us more than once this week. It didn't prevent the crash. The command was mine to run, and I ran it.
+That split caught problems more than once this week, such as an Ansible dry run whose output looked like a real run. It didn't prevent the crash. The command was mine to run, and I ran it.
 
 ## Sunday night into Monday: a rebuild that ate the disk
 
@@ -39,9 +39,9 @@ The database was down for 46 minutes. The crash took a moment; the time went int
 
 The container couldn't even write its lock file, so it restarted every minute and achieved nothing. Once I had freed a few gigabytes, our autoheal container noticed the database was failing its health check and restarted it. A database in crash recovery fails its health check by design. So recovery kept starting again and never got past about 30 seconds of WAL replay, until I stopped autoheal by hand.
 
-The fastest source of free space was there the whole time: ext4 reserves 5% of the filesystem for root, about 45 GB that PostgreSQL can't use. One `tune2fs -m 1` released most of it, without deleting anything. We found it 40 minutes into the outage.
+Those first few gigabytes came from a suggested cleanup, and it made things worse. I removed stopped containers whose names matched the app services and pruned unused images. I had just stopped the scheduler, the pipelines and the enricher to protect the disk. So they were exactly the stopped containers that filter matched, and they were deleted along with their images. No data was lost, but data collection needed a full redeploy instead of a `docker start`.
 
-Then a suggested cleanup made things worse. To free a few more gigabytes, I removed stopped containers whose names matched the app services and pruned unused images. I had just stopped the scheduler, the pipelines and the enricher to protect the disk. So they were exactly the stopped containers that filter matched, and they were deleted along with their images. No data was lost, but data collection needed a full redeploy instead of a `docker start`.
+The fastest source of free space was there the whole time: ext4 reserves 5% of the filesystem for root, about 45 GB that PostgreSQL can't use. One `tune2fs -m 1` released most of it, without deleting anything. We found it 40 minutes into the outage.
 
 When the database came back, I wrote one sentence to Claude: it had framed me with the "safe" actions, and it should write that down somewhere.
 
@@ -53,7 +53,7 @@ For the rest of the week the rule held. Every step started with read-only checks
 
 The disk was the problem, so a bigger disk looked like the answer. Hetzner offered a drive swap on the same server: four larger NVMe drives in RAID 10, the same machine and IP addresses, 30 to 60 minutes of work by appointment. The catch was in the fine print. A swap replaces the drives, so everything on them is lost, and I had to confirm that in writing.
 
-So the plan started with a copy. I rented a temporary server and ran a streaming replica of the database on it. It was seeded with `pg_basebackup` over an SSH tunnel, because the production disk had no room for a local base backup. The copy took about four and a half hours at 52 MB/s. Before creating the replication slot, we capped how much WAL a slot can hold back on the primary (`max_slot_wal_keep_size = 10GB`). A stalled replica would then lose its slot instead of filling the production disk a second time.
+So the plan started with a copy. I rented a temporary server and ran a streaming replica of the database on it. It was seeded with `pg_basebackup` over an SSH tunnel, because the production disk had no room for a local base backup. The copy took about four and a half hours at 52 MB/s. Before creating the replication slot, which makes the primary keep WAL until the replica has used it, we capped how much WAL a slot can hold back (`max_slot_wal_keep_size = 10GB`). A stalled replica would then lose its slot instead of filling the production disk a second time.
 
 Then a rehearsal. I asked why we needed one, since the data was already on the second machine. The answer: on swap day, every step should be one that has already worked once. So we stopped the replica, cloned it on the temporary server (779 GB in 21 minutes), started the clone as a normal database and checked it. It was ready to take connections in about ten seconds. Reads worked, a compressed chunk read back correctly, a write went through. The replica reconnected and caught up.
 
@@ -61,11 +61,11 @@ The swap was booked for Thursday morning, timed to start after my family morning
 
 ## The vendor says no
 
-On Wednesday morning Hetzner wrote back. Under their current rules, no hardware change of any kind was allowed on this server model. It is an older, grandfathered model. The only way to more storage was to convert it to a current model at current prices, which cost several times what I pay now.
+On Wednesday morning Hetzner wrote back. Under their current rules, no hardware change of any kind was allowed on this server model. It is an older, grandfathered model. The only way to more storage was to convert it to a current model at current prices, at about ten times what I pay now.
 
-Most of the plan was suddenly useless. The part that survived turned out to be the important one.
+The last step of the plan was gone. Everything before it still worked, and that turned out to be the important part.
 
-Everything up to the swap still worked: the replica, the tunnel, the WAL cap, the rehearsal. What changed was where the copy ended up. Instead of copying the data back onto new drives in the same server, the database moves to its own server and stays there. The app server keeps the apps, the queue, the small databases and monitoring. A new dedicated machine with 64 GB of RAM and two 1.92 TB NVMe drives runs only the Social DB. The two servers talk over WireGuard: encrypted, about ten lines of config on each side, and no database port on the public internet.
+The replica, the tunnel, the WAL cap and the rehearsal all carried over. What changed was where the copy ended up. Instead of copying the data back onto new drives in the same server, the database moves to its own server and stays there. The app server keeps the apps, the queue, the small databases and monitoring. A new dedicated machine with 64 GB of RAM and two 1.92 TB NVMe drives runs only the Social DB. The two servers talk over WireGuard: encrypted, about ten lines of config on each side, and no database port on the public internet.
 
 I had resisted a second server, because "two servers" sounds like a different kind of system. It isn't. It's the same software on two hosts, with one more address in the connection strings. There's no clustering and no new datastore. And when this database outgrows those 1.9 TB, the next move is the same move again.
 
@@ -87,7 +87,7 @@ The cutover ran on Friday morning. I stopped every writer and let the queues dra
 
 Writers stopped at 05:45 UTC. The apps were green around 06:03. Consumer lag was back to zero by 06:06. That's about twenty minutes of downtime, most of it the deploy pipeline.
 
-The hiccups were small. The runbook used a shell helper function, and it doesn't exist in a new SSH session, so twice I got `command not found` halfway through. The lesson: every block in a runbook should run on its own in a fresh shell. The monitoring tunnel also dropped in the middle of the window. That was why I had pasted output back all week instead of relying on Claude reading the dashboards.
+The hiccups were small. The runbook used a shell helper function, and it doesn't exist in a new SSH session, so twice I got `command not found` halfway through. The lesson: every block in a runbook should run on its own in a fresh shell. The monitoring tunnel also dropped in the middle of the window. That's where pasting output back all week paid off: Claude didn't need the dashboards to follow along.
 
 The old database stayed on the app server, stopped and untouched, as a fallback. It would stay there until something better existed.
 
@@ -95,31 +95,31 @@ The old database stayed on the app server, stopped and untouched, as a fallback.
 
 Something better didn't exist yet, because this database had never had a backup.
 
-The small databases had nightly dumps. The Social DB didn't. The design assumed it could be rebuilt by replaying the raw data archive, which would take days. During the move I kept saying "the safety copy", but the only real copies were a stopped database on the old server, getting staler by the hour, and that archive.
+The small databases had nightly dumps. The Social DB didn't. The design assumed it could be rebuilt by replaying the raw data archive, which would take days. After the cutover, the only other copies were the stopped database on the app server, getting staler by the hour, and that archive.
 
 The backup we built uses pgBackRest. Every WAL segment goes to Cloudflare R2 as it's written, a full backup runs every Sunday and a differential on the other days, and a weekly verify reads it all back. Prometheus alerts fire if archiving stops, a backup goes stale or a verify fails. There's no standby server. A restore measured in hours is enough for the users we have today.
 
 Two code reviews passed the configuration. Then a local integration test against our own database image found three things neither review caught:
 
 - **pgBackRest must connect as the right role.** Our clusters have no `postgres` role, so it fails until you tell it which user to use (`pg1-user`).
-- **Postgres can't be PID 1 in the container.** With async archiving, the background push process gets orphaned and adopted by PID 1. If PID 1 is the postmaster, PostgreSQL 18 sees a child it didn't start exit with an error, treats it as a crash and restarts the whole cluster. The container needs `--init`.
+- **Postgres can't be PID 1 in the container.** With async archiving, PID 1 adopts the orphaned push process, and if that's the postmaster, PostgreSQL 18 treats its exit as a crashed child and restarts the whole cluster. The container needs `--init`.
 - **`pgbackrest verify` exits 0 even when it finds invalid files.** Only the output says `status: error`. Our monitoring checks both the exit code and the text.
 
-The first full backup took 1 hour 26 minutes and compressed 782 GB down to 217 GB. Verify then reported an error. It was half a page, 4 KB, in one compressed chunk from January 2025, left over from Monday's crash. The 8.5 million rows in that chunk were intact. A `VACUUM FULL` rewrote it, and the next full backup came back clean. So the backup's first useful act was to show us a scar from the crash that nothing else had noticed.
+The first full backup took 1 hour 26 minutes and compressed 782 GB down to 217 GB. It finished, but flagged `error(s) detected`. The cause was half a page, 4 KB, in one compressed chunk from January 2025, left over from Monday's crash. The 8.5 million rows in that chunk were intact, and the verify that followed passed: the backup held exactly what was on disk, half page included. A `VACUUM FULL` rewrote the chunk, and the next full backup came back clean. So the backup's first useful act was to show us a scar from the crash that nothing else had noticed.
 
 ## The restore that made it real
 
 All of that only proves the files exist. A backup is real only after you've restored it.
 
-I asked whether we could test without renting another server. Restoring over the old stopped copy would have been free, but it wouldn't test the disaster case: an empty disk, everything coming from R2. And I had just learned that Hetzner's auction servers are billed for the whole month even when you cancel them after a few days. The temporary replica server cost a full month for two days of use. So I took the cheapest box that could hold the data: a temporary server with spinning disks, its RAID still resyncing. That gave an honest upper bound.
+I asked whether we could test without renting another server. Restoring over the old stopped copy would have been free, but it wouldn't test the disaster case: an empty disk, everything coming from R2. And I had just learned that Hetzner's auction servers are billed for the whole month even when you cancel them after a few days. The temporary replica server cost a full month for a few days of use. So I took the cheapest box that could hold the data: a temporary server with spinning disks, its RAID still resyncing. That gave an honest upper bound.
 
-The restore ran in the evening and the recovery finished late at night. Somewhere in there, with a third server in play and commands arriving for "the server", I had to ask Claude to say which one, every time. From then on every command block was labelled with the host and the prompt I should see before pasting.
+The restore ran in the evening and the recovery finished late at night. Right after it finished, with a third server in play and commands arriving for "the server", I had to ask Claude to say which one, every time. From then on every command block was labelled with the host and the prompt I should see before pasting.
 
-The target was a point in time: 10:30:00 UTC that morning, half an hour after the clean full backup finished. Recovery stopped just before the first transaction that committed after it. The newest row in the restored database was from 10:29:57. The extensions were there, the paused maintenance jobs were still paused, and a test table could be created, written and dropped.
+The target was a point in time: 10:30:00 UTC that morning, half an hour after the first full backup finished, the one with the half page in it. Recovery stopped just before the first transaction that committed after it. The newest row in the restored database was from 10:29:57. The extensions were there, the paused maintenance jobs were still paused, and a test table could be created, written and dropped. The half page didn't get in the way.
 
-From start to a usable database took 4 hours 3 minutes. The copy from R2 took 2 h 44 min, then fsync, about 16 minutes of WAL replay, and a long end-of-recovery checkpoint. That was on spinning disks. On the production NVMe it would be faster. "Hours, not days" is now a measured number, written in the runbook header.
+From start to a usable database took 4 hours 3 minutes. The copy from R2 took 2 h 44 min, then fsync, about 16 minutes of WAL replay, and a long end-of-recovery checkpoint. That was on spinning disks. On the production NVMe it should be faster. "Hours, not days" is now a measured number, written in the runbook header.
 
-Only then did I delete the old copy on the app server. That freed 844 GB. Then I cancelled the test server.
+Only then did I delete the old copy on the app server, which left it with 844 GB free. Then I cancelled the test server.
 
 ## What I'm keeping
 
@@ -127,7 +127,7 @@ Only then did I delete the old copy on the app server. That freed 844 GB. Then I
 
 **Budget for the peak, not the end state.** Compression, `VACUUM FULL`, large refreshes and index builds all need more space while they run than when they finish. Measure the disk you actually have: the reserve and the other services come out of it.
 
-**Read-only checks first, actions second.** It's slower. This week it caught most of the mistakes before they ran. The one time we skipped it, the database crashed.
+**Read-only checks first, actions second.** It's slower, and it only works if the checks measure the limit the action can hit. The one time they didn't, the database crashed.
 
 **Rehearse on a copy.** The rehearsal looked redundant when the data was already on the second machine. It meant every step on the real day had already worked once, and the plan survived the vendor's no because its first half had been tested.
 
@@ -137,7 +137,7 @@ Only then did I delete the old copy on the app server. That freed 844 GB. Then I
 
 **A backup is a hypothesis until a restore proves it.** Restore it, to an empty disk, to a point in time, and write down how long it took.
 
-**Running production alone with an AI assistant works if the roles stay clear.** The assistant wrote the plan and every command and kept the runbooks honest. I decided, ran and checked. When I asked it to name the server every time, it did. When I said it had framed me with "safe", it wrote the postmortem and kept the rule for the rest of the week. The crash happened when a confident word stood in for a measurement. The week went well once every claim came with its numbers.
+**Running production alone with an AI assistant works if the roles stay clear.** The assistant wrote the plan and every command and kept the runbooks honest. I decided, ran and checked. When I asked it to name the server every time, it did. The crash happened when a confident word stood in for a measurement. The week went well once every claim came with its numbers.
 
 ---
 

@@ -3,12 +3,12 @@ layout: post
 author: Diyaz Yakubov
 title: "Thirteen video models, one shoe and a bin"
 description: "How I picked and judged AI video models for a product idea without being any good at video myself: same input to every model, my own scores, real invoices, and the moment I gave up on generated physics."
-date: 2026-11-11 08:00:00 UTC
+date: 2026-10-11 08:00:00 UTC
 background: /assets/images/posts/2026-11-11-Thirteen-Video-Models-One-Shoe-and-a-Bin/img-01.jpg
 excerpt_separator: <!--more-->
 tags: [ai, video-generation, evaluation, busypipe, product]
 ---
-I spent a week and a little over forty dollars asking AI video models to make a man throw a shoe into a bin. Most of them couldn't. The ones that could looked fake. The thing that finally worked wasn't generating the throw at all.
+I spent a week and a little over forty dollars asking AI video models to make a man throw a shoe into a bin. Four out of thirteen managed it. When I later gave the best of them a bin with a closed lid, it cheated: the lid simply vanished. The thing that finally worked wasn't generating the throw at all.
 
 <!--more-->
 
@@ -41,21 +41,23 @@ And shot B:
   <source src="/assets/videos/posts/2026-11-11-Thirteen-Video-Models-One-Shoe-and-a-Bin/bakeoff-product-turn.mp4" type="video/mp4">
 </video>
 
-The grid is the single most useful thing I made. Watching thirteen clips one after another, you forget the first by the fifth. Watching them play at the same time, the bad ones are obvious in two seconds: the shoe vanishes mid-air, the arm bends twice, the bin moves, a cut appears that nobody asked for.
+The grid is the single most useful thing I made. Watching thirteen clips one after another, you forget the first by the fifth. Watching them play at the same time, the bad ones are obvious in two seconds: the shoe vanishes mid-air (Kling, LTX), flies off towards the hoop (Seedance 2.5), or the video cuts to a close-up nobody asked for (Happy Horse).
+
+It is also easy to get wrong. The first write-up of this test came from contact sheets, a few still frames per clip, and it said only Hailuo got the shoe into the bin. Going back through the clips frame by frame for this post, four did: Hailuo, Wan 3.0, Wan 3.0 Prime and Grok. At a couple of frames per second, a shoe dropping into a bin looks the same as one that disappears.
 
 ## Rule two: I'm the judge, not the checklist
 
-My first pass at judging was a table with a criterion that sounded objective: **did it do what the prompt said?** Does the shoe land in the bin, yes or no. By that measure one model won clearly. Hailuo 2.3 was the only one that landed the toss, and it was also the cheapest. Easy decision.
+My first pass at judging was a table with a criterion that sounded objective: **did it do what the prompt said?** Does the shoe land in the bin, yes or no. By that measure the choice looked easy: Hailuo 2.3 landed the toss and was also the cheapest model in the test.
 
 Then I actually sat down and scored every clip myself, on a page built for it: every video in one place, a 1-to-10 score, a few tick boxes ("usable", "fake", "AI glitch"), a notes field, and a ranking tab that sorts everything by score.
 
 ![The review page: every clip, a score, flags and notes](/assets/images/posts/2026-11-11-Thirteen-Video-Models-One-Shoe-and-a-Bin/review-page.jpg)
 
-My ranking disagreed with the checklist almost completely. Hailuo, the "winner", got a 3 for the toss. It did the action, and it looked fake doing it. Grok Video 1.5 got a 9 even though the shoe misses the bin, because the man looked like a man. Wan 3.0 Prime got an 8 on both shots for the same reason.
+My scores told a different story. All four models that got the shoe in passed the checklist, and I gave them anything from 3 to 9. Hailuo got a 3: it did the action, and it looked fake doing it. Grok Video 1.5 got a 9 for the same toss, because the man moved like a man. Wan 3.0 Prime got an 8, even though its shoe turns from white to black on the way down; at full speed I didn't notice, and neither would someone scrolling.
 
 ![The ranking tab, sorted by my own scores](/assets/images/posts/2026-11-11-Thirteen-Video-Models-One-Shoe-and-a-Bin/review-ranking.jpg)
 
-That was the most important finding of the week, and it had nothing to do with any model: **I'd been measuring the wrong thing.** For a TikTok, "does it look real" beats "did it follow the instructions". Someone scrolling past doesn't know what the prompt was. They know when a hand looks like rubber.
+That was the most important finding of the week, and it had nothing to do with any model: **I'd been measuring the wrong thing.** "Did it follow the instructions" is a pass/fail gate, and four models passed it. What separated them was "does it look real". Someone scrolling past doesn't know what the prompt was. They know when a hand looks like rubber.
 
 The final shortlist, by my own scores (shoe toss / product turn, then the real cost per clip):
 
@@ -91,21 +93,21 @@ Higgsfield's own showcase reel looks nothing like my clips, so I assumed I was d
 
 It is sharper. I still scored the finished videos 1 and 3. Individual shots got 6 and 8; stitched together, one bad beat sinks the whole thing. Every extra shot is another chance to look fake.
 
-Pro mode also surfaced a problem I hadn't thought about. I asked for plain, unbranded shoes and wrote "no logos" in every prompt. Six of eight running stills came back with real brand marks: swooshes, three stripes, the lot.
+Pro mode also surfaced a problem I hadn't thought about. I asked for plain, unbranded shoes and wrote "no logos" in every prompt. The running stills kept coming back with real brand marks anyway: a swoosh on the sock, three stripes on the shoe, a big swoosh on the side.
 
-![Stills that were asked for "no logos"](/assets/images/posts/2026-11-11-Thirteen-Video-Models-One-Shoe-and-a-Bin/logo-leaks.jpg)
+![Three stills from prompts that asked for plain, unbranded shoes](/assets/images/posts/2026-11-11-Thirteen-Video-Models-One-Shoe-and-a-Bin/logo-leaks.jpg)
 
 For a product that makes ads for brands, that's not a cosmetic issue. Every frame needs a logo check before it goes anywhere.
 
 Next I read what people who do this for a living recommend, and it boiled down to a few habits: prompt for imperfection ("shot on a phone", "off-centre", overcast) rather than "cinematic"; generate several takes and keep the cleanest; and, for actions that keep failing, give the model **both the first and the last frame**, so it only has to fill in the middle. Then grade it down afterwards: a bit less saturation, a little grain, captions in the style TikTok viewers expect.
 
-Start and end frames worked for the action. Three out of three takes landed the shoe in the bin. I also found that two of those three takes had a hidden jump cut, a single frame where the scene snaps. You can't really see it at full speed, but you feel it. ffmpeg's scene-change detector flags it in a second, which makes a cheap automatic quality check.
+For this round I made a new, more phone-like start image (overcast, a car park, a bin with its lid closed) and an end frame with the shoe already inside. I ran three takes on Wan 3.0 Prime. All three end with the shoe in the bin. None of them earns it. In two takes the lid is shut, then the scene snaps to a slightly different shot where the lid is already open: a hidden jump cut. You barely see it at full speed, but you feel it, and ffmpeg's scene-change detector flags it in a second, which makes a cheap automatic quality check. The third take has no cut, and it's the one below. Watch the lid.
 
 <video controls muted playsinline loop preload="none" poster="/assets/videos/posts/2026-11-11-Thirteen-Video-Models-One-Shoe-and-a-Bin/start-end-frame-challenge.jpg" style="width:100%;max-width:360px;display:block;margin:1.5rem auto;">
   <source src="/assets/videos/posts/2026-11-11-Thirteen-Video-Models-One-Shoe-and-a-Bin/start-end-frame-challenge.mp4" type="video/mp4">
 </video>
 
-My verdict, as the non-expert in the room: the shoe lands, and it still looks fake. The bin doesn't react. Nothing has weight. The model drew a shoe arriving in a bin; it didn't simulate one.
+The lid is closed. The shoe touches it, and in the next frame the lid is gone and the shoe is sitting inside. Nothing opens, nothing bounces, nothing has weight. The model knew how the clip had to end and drew its way there; it didn't simulate a thing. Grok, given the same start image without an end frame, didn't really throw at all: in one take he leans over and sets the shoe down on top of the closed lid.
 
 ## Stop generating the physics
 
@@ -117,7 +119,7 @@ Higgsfield has two tools for that. One transfers motion: you give it a video and
   <source src="/assets/videos/posts/2026-11-11-Thirteen-Video-Models-One-Shoe-and-a-Bin/real-footage-person-swap.mp4" type="video/mp4">
 </video>
 
-Same lift, same arc, same release, frame for frame, with a real ball. The jersey and its cartoon-team logo are gone; our invented character is in his place.
+The same lift, aim and release, with the same timing, because the motion comes from a real person throwing a real ball. Our invented character replaces him, and the jersey with its cartoon-team logo is gone. It isn't a perfect copy: the framing shifts a little, the ball is redrawn without its printed logos, and his hands come down slightly earlier at the end. You only see that side by side.
 
 <video controls muted playsinline loop preload="none" poster="/assets/videos/posts/2026-11-11-Thirteen-Video-Models-One-Shoe-and-a-Bin/real-footage-product-swap.jpg" style="width:100%;max-width:360px;display:block;margin:1.5rem auto;">
   <source src="/assets/videos/posts/2026-11-11-Thirteen-Video-Models-One-Shoe-and-a-Bin/real-footage-product-swap.mp4" type="video/mp4">
@@ -131,7 +133,8 @@ It isn't cheap (roughly $0.58 per second of source video at 720p, so about $6 fo
 
 - **Fix the input and vary only the model.** Same still, same prompt. Anything else is comparing your own luck.
 - **Look at everything at once.** A grid and a scoring page did more than any metric. Building them took less time than one round of arguing with myself.
-- **Score what the audience will notice.** "Followed the prompt" was my engineer's criterion. "Looks real" was the right one. I only found out by scoring.
+- **Score what the audience will notice.** "Followed the prompt" was my engineer's criterion; it only told me which clips to look at. "Looks real" decided. I only found out by scoring.
+- **Check frame by frame before you write it down.** A few stills per clip told me one model landed the shoe. Four did.
 - **Budget from the invoice.** List prices were up to 3.4× off.
 - **Single shots can pass; sequences fail.** Each extra generated beat is another chance to look fake.
 - **Check every frame for logos.** "No logos" in a prompt is a wish, not a setting.

@@ -6,7 +6,7 @@ description: "How I picked and judged AI video models for a product idea without
 date: 2026-10-23 08:00:00 UTC
 background: /assets/images/posts/2026-11-11-Thirteen-Video-Models-One-Shoe-and-a-Bin/img-01.jpg
 excerpt_separator: <!--more-->
-tags: [ai, video-generation, evaluation, product]
+tags: [ai, video-generation, evaluation, busypipe, product]
 ---
 I spent a week and a little over forty dollars asking AI video models to make a man throw a shoe into a bin. Four out of thirteen managed it. Later, when one of the best ones got a bin with a closed lid, it simply made the lid disappear. What finally worked was not generating the throw at all.
 
@@ -14,7 +14,7 @@ I spent a week and a little over forty dollars asking AI video models to make a 
 
 First, a disclaimer. I'm not a graphics or video person. I can't edit in Premiere, and I'd have to look up what a LUT is. My eye for "this looks off" is about as good as anyone's scrolling TikTok on the bus. In this case that's not the worst qualification, because that's exactly the audience these videos are for.
 
-The reason for all this was a product question. If a tool already tells brands what works on TikTok in their niche (formats, hooks, rising hashtags), the obvious next request is "fine, now make me one". Before building anything like that, I wanted to know three things: is the generation good enough, what does it really cost, and how do I even compare models when I don't trust my own taste.
+The idea came from [busypipe](https://busypipe.com/), the TikTok analytics tool I'm building. It shows brands what works in their niche: formats, hooks, rising hashtags. Looking at that kind of data, the next question is obvious: "fine, now make me one". Whether that ever belongs in busypipe is an open question. Before thinking about it at all, I wanted to know three things: is the generation good enough, what does it really cost, and how do I even compare models when I don't trust my own taste.
 
 Most of this post is about the last one.
 
@@ -80,7 +80,7 @@ On the positive side, failed and rejected requests didn't seem to be charged.
 
 ## Does knowing the niche help?
 
-This was the real product question: does knowing what works for brands like yours make a better video? I made ten short videos. Five came from briefs built on real TikTok trend data for a group of sportswear brands, like a "does that count?" challenge, a list of gym tips and a 15-minute routine. The other five came from briefs written with no data at all, only "small US running-shoe brand, make five TikToks". Same models, same editing. I rated them with the source hidden.
+This was the question I cared about most: does knowing what works for brands like yours make a better video? I made ten short videos. Five came from briefs built on busypipe's trend data for a group of sportswear brands, like a "does that count?" challenge, a list of gym tips and a 15-minute routine. The other five came from briefs written with no data at all, only "small US running-shoe brand, make five TikToks". Same models, same editing. I rated them with the source hidden.
 
 It told me nothing about the question. All ten scored 1 or 2, except one generic video that got a 7, and that one had a logo problem. When the footage looks this artificial, you never get as far as judging the idea. Context can improve the idea, but it does nothing for the picture, so I couldn't test what I cared about until the picture got better.
 

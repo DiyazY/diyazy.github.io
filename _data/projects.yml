@@ -48,12 +48,12 @@
         text: Live
         style: live
       description: >
-        My software development company offering custom solutions, cloud architecture,
-        and AI-powered development services for SMBs in the Nordic region.
-        Specializing in rapid delivery with modern tech stacks.
+        My Helsinki-based software consultancy: custom software, AI engineering, and
+        mentoring for small and medium businesses across Finland and Europe. Steady,
+        because it keeps moving.
       summary: >-
-        Custom software development company — cloud solutions and AI-powered services
-        for Nordic SMBs
+        Helsinki-based software consultancy — custom software, AI engineering, and
+        mentoring for SMBs across Finland and Europe
       tech: [React, Node.js, Python, .NET, Cloudflare, AI/LLMs]
       links:
         - label: Website
@@ -208,7 +208,7 @@
     - name: "Edge Kubernetes: CPU & Energy"
       monogram: En
       badge:
-        text: Accepted
+        text: Published
         style: research
       description: >
         The third study in the lightweight-Kubernetes edge series (after the two ESOCC 2025
@@ -219,15 +219,18 @@
         energy-efficient per pod lifecycle despite being full-featured, and CPU frequency does not
         predict orchestration performance — the differences are software-architectural, not
         hardware. Full title "Comparative Analysis of Lightweight Kubernetes Distributions for Edge
-        Computing: CPU Microarchitecture and Energy Efficiency", accepted at ESOCC 2026 (Springer
-        LNCS) with Sergio Moreschini and David Hästbacka; proceedings to appear.
+        Computing: CPU Microarchitecture and Energy Efficiency", published in ESOCC 2026 (Springer
+        LNCS) with Sergio Moreschini and David Hästbacka.
       summary: >-
         Energy comparison of five lightweight Kubernetes distributions (k8s, k3s, k0s, KubeEdge,
         OpenYurt) on ARM edge hardware via a DVFS power model, with interrupt and thermal analysis —
         finding CPU frequency does not predict orchestration performance and k8s is most efficient
-        per pod. Third in the edge series; accepted at ESOCC 2026, Springer LNCS, to appear
+        per pod. Third in the edge series; ESOCC 2026, Springer LNCS
       tech: [Kubernetes, Edge Computing, Energy, DVFS, ARM]
       links:
+        - label: Paper
+          url: https://doi.org/10.1007/978-3-032-37831-6_1
+          icon: paper
         - label: Code & data
           url: https://github.com/DiyazY/kd-edge-internals
           icon: github
@@ -235,7 +238,7 @@
     - name: Edge Computing Orchestration Overhead
       monogram: OH
       badge:
-        text: Accepted
+        text: Published
         style: research
       description: >
         The first per-container decomposition of a Kubernetes distribution on real edge hardware.
@@ -245,15 +248,18 @@
         to a busy data plane. At idle one pod carries two-thirds of system CPU while the whole tax is
         ~0.38% of the node; control-plane churn multiplies system CPU 9.2×, and memory stays a
         near-fixed ~46–60 MiB band. Full title "Edge Computing Orchestration Overhead: Analysing
-        Per-Container Decomposition of Kubernetes on Edge Using cgroup Telemetry", accepted at ESOCC
-        2026 (Springer LNCS) with Sergio Moreschini and David Hästbacka; proceedings to appear.
+        Per-Container Decomposition of Kubernetes on Edge Using cgroup Telemetry", published in ESOCC
+        2026 (Springer LNCS) with Sergio Moreschini and David Hästbacka.
       summary: >-
         First per-container decomposition of a Kubernetes distribution on real edge hardware — cgroup
         telemetry on a k0s worker attributing the orchestration tax across four system pods and its
-        scaling under load (idle ~0.38% of node; control-plane churn 9.2× system CPU). Accepted at
-        ESOCC 2026, Springer LNCS, to appear
+        scaling under load (idle ~0.38% of node; control-plane churn 9.2× system CPU). ESOCC 2026,
+        Springer LNCS
       tech: [Kubernetes, k0s, cgroups, Edge Computing, Observability]
       links:
+        - label: Paper
+          url: https://doi.org/10.1007/978-3-032-37831-6_7
+          icon: paper
         - label: Code & data
           url: https://github.com/DiyazY/kd-edge-internals
           icon: github

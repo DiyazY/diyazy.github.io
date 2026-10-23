@@ -229,7 +229,7 @@
       tech: [Kubernetes, Edge Computing, Energy, DVFS, ARM]
       links:
         - label: Paper
-          url: https://link.springer.com/book/10.1007/978-3-032-37831-6
+          url: https://doi.org/10.1007/978-3-032-37831-6_1
           icon: paper
         - label: Code & data
           url: https://github.com/DiyazY/kd-edge-internals

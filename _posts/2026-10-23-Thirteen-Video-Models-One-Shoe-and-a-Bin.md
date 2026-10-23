@@ -3,10 +3,10 @@ layout: post
 author: Diyaz Yakubov
 title: "Thirteen video models, one shoe and a bin"
 description: "How I picked and judged AI video models for a product idea without being any good at video myself: the same input for every model, my own scores, the real invoice, and the point where I stopped trying to generate physics."
-date: 2026-10-11 08:00:00 UTC
+date: 2026-10-23 08:00:00 UTC
 background: /assets/images/posts/2026-11-11-Thirteen-Video-Models-One-Shoe-and-a-Bin/img-01.jpg
 excerpt_separator: <!--more-->
-tags: [ai, video-generation, evaluation, busypipe, product]
+tags: [ai, video-generation, evaluation, product]
 ---
 I spent a week and a little over forty dollars asking AI video models to make a man throw a shoe into a bin. Four out of thirteen managed it. Later, when one of the best ones got a bin with a closed lid, it simply made the lid disappear. What finally worked was not generating the throw at all.
 
@@ -14,7 +14,7 @@ I spent a week and a little over forty dollars asking AI video models to make a 
 
 First, a disclaimer. I'm not a graphics or video person. I can't edit in Premiere, and I'd have to look up what a LUT is. My eye for "this looks off" is about as good as anyone's scrolling TikTok on the bus. In this case that's not the worst qualification, because that's exactly the audience these videos are for.
 
-The reason for all this is [busypipe](https://busypipe.com/). It already tells brands what works on TikTok in their niche: formats, hooks, rising hashtags. The obvious next request is "fine, now make me one". Before building anything like that, I wanted to know three things: is the generation good enough, what does it really cost, and how do I even compare models when I don't trust my own taste.
+The reason for all this was a product question. If a tool already tells brands what works on TikTok in their niche (formats, hooks, rising hashtags), the obvious next request is "fine, now make me one". Before building anything like that, I wanted to know three things: is the generation good enough, what does it really cost, and how do I even compare models when I don't trust my own taste.
 
 Most of this post is about the last one.
 
@@ -80,7 +80,7 @@ On the positive side, failed and rejected requests didn't seem to be charged.
 
 ## Does knowing the niche help?
 
-This was the real product question. busypipe's whole pitch is context: here's what works for brands like yours, so make that. I made ten short videos. Five came from briefs built on busypipe data for a sportswear portfolio, like a "does that count?" challenge, a list of gym tips and a 15-minute routine. The other five came from briefs written with no data at all, only "small US running-shoe brand, make five TikToks". Same models, same editing. I rated them with the source hidden.
+This was the real product question: does knowing what works for brands like yours make a better video? I made ten short videos. Five came from briefs built on real TikTok trend data for a group of sportswear brands, like a "does that count?" challenge, a list of gym tips and a 15-minute routine. The other five came from briefs written with no data at all, only "small US running-shoe brand, make five TikToks". Same models, same editing. I rated them with the source hidden.
 
 It told me nothing about the question. All ten scored 1 or 2, except one generic video that got a 7, and that one had a logo problem. When the footage looks this artificial, you never get as far as judging the idea. Context can improve the idea, but it does nothing for the picture, so I couldn't test what I cared about until the picture got better.
 
@@ -140,8 +140,6 @@ It isn't cheap: roughly $0.58 per second of source video at 720p, so about $6 fo
 - **Expect single shots to work better than sequences.** Every extra generated shot is another chance for something to look fake.
 - **Check every frame for logos.** Writing "no logos" in the prompt doesn't guarantee anything.
 - **Don't generate what real footage already does well.** A real clip with a swap beat every generated throw.
-
-For busypipe, that changes the idea. It's less "we generate your videos" and more "we tell you what to make, and help you remake proven formats with your own product in them". The data picks the format, real footage provides the movement, and the model only replaces the parts that need to be yours.
 
 ## Methodology and caveats
 

@@ -104,7 +104,7 @@
   llms_section: Projects
   items:
     - name: DayWatch
-      monogram: DW
+      image: daywatch.webp
       badge:
         text: Open Source
         style: tool
@@ -152,7 +152,7 @@
           icon: github
 
     - name: "Edge Kubernetes: Performance"
-      monogram: Perf
+      image: edge-k8s-performance.webp
       badge:
         text: Published
         style: research
@@ -179,7 +179,7 @@
           icon: github
 
     - name: "Edge Kubernetes: Security & Resilience"
-      monogram: Sec
+      image: edge-k8s-security.webp
       badge:
         text: Published
         style: research
@@ -206,7 +206,7 @@
           icon: github
 
     - name: "Edge Kubernetes: CPU & Energy"
-      monogram: En
+      image: edge-k8s-energy.webp
       badge:
         text: Published
         style: research
@@ -236,7 +236,7 @@
           icon: github
 
     - name: Edge Computing Orchestration Overhead
-      monogram: OH
+      image: edge-orchestration-overhead.webp
       badge:
         text: Published
         style: research
@@ -265,7 +265,7 @@
           icon: github
 
     - name: di-agent
-      monogram: "di-a"
+      image: di-agent.webp
       badge:
         text: In Progress
         style: wip

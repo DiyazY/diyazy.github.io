@@ -2,8 +2,7 @@
 layout: post
 author: Diyaz Yakubov
 title: "Numbers Next to Every \"Safe\""
-date: 2026-10-12 07:30:00 UTC
-published: false
+date: 2026-11-11 08:00:00 UTC
 excerpt_separator: <!--more-->
 tags: [postgresql, timescaledb, incident, devops, ai-assisted-ops, build-in-public]
 ---

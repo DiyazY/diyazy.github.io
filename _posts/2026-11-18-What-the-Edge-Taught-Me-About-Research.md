@@ -3,6 +3,7 @@ layout: post
 author: Diyaz Yakubov
 title: "What the Edge Taught Me About Research"
 date: 2026-11-18 08:00:00 UTC
+background: /assets/images/posts/2026-11-18-What-the-Edge-Taught-Me-About-Research/img-01.jpg
 excerpt_separator: <!--more-->
 tags: [research, edge-computing, kubernetes, phd, tampere-university]
 ---

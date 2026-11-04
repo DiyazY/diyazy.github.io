@@ -1,0 +1,89 @@
+---
+layout: default
+---
+{%- comment -%}
+  One project's detail page. Everything comes from the _data/projects.yml item
+  whose slug matches page.project; the page's own body is an optional longer
+  write-up shown under the description. Stubs live in projects/<slug>.md.
+{%- endcomment -%}
+<link rel="stylesheet" href="{{ site.baseurl }}/assets/css/projects.css">
+
+{%- include find-project.html slug=page.project -%}
+{%- assign item = found_project -%}
+{%- assign related = nil -%}
+{%- if item.post_slug -%}
+  {%- assign slug = item.post_slug -%}
+  {%- assign related = site.posts | where_exp: "post", "post.url contains slug" | first -%}
+{%- endif -%}
+{%- assign writeup = content | strip_html | strip -%}
+
+<div class="panel-container projects-container">
+  <div class="projects-content text-panel project-page">
+    {% include breadcrumbs.html %}
+
+    {%- if item.image and item.image != "" %}
+    <div class="project-hero">
+      <img src="{{ site.baseurl }}/assets/images/projects/{{ item.image }}" alt="" decoding="async">
+      {%- if item.badge %}
+      <span class="project-badge badge-{{ item.badge.style }}">{{ item.badge.text }}</span>
+      {%- endif %}
+    </div>
+    {%- endif %}
+
+    <h1>{{ item.name }}</h1>
+    {%- if item.summary %}
+    <p class="project-lede">{{ item.summary }}</p>
+    {%- endif %}
+
+    {%- if item.links or related %}
+    <div class="project-links">
+      {%- for link in item.links %}
+      <a href="{{ link.url }}" target="_blank" rel="noopener" class="project-link">
+        {%- include project-icon.html type=link.icon -%}
+        {{ link.label }}
+      </a>
+      {%- endfor %}
+      {%- if related %}
+      <a href="{{ related.url }}" class="project-link">
+        {%- include project-icon.html type="post" -%}
+        Read the story
+      </a>
+      {%- endif %}
+    </div>
+    {%- endif %}
+
+    <section class="project-body">
+      <h2>About</h2>
+      <p>{{ item.description }}</p>
+      {%- if writeup != "" %}
+      {{ content }}
+      {%- endif %}
+    </section>
+
+    {%- if item.tech %}
+    <section class="project-body">
+      <h2>Built with</h2>
+      <div class="project-tech">
+        {%- for tag in item.tech %}
+        <span>{{ tag }}</span>
+        {%- endfor %}
+      </div>
+    </section>
+    {%- endif %}
+
+    {%- if related %}
+    <section class="project-body">
+      <h2>The story</h2>
+      <a class="project-story" href="{{ related.url }}">
+        {%- if related.background %}<img src="{{ related.background }}" alt="" loading="lazy" decoding="async">{% endif %}
+        <span>
+          <strong>{{ related.title }}</strong>
+          <small>{{ related.date | date: "%B %d, %Y" }}</small>
+        </span>
+      </a>
+    </section>
+    {%- endif %}
+
+    <p class="project-back"><a href="/projects.html">&larr; All projects</a></p>
+  </div>
+</div>

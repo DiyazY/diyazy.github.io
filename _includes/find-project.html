@@ -1,0 +1,11 @@
+{%- comment -%}
+  Looks up one _data/projects.yml item by slug across all groups.
+  Usage: {% include find-project.html slug=page.project %}
+  Sets `found_project` (nil if no item has that slug) in the caller's scope.
+{%- endcomment -%}
+{%- assign found_project = nil -%}
+{%- for group in site.data.projects -%}
+  {%- for item in group.items -%}
+    {%- if item.slug == include.slug -%}{%- assign found_project = item -%}{%- endif -%}
+  {%- endfor -%}
+{%- endfor -%}

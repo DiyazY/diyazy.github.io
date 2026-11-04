@@ -185,11 +185,13 @@
 /* Project Links */
 .project-links {
   display: flex;
+  flex-wrap: wrap;
   gap: 12px;
 }
 
 .project-link {
   display: inline-flex;
+  white-space: nowrap;
   align-items: center;
   gap: 6px;
   padding: 8px 14px;
@@ -307,4 +309,106 @@
     font-size: 0.75em;
     padding: 3px 8px;
   }
+}
+
+/* Project detail page (_layouts/project.html) */
+.project-page h1 {
+  margin: 0 0 8px 0;
+  font-size: 2.2em;
+  color: var(--color-primary, #2a2521);
+}
+
+.project-hero {
+  position: relative;
+  margin: 0 0 24px 0;
+  border-radius: 12px;
+  overflow: hidden;
+  background-color: var(--color-bg-tertiary, #e0e0e0);
+}
+
+.project-hero img {
+  display: block;
+  width: 100%;
+  max-height: 380px;
+  object-fit: cover;
+}
+
+.project-lede {
+  color: var(--color-text-light, #666);
+  font-size: 1.1em;
+  line-height: 1.6;
+  margin: 0 0 20px 0;
+}
+
+.project-page .project-links {
+  margin-bottom: 10px;
+}
+
+.project-body {
+  margin-top: 30px;
+}
+
+.project-body h2 {
+  font-size: 1.3em;
+  color: var(--color-primary, #2a2521);
+  margin: 0 0 12px 0;
+  padding-bottom: 8px;
+  border-bottom: 2px solid var(--color-border, rgba(42, 37, 33, 0.1));
+}
+
+.project-body p {
+  line-height: 1.7;
+}
+
+.project-story {
+  display: flex;
+  gap: 14px;
+  align-items: center;
+  padding: 12px;
+  border: 1px solid var(--color-border, rgba(42, 37, 33, 0.1));
+  border-radius: 8px;
+  text-decoration: none;
+  color: var(--color-primary, #2a2521);
+}
+
+.project-story:hover strong {
+  color: var(--color-accent, #c9a227);
+}
+
+.project-story img {
+  width: 96px;
+  height: 64px;
+  object-fit: cover;
+  border-radius: 6px;
+  flex-shrink: 0;
+}
+
+.project-story span {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+}
+
+.project-story small {
+  color: var(--color-text-light, #666);
+}
+
+.project-back {
+  margin: 30px 0 0 0;
+}
+
+.project-back a {
+  color: var(--color-accent, #c9a227);
+  text-decoration: none;
+  font-weight: 500;
+}
+
+/* Card title links to the detail page when one exists */
+.project-info h3 a {
+  color: inherit;
+  text-decoration: none;
+}
+
+.project-info h3 a:hover {
+  color: var(--color-accent, #c9a227);
 }

@@ -61,8 +61,10 @@ image / plate in both cases.
     <span class="project-badge badge-{{ item.badge.style }}">{{ item.badge.text }}</span>
     {%- endif %}
   </div>
+  {%- assign detail_page = nil -%}
+  {%- if item.slug -%}{%- assign detail_page = site.pages | where: "project", item.slug | first -%}{%- endif %}
   <div class="project-info">
-    <h3>{{ item.name }}</h3>
+    <h3>{% if detail_page %}<a href="{{ detail_page.url }}">{{ item.name }}</a>{% else %}{{ item.name }}{% endif %}</h3>
     <p class="project-description">{{ item.description }}</p>
     {%- if item.tech %}
     <div class="project-tech">
@@ -83,8 +85,11 @@ image / plate in both cases.
       {%- assign related = site.posts | where_exp: "post", "post.url contains slug" | first -%}
     {%- endif -%}
 
-    {%- if item.links or related %}
+    {%- if item.links or related or detail_page %}
     <div class="project-links">
+      {%- if detail_page %}
+      <a href="{{ detail_page.url }}" class="project-link">Details</a>
+      {%- endif %}
       {%- for link in item.links %}
       <a href="{{ link.url }}" target="_blank" rel="noopener" class="project-link">
         {%- include project-icon.html type=link.icon -%}

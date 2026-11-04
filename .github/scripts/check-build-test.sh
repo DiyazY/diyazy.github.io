@@ -45,6 +45,51 @@ expect_fail "empty list" '[]' "empty"
 eleven="$(for i in 1 2 3 4 5 6 7 8 9 10 11; do entry https://diyaz.dev/a.html "$ok_date"; [ "$i" -lt 11 ] && printf ,; done)"
 expect_fail "more than 10 entries" "[$eleven]" "11 entries (max 10)"
 
+# expect_homelab_fail <name> <devices JSON array> <message check-build must report>
+# Swaps the data block embedded in homelab.html, then expects
+# "FAIL  homelab data invalid: <message>".
+expect_homelab_fail() {
+  rm -rf "$work/site" && cp -R "$SITE" "$work/site"
+  ruby -e '
+    f, json = ARGV
+    html = File.read(f)
+    html.sub!(%r{(<script type="application/json" id="homelab-data">).*?(</script>)}m) { "#{$1}{\"devices\":#{json}}#{$2}" } or abort "no data block"
+    File.write(f, html)
+  ' "$work/site/homelab.html" "$2"
+  if env -u CHECK_ALLOW_FUTURE "$REPO/.github/scripts/check-build.sh" "$work/site" > "$work/out" 2>&1; then
+    printf '  FAIL  %s: check-build.sh passed\n' "$1"; fails=$((fails + 1))
+  elif grep -F 'FAIL' "$work/out" | grep -qF -- "homelab data invalid: $3"; then
+    printf '  ok    %s\n' "$1"
+  else
+    printf '  FAIL  %s: expected "%s" in:\n' "$1" "$3"; grep 'FAIL' "$work/out" | sed 's/^/          /'
+    fails=$((fails + 1))
+  fi
+}
+
+dev() { # dev <id> <tier> [uplink]
+  printf '{"id":"%s","tier":"%s","kind":"nuc"%s}' "$1" "$2" "${3:+,\"uplink\":\"$3\"}"
+}
+
+echo
+echo "Testing check-build.sh against bad homelab data"
+expect_homelab_fail "duplicate id" "[$(dev a servers internet),$(dev a servers internet)]" "duplicate id a"
+expect_homelab_fail "unknown uplink" "[$(dev a servers nope)]" "a uplink nope not found"
+expect_homelab_fail "uplink cycle" "[$(dev a servers b),$(dev b servers a)]" "uplink cycle at a"
+expect_homelab_fail "unknown tier" "[$(dev a attic internet)]" "a has unknown tier attic"
+
+# Each of these must trip the leak guard on homelab.html.
+for leak in 10.10.0.11 100.101.102.103 192.168.100.1 172.20.0.5 nuc-1.lab Tailscale; do
+  rm -rf "$work/site" && cp -R "$SITE" "$work/site"
+  printf '<p>%s</p>' "$leak" >> "$work/site/homelab.html"
+  if env -u CHECK_ALLOW_FUTURE "$REPO/.github/scripts/check-build.sh" "$work/site" > "$work/out" 2>&1; then
+    printf '  FAIL  leak "%s" on homelab.html: check-build.sh passed\n' "$leak"; fails=$((fails + 1))
+  elif grep -qF 'FAIL  homelab.html leaks private network details' "$work/out"; then
+    printf '  ok    leak "%s" on homelab.html\n' "$leak"
+  else
+    printf '  FAIL  leak "%s" on homelab.html: expected the leak message\n' "$leak"; fails=$((fails + 1))
+  fi
+done
+
 echo
 if [ "$fails" -gt 0 ]; then
   echo "$fails fixture(s) not caught"

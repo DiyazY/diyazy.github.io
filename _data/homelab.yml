@@ -1,0 +1,240 @@
+# Home lab inventory. Single source for /homelab.html: the 3D scene, the info
+# cards and the plain-HTML device list all read this file.
+#
+# Public page, so: hardware, roles and service names only. Never add IPs,
+# hostnames, Tailscale/MagicDNS names, ports or SSH details — check-build.sh
+# fails the build if the page looks like it leaks any.
+#
+# Per device:
+#   id        stable slug; the scene and the list key on it
+#   name      display name
+#   short     optional shorter name for the network-view label
+#   model     hardware model
+#   specs     one short line
+#   role      one line, what it is for
+#   services  list of what runs on it (may be empty)
+#   kind      mesh to draw: nuc jetson seeed pi4 pi3 pi-zero switch router
+#             nas fan ruuvi
+#   tier      shelf, top to bottom: network servers gpu pis storage; cooling
+#             sits on the cabinet roof. Position within a shelf follows the
+#             order of this file.
+#   uplink    id of the device it plugs into, or "internet". Omit for things
+#             with no network link (fans, sensor). Builds the network view.
+#   link      usb-c-40g for the Jetson <-> Seeed pairing; ethernet otherwise
+#   links     optional [{label, url}] shown on the device's card
+
+intro: >-
+  Two NUCs, a Jetson-and-Seeed GPU pair, seven Raspberry Pis and a NAS in one
+  cabinet. It runs a K3s cluster, local LLM inference and the self-hosted
+  services I use every day, and every machine in it is provisioned from code.
+  Drag to look around, pick a device to see what it does, or switch to the
+  network view to see how it all connects.
+
+devices:
+  - id: deco
+    name: TP-Link Deco
+    short: Deco
+    model: TP-Link Deco mesh router
+    specs: Mesh WiFi · gigabit WAN/LAN
+    role: Gateway, DHCP and WiFi
+    services: []
+    kind: router
+    tier: network
+    uplink: internet
+
+  - id: sg108
+    name: TL-SG108
+    model: TP-LINK TL-SG108
+    specs: 8-port gigabit switch
+    role: Primary switch
+    services: []
+    kind: switch
+    tier: network
+    uplink: deco
+
+  - id: tsw100
+    name: TSW100
+    model: Teltonika TSW100
+    specs: 5-port gigabit switch
+    role: Secondary switch for the Pi fleet
+    services: []
+    kind: switch
+    tier: network
+    uplink: sg108
+
+  - id: nuc-1
+    name: NUC-1
+    model: Intel NUC, i7-10710U
+    specs: 6C/12T · 64 GB DDR4 · 1 TB NVMe
+    role: K3s primary server, databases and app UIs
+    services: [K3s server, n8n, SolidTime, OpenClaw, Postgres]
+    kind: nuc
+    tier: servers
+    uplink: sg108
+    links:
+      - label: Edge Kubernetes research
+        url: /projects/edge-k8s-performance.html
+      - label: di-agent
+        url: /projects/di-agent.html
+
+  - id: nuc-2
+    name: NUC-2
+    model: Intel NUC, i7-10710U
+    specs: 6C/12T · 64 GB DDR4 · 1 TB NVMe
+    role: K3s HA server and CPU inference
+    services: [K3s server, llama.cpp CPU inference (70B+), Open WebUI, OpenClaw, Obsidian sync]
+    kind: nuc
+    tier: servers
+    uplink: sg108
+    links:
+      - label: Edge Kubernetes research
+        url: /projects/edge-k8s-performance.html
+      - label: di-agent
+        url: /projects/di-agent.html
+
+  - id: ruuvi
+    name: Ruuvi Tag
+    model: Ruuvi Tag
+    specs: Bluetooth temperature and humidity sensor
+    role: Watches the shelf temperature
+    services: []
+    kind: ruuvi
+    tier: servers
+
+  - id: jetson
+    name: Jetson Orin Nano
+    short: Jetson
+    model: NVIDIA Jetson Orin Nano
+    specs: Orin SoC · 8 GB · NVMe
+    role: GPU inference, fast tier (7B–14B models)
+    services: [GPU inference (llama.cpp / Ollama)]
+    kind: jetson
+    tier: gpu
+    uplink: sg108
+
+  - id: seeed
+    name: Seeed Studio
+    short: Seeed
+    model: Seeed Studio AI node
+    specs: 8 GB · NVMe
+    role: GPU inference, paired with the Jetson to split larger models
+    services: [GPU inference (llama.cpp / Ollama)]
+    kind: seeed
+    tier: gpu
+    uplink: jetson
+    link: usb-c-40g
+
+  - id: pi4-1
+    name: Raspberry Pi 4 · 1
+    short: Pi 4 · 1
+    model: Raspberry Pi 4 Model B
+    specs: BCM2711 · 4 GB
+    role: K3s agent
+    services: [K3s agent, Prometheus, Grafana]
+    kind: pi4
+    tier: pis
+    uplink: tsw100
+    links:
+      - label: Edge Kubernetes research
+        url: /projects/edge-k8s-performance.html
+
+  - id: pi4-2
+    name: Raspberry Pi 4 · 2
+    short: Pi 4 · 2
+    model: Raspberry Pi 4 Model B
+    specs: BCM2711 · 4 GB
+    role: K3s agent
+    services: [K3s agent, Prometheus, Grafana]
+    kind: pi4
+    tier: pis
+    uplink: tsw100
+    links:
+      - label: Edge Kubernetes research
+        url: /projects/edge-k8s-performance.html
+
+  - id: pi4-3
+    name: Raspberry Pi 4 · 3
+    short: Pi 4 · 3
+    model: Raspberry Pi 4 Model B
+    specs: BCM2711 · 4 GB
+    role: K3s agent
+    services: [K3s agent, Prometheus, Grafana]
+    kind: pi4
+    tier: pis
+    uplink: tsw100
+    links:
+      - label: Edge Kubernetes research
+        url: /projects/edge-k8s-performance.html
+
+  - id: pi3-1
+    name: Raspberry Pi 3 · 1
+    short: Pi 3 · 1
+    model: Raspberry Pi 3
+    specs: BCM2837 · 1 GB
+    role: Internal DNS
+    services: [CoreDNS]
+    kind: pi3
+    tier: pis
+    uplink: tsw100
+
+  - id: pi3-2
+    name: Raspberry Pi 3 · 2
+    short: Pi 3 · 2
+    model: Raspberry Pi 3
+    specs: BCM2837 · 1 GB
+    role: DNS filtering
+    services: [Pi-hole]
+    kind: pi3
+    tier: pis
+    uplink: tsw100
+
+  - id: pi3-3
+    name: Raspberry Pi 3 · 3
+    short: Pi 3 · 3
+    model: Raspberry Pi 3
+    specs: BCM2837 · 1 GB
+    role: Spare, ready to swap in
+    services: []
+    kind: pi3
+    tier: pis
+    uplink: tsw100
+
+  - id: pi-zero
+    name: Raspberry Pi Zero W
+    short: Pi Zero
+    model: Raspberry Pi Zero W
+    specs: BCM2835 · 512 MB
+    role: Edge and sensor node
+    services: []
+    kind: pi-zero
+    tier: pis
+    uplink: tsw100
+
+  - id: qnap
+    name: QNAP NAS
+    short: NAS
+    model: QNAP NAS
+    specs: Network storage
+    role: Central storage and backups
+    services: [NFS, iSCSI, Backups]
+    kind: nas
+    tier: storage
+    uplink: sg108
+
+  - id: fan-1
+    name: Noctua fan · 1
+    model: Noctua fan, NA-FC1 controller
+    specs: PWM, speed set by the NA-FC1
+    role: Pulls hot air out of the cabinet roof
+    services: []
+    kind: fan
+    tier: cooling
+
+  - id: fan-2
+    name: Noctua fan · 2
+    model: Noctua fan, NA-FC1 controller
+    specs: PWM, speed set by the NA-FC1
+    role: Pulls hot air out of the cabinet roof
+    services: []
+    kind: fan
+    tier: cooling

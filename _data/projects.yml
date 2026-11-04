@@ -18,6 +18,10 @@
 #
 # Per item:
 #   name         required
+#   slug         id for the project's detail page. A page exists only if
+#                projects/<slug>.md does (layout: project, project: <slug>);
+#                its card then gets a "Details" link. Keep it stable: it is
+#                the page URL.
 #   image        filename in assets/images/projects/. Omit, or set to null or
 #                "", to render a generated brand plate (a monogram on a faint
 #                grid, with a category-coloured keyline) in place of a cover.
@@ -43,6 +47,7 @@
   llms_section: Projects
   items:
     - name: TopTop.dev
+      slug: toptop
       image: toptop.webp
       badge:
         text: Live
@@ -61,6 +66,7 @@
           icon: globe
 
     - name: busypipe
+      slug: busypipe
       image: busypipe.webp
       badge:
         text: Live
@@ -82,6 +88,7 @@
           icon: globe
 
     - name: EuroJackpot Stats
+      slug: eurojackpot-stats
       image: eurojackpotstats.webp
       badge:
         text: Live
@@ -104,6 +111,7 @@
   llms_section: Projects
   items:
     - name: DayWatch
+      slug: daywatch
       image: daywatch.webp
       badge:
         text: Open Source
@@ -127,6 +135,7 @@
   llms_section: Research
   items:
     - name: Di-Select
+      slug: di-select
       image: di-select.webp
       badge:
         text: Published
@@ -152,6 +161,7 @@
           icon: github
 
     - name: "Edge Kubernetes: Performance"
+      slug: edge-k8s-performance
       image: edge-k8s-performance.webp
       badge:
         text: Published
@@ -179,6 +189,7 @@
           icon: github
 
     - name: "Edge Kubernetes: Security & Resilience"
+      slug: edge-k8s-security
       image: edge-k8s-security.webp
       badge:
         text: Published
@@ -206,6 +217,7 @@
           icon: github
 
     - name: "Edge Kubernetes: CPU & Energy"
+      slug: edge-k8s-energy
       image: edge-k8s-energy.webp
       badge:
         text: Published
@@ -236,6 +248,7 @@
           icon: github
 
     - name: Edge Computing Orchestration Overhead
+      slug: edge-orchestration-overhead
       image: edge-orchestration-overhead.webp
       badge:
         text: Published
@@ -265,6 +278,7 @@
           icon: github
 
     - name: di-agent
+      slug: di-agent
       image: di-agent.webp
       badge:
         text: In Progress

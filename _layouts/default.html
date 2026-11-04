@@ -10,8 +10,16 @@
       cover image as `background`, so it doubles as the share image; the
       default keeps link previews from 404ing (og-default.png must exist).
     {%- endcomment %}
+    {%- comment -%}
+      Project pages (_layouts/project.html) keep their content in
+      _data/projects.yml, so their share image and description come from there.
+    {%- endcomment -%}
+    {%- assign found_project = nil -%}
+    {%- if page.project %}{% include find-project.html slug=page.project %}{% endif -%}
+    {%- assign project_image = nil -%}
+    {%- if found_project.image and found_project.image != "" %}{% assign project_image = '/assets/images/projects/' | append: found_project.image %}{% endif %}
     {% assign share_title = page.seo_title | default: page.title | default: site.title %}
-    {% assign share_image = page.image | default: page.background | default: '/assets/images/og-default.png' %}
+    {% assign share_image = page.image | default: page.background | default: project_image | default: '/assets/images/og-default.png' %}
     {% assign share_image = share_image | absolute_url %}
     {%- comment -%}
       share_description carries entity-encoded HTML, ready to drop into an
@@ -20,7 +28,7 @@
       (strip_html leaves its &amp;/&lt; entities intact), so escaping it again
       would double-encode (&amp;amp;) and show literal entity codes in snippets.
     {%- endcomment -%}
-    {%- capture share_description %}{%- if page.description %}{{ page.description | escape }}{% elsif page.excerpt %}{{ page.excerpt | strip_html | normalize_whitespace | truncate: 160 }}{% else %}{{ site.description | escape }}{% endif %}{% endcapture %}
+    {%- capture share_description %}{%- if page.description %}{{ page.description | escape }}{% elsif found_project.summary %}{{ found_project.summary | normalize_whitespace | escape }}{% elsif page.excerpt %}{{ page.excerpt | strip_html | normalize_whitespace | truncate: 160 }}{% else %}{{ site.description | escape }}{% endif %}{% endcapture %}
 
     <title>{% if page.seo_title %}{{ page.seo_title | escape }}{% elsif page.title %}{{ page.title | escape }} | {{ site.title }}{% else %}{{ site.title }}{% endif %}</title>
 

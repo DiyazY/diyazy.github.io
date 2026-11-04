@@ -1,5 +1,5 @@
 // Unit tests for assets/js/homelab-layout.js (no DOM, no Three.js).
-// Run: node --test .github/scripts/homelab-test/
+// Run: node --test '.github/scripts/homelab-test/*.test.mjs'
 import test from 'node:test';
 import assert from 'node:assert/strict';
 import {

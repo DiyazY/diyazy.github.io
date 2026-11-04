@@ -77,15 +77,18 @@ expect_homelab_fail "unknown uplink" "[$(dev a servers nope)]" "a uplink nope no
 expect_homelab_fail "uplink cycle" "[$(dev a servers b),$(dev b servers a)]" "uplink cycle at a"
 expect_homelab_fail "unknown tier" "[$(dev a attic internet)]" "a has unknown tier attic"
 
-rm -rf "$work/site" && cp -R "$SITE" "$work/site"
-printf '<p>10.10.0.11</p>' >> "$work/site/homelab.html"
-if env -u CHECK_ALLOW_FUTURE "$REPO/.github/scripts/check-build.sh" "$work/site" > "$work/out" 2>&1; then
-  printf '  FAIL  internal address on homelab.html: check-build.sh passed\n'; fails=$((fails + 1))
-elif grep -qF 'FAIL  homelab.html leaks private network details' "$work/out"; then
-  printf '  ok    internal address on homelab.html\n'
-else
-  printf '  FAIL  internal address on homelab.html: expected the leak message\n'; fails=$((fails + 1))
-fi
+# Each of these must trip the leak guard on homelab.html.
+for leak in 10.10.0.11 100.101.102.103 192.168.100.1 172.20.0.5 nuc-1.lab Tailscale; do
+  rm -rf "$work/site" && cp -R "$SITE" "$work/site"
+  printf '<p>%s</p>' "$leak" >> "$work/site/homelab.html"
+  if env -u CHECK_ALLOW_FUTURE "$REPO/.github/scripts/check-build.sh" "$work/site" > "$work/out" 2>&1; then
+    printf '  FAIL  leak "%s" on homelab.html: check-build.sh passed\n' "$leak"; fails=$((fails + 1))
+  elif grep -qF 'FAIL  homelab.html leaks private network details' "$work/out"; then
+    printf '  ok    leak "%s" on homelab.html\n' "$leak"
+  else
+    printf '  FAIL  leak "%s" on homelab.html: expected the leak message\n' "$leak"; fails=$((fails + 1))
+  fi
+done
 
 echo
 if [ "$fails" -gt 0 ]; then

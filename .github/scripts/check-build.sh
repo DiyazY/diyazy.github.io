@@ -472,7 +472,9 @@ if [ -s "$SITE/homelab.html" ]; then
   else
     fail "homelab data invalid: $err"
   fi
-  if grep -qiE '\b10\.[0-9]+\.[0-9]+\.[0-9]+|\b100\.[0-9]+\.[0-9]+\.[0-9]+|tailscale|magicdns|\.ts\.net' "$SITE/homelab.html"; then
+  # Private ranges (10/8, 172.16/12, 192.168/16), Tailscale's 100.x range,
+  # the lab's internal ".lab" DNS names, and remote-access product names.
+  if grep -qiE '\b10\.[0-9]+\.[0-9]+\.[0-9]+|\b100\.[0-9]+\.[0-9]+\.[0-9]+|\b192\.168\.[0-9]+\.[0-9]+|\b172\.(1[6-9]|2[0-9]|3[01])\.[0-9]+\.[0-9]+|\b[a-z0-9-]+\.lab\b|tailscale|magicdns|\.ts\.net' "$SITE/homelab.html"; then
     fail "homelab.html leaks private network details"
   else
     pass "homelab.html carries no internal addresses or remote-access names"

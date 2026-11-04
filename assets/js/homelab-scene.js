@@ -279,7 +279,16 @@ async function start() {
       for (const led of leds) led.material.emissiveIntensity = 0.8 + 0.8 * (0.5 + 0.5 * Math.sin(t * 3 + led.userData.phase));
     }
     for (const fn of frameHooks) fn(dt, t);
-    controls.update();
+    // OrbitControls clamps auto-rotation at the azimuth limits instead of
+    // turning back, so swing back and forth between them. A positive speed
+    // moves toward minAzimuthAngle.
+    if (controls.autoRotate) {
+      const az = controls.getAzimuthalAngle();
+      const speed = Math.abs(controls.autoRotateSpeed);
+      if (az <= controls.minAzimuthAngle + 0.01) controls.autoRotateSpeed = -speed;
+      else if (az >= controls.maxAzimuthAngle - 0.01) controls.autoRotateSpeed = speed;
+    }
+    controls.update(dt);
     renderer.render(scene, camera);
     for (const fn of afterRenderHooks) fn();
     if (container.dataset.ready !== 'true') container.dataset.ready = 'true';
@@ -429,6 +438,7 @@ function setupInteraction({ THREE, camera, renderer, controls, meshes }) {
 
   // Test hook for local Playwright checks only; never exposed on the live site.
   if (location.hostname === 'localhost') {
+    window.__homelabControls = controls;
     window.__homelabProject = (id) => {
       const g = meshes.get(id);
       if (!g) return null;

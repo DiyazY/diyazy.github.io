@@ -63,7 +63,13 @@ jobs:
         run: ./.github/scripts/check-build.sh _site
 
       # Layout maths behind the /homelab.html 3D scene. Node's built-in test
-      # runner, no packages; ubuntu-latest ships a Node new enough for it.
+      # runner, no packages. Pinned like the worker job: glob arguments to
+      # --test need Node 21+, and the runner's default Node is older.
+      - name: Set up Node
+        uses: actions/setup-node@v7
+        with:
+          node-version: '24'
+
       - name: Test home-lab layout
         run: node --test '.github/scripts/homelab-test/*.test.mjs'
 

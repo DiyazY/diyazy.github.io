@@ -90,6 +90,33 @@ for leak in 10.10.0.11 100.101.102.103 192.168.100.1 172.20.0.5 nuc-1.lab Tailsc
   fi
 done
 
+# expect_products_fail <name> <ruby snippet editing `html`, or "rm:<path>"> <message>
+# Breaks the home page's product card in a copy of the site, then expects
+# "FAIL  home products invalid: <message>".
+expect_products_fail() {
+  rm -rf "$work/site" && cp -R "$SITE" "$work/site"
+  case "$2" in
+    rm:*) rm -f "$work/site/${2#rm:}" ;;
+    *) ruby -e 'f = ARGV[0]; html = File.read(f); '"$2"'; File.write(f, html)' "$work/site/index.html" ;;
+  esac
+  if env -u CHECK_ALLOW_FUTURE "$REPO/.github/scripts/check-build.sh" "$work/site" > "$work/out" 2>&1; then
+    printf '  FAIL  %s: check-build.sh passed\n' "$1"; fails=$((fails + 1))
+  elif grep -F 'FAIL' "$work/out" | grep -qF -- "home products invalid: $3"; then
+    printf '  ok    %s\n' "$1"
+  else
+    printf '  FAIL  %s: expected "%s" in:\n' "$1" "$3"; grep 'FAIL' "$work/out" | sed 's/^/          /'
+    fails=$((fails + 1))
+  fi
+}
+
+echo
+echo "Testing check-build.sh against a broken home product card"
+expect_products_fail "no product slides" 'html.gsub!(/class="product-slide[^"]*"/, %q(class="gone"))' "no product slides"
+expect_products_fail "logo file missing" "rm:assets/images/logos/busypipe.svg" "busypipe logo assets/images/logos/busypipe.svg missing"
+expect_products_fail "empty tagline" 'html.sub!(%r{(<p class="product-tagline">)[^<]*}, %q(\\1))' "busypipe has no tagline"
+expect_products_fail "missing colour" 'html.sub!("--product-bg: #131923;", "--product-bg: ;")' "busypipe colour --product-bg missing"
+expect_products_fail "relative link" 'html.sub!(%q(href="https://busypipe.com"), %q(href="/busypipe"))' "busypipe link /busypipe is not https"
+
 echo
 if [ "$fails" -gt 0 ]; then
   echo "$fails fixture(s) not caught"

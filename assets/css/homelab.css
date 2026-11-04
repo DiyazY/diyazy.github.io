@@ -1,5 +1,13 @@
 /* Home lab page (homelab.html + assets/js/homelab-scene.js) */
 
+/* Scene background. Its own token, because --color-primary flips to near-white
+   in dark mode. The scene module reads this at runtime and on theme change. */
+:root { --homelab-bg: #2a2521; }
+[data-theme="dark"] { --homelab-bg: #141210; }
+@media (prefers-color-scheme: dark) {
+  :root:not([data-theme="light"]) { --homelab-bg: #141210; }
+}
+
 /* .panel-container is a 3-col grid; override to a centred single column,
    like the series and projects pages. */
 .homelab-page { display: block; padding: 10px; }
@@ -16,7 +24,7 @@
   position: relative;
   height: 70vh; min-height: 360px;
   border-radius: 12px; overflow: hidden;
-  background-color: var(--color-primary, #2a2521);
+  background-color: var(--homelab-bg);
 }
 .homelab-scene canvas { display: block; width: 100%; height: 100%; touch-action: none; }
 .homelab-fallback {
@@ -87,7 +95,7 @@
 .homelab-posts span { color: var(--color-text-muted, #8d8478); font-size: 0.85rem; }
 
 @media (max-width: 768px) {
-  .homelab-scene { height: 60vh; }
+  .homelab-scene { height: 55vh; }
 }
 @media (max-width: 600px) {
   .homelab-container { padding: 20px 16px; }

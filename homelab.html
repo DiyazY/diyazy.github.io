@@ -77,3 +77,17 @@ description: "An interactive 3D tour of Diyaz Yakubov's home lab: two NUCs runni
 </div>
 
 <script type="application/json" id="homelab-data">{{ lab | jsonify }}</script>
+{%- comment -%}
+  Three.js is pinned here and loaded only on this page. The scene module
+  imports it dynamically, so if the CDN is blocked the page falls back to the
+  device list instead of breaking. Bump both URLs together.
+{%- endcomment %}
+<script type="importmap">
+{
+  "imports": {
+    "three": "https://cdn.jsdelivr.net/npm/three@0.187.0/build/three.module.js",
+    "three/addons/": "https://cdn.jsdelivr.net/npm/three@0.187.0/examples/jsm/"
+  }
+}
+</script>
+<script type="module" src="{{ site.baseurl }}/assets/js/homelab-scene.js"></script>

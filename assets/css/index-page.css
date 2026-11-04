@@ -10,17 +10,17 @@
   padding: 20px;
 }
 
-.item-diy {
+.item-tile-a {
   grid-area: 1 / 2 / 2 / 3;
   cursor: pointer;
 }
 
-.item-homelab {
+.item-tile-b {
   grid-area: 1 / 3 / 2 / 4;
   cursor: pointer;
 }
 
-.item-art {
+.item-tile-c {
   grid-area: 2 / 2 / 3 / 3;
   cursor: pointer;
 }
@@ -42,38 +42,38 @@
   border-radius: 0;
 }
 
-.item-diy,
-.item-homelab,
-.item-art {
+.home-tile {
   transition: transform var(--transition-fast, 0.15s ease),
               box-shadow var(--transition-fast, 0.15s ease);
 }
 
-.item-diy:hover,
-.item-homelab:hover,
-.item-art:hover {
+.home-tile:hover {
   transform: scale(1.02);
   box-shadow: var(--shadow-lg, 0 10px 20px rgba(0, 0, 0, 0.15));
   z-index: 1;
 }
 
-/* Background Images */
-.homelab {
-  background-image: url(../images/homelab.webp);
-  background-position: center;
+/* Background Images. background-color shows while the image loads. Tile
+   images live in images/tiles/ as 900px-wide crops of the series covers —
+   the After the Feed one has the cover's own headline removed so it doesn't
+   compete with the tile title. */
+.home-tile {
   background-size: cover;
+  background-position: center;
+  background-repeat: no-repeat;
+  background-color: var(--color-primary, #2a2521);
 }
 
-.diy {
-  background-image: url(../images/diy.webp);
-  background-position: center;
-  background-size: cover;
+.tile-after-the-feed {
+  background-image: url(../images/tiles/after-the-feed.webp);
 }
 
-.art {
-  background-image: url(../images/art.webp);
-  background-size: cover;
-  background-position: center;
+.tile-speculative-design {
+  background-image: url(../images/tiles/speculative-design.webp);
+}
+
+.tile-projects {
+  background-image: url(../images/tiles/projects.webp);
 }
 
 /* Panel Titles (for image panels) */
@@ -83,6 +83,8 @@
   border-radius: 0.6rem;
   margin: 0;
   backdrop-filter: blur(10px);
+  /* Scrim so the title stays legible over busy or light artwork. */
+  background-color: rgba(20, 17, 15, 0.35);
 }
 
 .title a {
@@ -193,15 +195,15 @@
     grid-area: 1 / 1 / 2 / 2;
   }
 
-  .item-diy {
+  .item-tile-a {
     grid-area: 1 / 2 / 2 / 3;
   }
 
-  .item-homelab {
+  .item-tile-b {
     grid-area: 2 / 1 / 3 / 2;
   }
 
-  .item-art {
+  .item-tile-c {
     grid-area: 2 / 2 / 3 / 3;
   }
 

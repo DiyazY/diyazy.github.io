@@ -98,7 +98,7 @@ A structured plan to make [diyazy.github.io](https://diyazy.github.io/) more int
 
 **Priority:** High
 **Goal:** Make content more engaging and interactive
-**Status:** COMPLETED (Giscus needs configuration)
+**Status:** COMPLETED
 
 ### Tasks
 
@@ -114,7 +114,7 @@ A structured plan to make [diyazy.github.io](https://diyazy.github.io/) more int
     - [x] Choose provider: Giscus (GitHub Discussions)
     - [x] Add to post template
     - [x] Style to match site design
-    - [ ] **ACTION REQUIRED:** Configure Giscus repo ID and category ID (see setup instructions below)
+    - [x] Configure Giscus repo ID and category ID (set in `_layouts/post.html`)
 
 - [x] **Add social sharing buttons**
     - [x] Twitter/X share

@@ -62,6 +62,11 @@ jobs:
       - name: Check generated output
         run: ./.github/scripts/check-build.sh _site
 
+      # Layout maths behind the /homelab.html 3D scene. Node's built-in test
+      # runner, no packages; ubuntu-latest ships a Node new enough for it.
+      - name: Test home-lab layout
+        run: node --test '.github/scripts/homelab-test/*.test.mjs'
+
       # Proves the posts.json checks above still fail on bad input.
       - name: Test the build checks
         run: ./.github/scripts/check-build-test.sh _site

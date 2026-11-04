@@ -164,7 +164,7 @@ async function start() {
     if (d.uplink) {
       const led = new THREE.Mesh(
         new THREE.SphereGeometry(0.035, 8, 8),
-        new THREE.MeshStandardMaterial({ color: GOLD, emissive: GOLD, emissiveIntensity: 1.5 }),
+        new THREE.MeshStandardMaterial({ color: GOLD, emissive: GOLD, emissiveIntensity: 1.5, userData: { led: true } }),
       );
       led.position.set(w / 2 - 0.12, Math.min(h * 0.6, h - 0.05), dep / 2 + 0.01);
       if (d.kind === 'router') led.position.set(0, h * 0.75, w / 2 + 0.01);
@@ -279,7 +279,146 @@ async function start() {
   controlsBar.hidden = false;
   schedule();
 
-  return { THREE, scene, camera, renderer, controls, meshes, fitDistance, resetCamera };
+  const ctx = { THREE, scene, camera, renderer, controls, meshes, fitDistance, resetCamera };
+  ctx.select = setupInteraction(ctx);
+  return ctx;
+}
+
+// --- interaction: hover, select, info card, list sync -------------------------
+const card = document.getElementById('homelab-card');
+const listButtons = [...document.querySelectorAll('.homelab-device')];
+const byId = new Map(devices.map(d => [d.id, d]));
+const DRAG_PX = 5; // pointer travel beyond this is an orbit drag, not a tap
+
+function capture(event, props) {
+  if (window.posthog) window.posthog.capture(event, props);
+}
+
+function el(tag, text, className) {
+  const n = document.createElement(tag);
+  if (text) n.textContent = text;
+  if (className) n.className = className;
+  return n;
+}
+
+function fillCard(d) {
+  card.replaceChildren();
+  const close = el('button', '\u00d7', 'card-close');
+  close.type = 'button';
+  close.setAttribute('aria-label', 'Close');
+  card.append(close, el('h3', d.name), el('p', `${d.model} \u00b7 ${d.specs}`, 'card-model'), el('p', d.role, 'card-role'));
+  if (d.services && d.services.length) {
+    const ul = el('ul');
+    for (const s of d.services) ul.append(el('li', s));
+    card.append(ul);
+  }
+  for (const link of d.links || []) {
+    const a = el('a', link.label);
+    a.href = link.url;
+    const p = el('p');
+    p.append(a);
+    card.append(p);
+  }
+  return close;
+}
+
+function setupInteraction({ THREE, camera, renderer, controls, meshes }) {
+  const raycaster = new THREE.Raycaster();
+  const pointer = new THREE.Vector2();
+  const groups = [...meshes.values()];
+  let hovered = null;
+  let selected = null;
+  let down = null;
+  let targetTween = null;
+
+  function glow(id, on) {
+    const g = meshes.get(id);
+    if (!g) return;
+    g.traverse((o) => {
+      if (!o.isMesh || o.material.userData.led) return;
+      if (!o.material.userData.own) { o.material = o.material.clone(); o.material.userData.own = true; }
+      o.material.emissive.setHex(on ? 0xc9a227 : 0x000000);
+      o.material.emissiveIntensity = on ? 0.35 : 0;
+    });
+  }
+  const lit = () => { for (const id of meshes.keys()) glow(id, id === hovered || id === selected); };
+
+  function pick(event) {
+    const r = renderer.domElement.getBoundingClientRect();
+    pointer.set(((event.clientX - r.left) / r.width) * 2 - 1, -((event.clientY - r.top) / r.height) * 2 + 1);
+    raycaster.setFromCamera(pointer, camera);
+    for (const hit of raycaster.intersectObjects(groups, true)) {
+      let o = hit.object;
+      while (o && !o.userData.id) o = o.parent;
+      if (o && o.visible && !o.userData.hidden) return o.userData.id;
+    }
+    return null;
+  }
+
+  function select(id, { source = 'scene' } = {}) {
+    selected = id && byId.has(id) ? id : null;
+    container.dataset.selected = selected || '';
+    for (const b of listButtons) b.setAttribute('aria-pressed', String(b.dataset.device === selected));
+    if (selected) {
+      fillCard(byId.get(selected)).addEventListener('click', () => select(null));
+      card.hidden = false;
+      capture('homelab_device_selected', { device: selected });
+      if (source === 'list') {
+        const p = meshes.get(selected).position;
+        targetTween = { from: controls.target.clone(), to: new THREE.Vector3(p.x, p.y, p.z), t: 0 };
+        if (state.reducedMotion) { controls.target.copy(targetTween.to); targetTween = null; }
+      }
+    } else {
+      card.hidden = true;
+      card.replaceChildren();
+    }
+    lit();
+  }
+
+  const canvas = renderer.domElement;
+  canvas.addEventListener('pointerdown', (e) => { down = { x: e.clientX, y: e.clientY }; });
+  canvas.addEventListener('pointermove', (e) => {
+    if (e.pointerType !== 'mouse' || e.buttons) return;
+    const id = pick(e);
+    if (id !== hovered) { hovered = id; canvas.style.cursor = id ? 'pointer' : ''; lit(); }
+  });
+  canvas.addEventListener('pointerleave', () => { hovered = null; canvas.style.cursor = ''; lit(); });
+  canvas.addEventListener('pointerup', (e) => {
+    if (!down) return;
+    const moved = Math.hypot(e.clientX - down.x, e.clientY - down.y);
+    down = null;
+    if (moved > DRAG_PX) return;
+    select(pick(e));
+  });
+  document.addEventListener('keydown', (e) => { if (e.key === 'Escape' && selected) select(null); });
+
+  for (const b of listButtons) {
+    b.addEventListener('click', () => {
+      const id = b.dataset.device;
+      select(selected === id ? null : id, { source: 'list' });
+      if (selected) container.scrollIntoView({ behavior: state.reducedMotion ? 'auto' : 'smooth', block: 'center' });
+    });
+  }
+
+  frameHooks.push((dt) => {
+    if (!targetTween) return;
+    targetTween.t = Math.min(1, targetTween.t + dt / 0.6);
+    controls.target.lerpVectors(targetTween.from, targetTween.to, targetTween.t * targetTween.t * (3 - 2 * targetTween.t));
+    if (targetTween.t === 1) targetTween = null;
+  });
+
+  // Test hook for local Playwright checks only; never exposed on the live site.
+  if (location.hostname === 'localhost') {
+    window.__homelabProject = (id) => {
+      const g = meshes.get(id);
+      if (!g) return null;
+      const box = new THREE.Box3().setFromObject(g);
+      const v = box.getCenter(new THREE.Vector3()).project(camera);
+      const r = canvas.getBoundingClientRect();
+      return { x: r.left + (v.x + 1) / 2 * r.width, y: r.top + (1 - v.y) / 2 * r.height };
+    };
+  }
+  return select;
 }
 
 // Per-frame callbacks registered by the interaction and network-view code.

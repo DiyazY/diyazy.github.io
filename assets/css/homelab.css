@@ -58,7 +58,7 @@
 
 /* Info card: side panel on wide screens, bottom sheet on narrow ones */
 .homelab-card {
-  position: absolute; top: 60px; right: 12px; bottom: 12px; width: 300px;
+  position: absolute; top: 60px; right: 12px; width: 300px; max-height: calc(100% - 72px);
   overflow: auto; padding: 18px;
   background: rgba(29, 26, 23, 0.88); backdrop-filter: blur(10px);
   color: #e8e1d6; border-radius: 10px; border: 1px solid rgba(201, 162, 39, 0.35);
@@ -74,7 +74,7 @@
   border: 0; border-radius: 50%; background: rgba(255, 255, 255, 0.08); color: #e8e1d6; cursor: pointer; font-size: 1rem;
 }
 @media (max-width: 899px) {
-  .homelab-card { top: auto; left: 8px; right: 8px; width: auto; max-height: 50%; }
+  .homelab-card { top: auto; bottom: 8px; left: 8px; right: 8px; width: auto; max-height: 50%; }
 }
 
 /* Device list */

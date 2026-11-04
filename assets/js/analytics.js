@@ -83,11 +83,17 @@
       return;
     }
 
-    // 3. Homepage tiles (series, projects) and the About tile. Each carries
-    // its analytics name in data-tile, so a new tile needs no change here.
-    var tile = target.closest('.home-grid [data-tile]');
+    // 3. Homepage category tiles (DIY / HomeLab / Art) and the About tile.
+    var tile = target.closest('.item-diy, .item-homelab, .item-art, .item-about');
     if (tile) {
-      capture('homepage_tile_clicked', { tile: tile.getAttribute('data-tile') });
+      var name = tile.classList.contains('item-diy')
+        ? 'diy'
+        : tile.classList.contains('item-homelab')
+        ? 'homelab'
+        : tile.classList.contains('item-art')
+        ? 'art'
+        : 'about';
+      capture('homepage_tile_clicked', { tile: name });
       // fall through: not an outbound link, so nothing else fires
     }
 

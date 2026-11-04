@@ -1,8 +1,8 @@
 // Rotating product card on the home page (the .item-products cell in
 // index.html). Shows one slide at a time and moves on every ROTATE_MS.
-// Rotation pauses while the pointer is over the card or focus is inside it,
-// stops for good once someone picks a dot, never starts under
-// prefers-reduced-motion, and idles while the tab is hidden.
+// Rotation pauses while the pointer is over the card or keyboard focus is
+// inside it, restarts its countdown when someone picks a dot, never runs
+// under prefers-reduced-motion, and idles while the tab is hidden.
 (function () {
   var ROTATE_MS = 6000;
   var root = document.querySelector('[data-home-products]');
@@ -16,7 +16,6 @@
   var timer = null;
   var hovered = false;
   var focused = false;
-  var stopped = false;
 
   function show(i) {
     current = i;
@@ -39,20 +38,23 @@
   function schedule() {
     clearInterval(timer);
     timer = null;
-    if (stopped || hovered || focused || reduce.matches || document.hidden) return;
+    if (hovered || focused || reduce.matches || document.hidden) return;
     timer = setInterval(function () { show((current + 1) % slides.length); }, ROTATE_MS);
   }
 
   for (var d = 0; d < dots.length; d++) {
     dots[d].addEventListener('click', function (e) {
       show(Number(e.currentTarget.getAttribute('data-index')));
-      stopped = true;
       schedule();
     });
   }
   root.addEventListener('mouseenter', function () { hovered = true; schedule(); });
   root.addEventListener('mouseleave', function () { hovered = false; schedule(); });
-  root.addEventListener('focusin', function () { focused = true; schedule(); });
+  // Keyboard focus only: a clicked dot keeps focus, and that must not pause.
+  root.addEventListener('focusin', function (e) {
+    focused = e.target.matches(':focus-visible');
+    schedule();
+  });
   root.addEventListener('focusout', function (e) {
     focused = root.contains(e.relatedTarget);
     schedule();

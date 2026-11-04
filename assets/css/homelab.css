@@ -1,0 +1,94 @@
+/* Home lab page (homelab.html + assets/js/homelab-scene.js) */
+
+/* .panel-container is a 3-col grid; override to a centred single column,
+   like the series and projects pages. */
+.homelab-page { display: block; padding: 10px; }
+.homelab-container {
+  max-width: 1100px; margin: 0 auto; padding: 30px;
+  background-color: var(--color-panel-bg, rgba(255, 255, 255, 0.95));
+  border-radius: 10px;
+}
+.homelab-intro { color: var(--color-text-muted, #6b6459); font-size: 1.05rem; line-height: 1.7; max-width: 760px; margin: 0 0 1.5rem; }
+
+/* Scene panel. The canvas is injected by the scene module; the panel keeps its
+   size whether or not WebGL is available, so the page never jumps. */
+.homelab-scene {
+  position: relative;
+  height: 70vh; min-height: 360px;
+  border-radius: 12px; overflow: hidden;
+  background-color: var(--color-primary, #2a2521);
+}
+.homelab-scene canvas { display: block; width: 100%; height: 100%; touch-action: none; }
+.homelab-fallback {
+  position: absolute; inset: 0; margin: 0;
+  display: flex; align-items: center; justify-content: center; text-align: center;
+  padding: 24px; color: #e8e1d6; font-size: 1.05rem;
+}
+.homelab-fallback[hidden] { display: none; }
+
+.homelab-controls {
+  position: absolute; top: 12px; left: 12px; right: 12px;
+  display: flex; justify-content: space-between; gap: 8px; pointer-events: none;
+}
+.homelab-controls > * { pointer-events: auto; }
+.homelab-controls[hidden] { display: none; }
+.homelab-toggle { display: inline-flex; border-radius: 999px; overflow: hidden; background: rgba(20, 17, 15, 0.6); backdrop-filter: blur(8px); }
+.homelab-toggle button, .homelab-reset {
+  border: 0; background: transparent; color: #e8e1d6;
+  font: inherit; font-size: 0.85rem; padding: 7px 14px; cursor: pointer;
+}
+.homelab-toggle button[aria-pressed="true"] { background: var(--color-accent, #c9a227); color: #1d1a17; font-weight: 600; }
+.homelab-reset { border-radius: 999px; background: rgba(20, 17, 15, 0.6); backdrop-filter: blur(8px); }
+.homelab-toggle button:focus-visible, .homelab-reset:focus-visible { outline: 2px solid var(--color-accent, #c9a227); outline-offset: 2px; }
+
+/* Device names in network view (CSS2DRenderer labels) */
+.homelab-label {
+  color: #f3ede4; font-size: 0.72rem; padding: 2px 6px; border-radius: 4px;
+  background: rgba(20, 17, 15, 0.7); white-space: nowrap; pointer-events: none;
+}
+.homelab-label--link { color: var(--color-accent, #c9a227); }
+
+/* Info card: side panel on wide screens, bottom sheet on narrow ones */
+.homelab-card {
+  position: absolute; top: 60px; right: 12px; bottom: 12px; width: 300px;
+  overflow: auto; padding: 18px;
+  background: rgba(29, 26, 23, 0.88); backdrop-filter: blur(10px);
+  color: #e8e1d6; border-radius: 10px; border: 1px solid rgba(201, 162, 39, 0.35);
+}
+.homelab-card[hidden] { display: none; }
+.homelab-card h3 { margin: 0 32px 4px 0; color: #fff; font-size: 1.15rem; }
+.homelab-card .card-model { margin: 0 0 12px; color: #b9b0a3; font-size: 0.85rem; }
+.homelab-card .card-role { margin: 0 0 12px; }
+.homelab-card ul { margin: 0 0 12px; padding-left: 18px; }
+.homelab-card a { color: var(--color-accent, #c9a227); }
+.homelab-card .card-close {
+  position: absolute; top: 10px; right: 10px; width: 28px; height: 28px;
+  border: 0; border-radius: 50%; background: rgba(255, 255, 255, 0.08); color: #e8e1d6; cursor: pointer; font-size: 1rem;
+}
+@media (max-width: 899px) {
+  .homelab-card { top: auto; left: 8px; right: 8px; width: auto; max-height: 50%; }
+}
+
+/* Device list */
+.homelab-section-title { margin: 2rem 0 0.5rem; font-size: 1.35rem; color: var(--color-primary, #2a2521); }
+.homelab-tier h3 { font-size: 1rem; margin: 1.25rem 0 0.5rem; color: var(--color-accent, #c9a227); text-transform: uppercase; letter-spacing: 0.06em; }
+.homelab-devices { list-style: none; padding: 0; margin: 0; display: grid; grid-template-columns: repeat(auto-fill, minmax(240px, 1fr)); gap: 10px; }
+.homelab-devices li { border: 1px solid var(--color-border, rgba(42, 37, 33, 0.12)); border-radius: 8px; padding: 10px 12px; }
+.homelab-device {
+  display: flex; flex-direction: column; align-items: flex-start; gap: 2px; width: 100%;
+  border: 0; background: none; padding: 0; text-align: left; cursor: pointer; font: inherit; color: inherit;
+}
+.homelab-device-name { font-weight: 600; color: var(--color-primary, #2a2521); }
+.homelab-device[aria-pressed="true"] .homelab-device-name { color: var(--color-accent, #c9a227); }
+.homelab-device-role { font-size: 0.88rem; color: var(--color-text-muted, #6b6459); }
+.homelab-device-details { display: grid; grid-template-columns: auto 1fr; gap: 2px 10px; margin: 8px 0 0; font-size: 0.8rem; color: var(--color-text-muted, #6b6459); }
+.homelab-device-details dt { font-weight: 600; }
+.homelab-device-details dd { margin: 0; }
+.homelab-posts span { color: var(--color-text-muted, #8d8478); font-size: 0.85rem; }
+
+@media (max-width: 768px) {
+  .homelab-scene { height: 60vh; }
+}
+@media (max-width: 600px) {
+  .homelab-container { padding: 20px 16px; }
+}

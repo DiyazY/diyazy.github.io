@@ -1,0 +1,79 @@
+---
+layout: default
+title: Home Lab
+description: "An interactive 3D tour of Diyaz Yakubov's home lab: two NUCs running K3s, a Jetson and Seeed GPU pair for local LLM inference, seven Raspberry Pis and a NAS — what each machine runs and how they connect."
+---
+{%- comment -%}
+  Everything on this page comes from _data/homelab.yml. The device list below
+  is the real content (search engines, screen readers, no-WebGL visitors);
+  assets/js/homelab-scene.js reads the same data from #homelab-data and draws
+  the 3D view on top of it.
+{%- endcomment -%}
+<link rel="stylesheet" href="{{ site.baseurl }}/assets/css/homelab.css">
+
+{%- assign lab = site.data.homelab -%}
+<div class="panel-container homelab-page">
+  <div class="homelab-container">
+    {% include breadcrumbs.html %}
+    <h1>Home Lab</h1>
+    <p class="homelab-intro">{{ lab.intro }}</p>
+
+    <div id="homelab-scene" class="homelab-scene" data-view="rack" data-settled="true" data-selected="">
+      {%- comment -%}
+        Shown until the scene module either starts (hides it) or fails (swaps
+        in the WebGL message). Without JavaScript the noscript copy replaces it.
+      {%- endcomment %}
+      <p class="homelab-fallback" data-loading>Loading the 3D view&hellip;</p>
+      <noscript><style>.homelab-fallback[data-loading] { display: none; }</style><p class="homelab-fallback">The 3D view needs JavaScript and WebGL &mdash; here&rsquo;s everything in it below.</p></noscript>
+      <div class="homelab-controls" hidden>
+        <div class="homelab-toggle" role="group" aria-label="View">
+          <button type="button" data-view="rack" aria-pressed="true">Rack</button>
+          <button type="button" data-view="network" aria-pressed="false">Network</button>
+        </div>
+        <button type="button" id="homelab-reset" class="homelab-reset" aria-label="Reset view">Reset view</button>
+      </div>
+      <aside id="homelab-card" class="homelab-card" aria-live="polite" hidden></aside>
+    </div>
+
+    <h2 class="homelab-section-title">What runs here</h2>
+    {%- assign tier_names = "network:Network|servers:Servers|gpu:GPU inference|pis:Raspberry Pi fleet|storage:Storage|cooling:Cooling" | split: "|" -%}
+    {%- for pair in tier_names %}
+    {%- assign parts = pair | split: ":" -%}
+    {%- assign tier_devices = lab.devices | where: "tier", parts[0] -%}
+    {%- if tier_devices.size > 0 %}
+    <section class="homelab-tier">
+      <h3>{{ parts[1] }}</h3>
+      <ul class="homelab-devices">
+        {%- for d in tier_devices %}
+        <li>
+          <button type="button" class="homelab-device" data-device="{{ d.id }}" aria-pressed="false">
+            <span class="homelab-device-name">{{ d.name }}</span>
+            <span class="homelab-device-role">{{ d.role }}</span>
+          </button>
+          <dl class="homelab-device-details">
+            <dt>Model</dt><dd>{{ d.model }}</dd>
+            <dt>Specs</dt><dd>{{ d.specs }}</dd>
+            {%- if d.services.size > 0 %}
+            <dt>Runs</dt><dd>{{ d.services | join: ", " }}</dd>
+            {%- endif %}
+          </dl>
+        </li>
+        {%- endfor %}
+      </ul>
+    </section>
+    {%- endif %}
+    {%- endfor %}
+
+    {%- assign lab_posts = site.posts | where_exp: "p", "p.tags contains 'homelab'" -%}
+    {%- if lab_posts.size > 0 %}
+    <h2 class="homelab-section-title">Home-lab posts</h2>
+    <ul class="homelab-posts">
+      {%- for post in lab_posts %}
+      <li><a href="{{ post.url }}">{{ post.title }}</a> <span>{{ post.date | date: "%b %Y" }}</span></li>
+      {%- endfor %}
+    </ul>
+    {%- endif %}
+  </div>
+</div>
+
+<script type="application/json" id="homelab-data">{{ lab | jsonify }}</script>

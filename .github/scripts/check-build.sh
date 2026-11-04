@@ -429,6 +429,64 @@ else
   pass "sitemap.xml omits /subscribed/"
 fi
 
+# --- home lab -------------------------------------------------------------
+# /homelab.html embeds _data/homelab.yml as JSON for the 3D scene. A typo in
+# an uplink or tier would not break the build, just quietly break the scene,
+# so validate the embedded data here. Messages match validate() in
+# assets/js/homelab-layout.js. The page is public, so it must also never
+# carry internal addresses or remote-access names (see _data/homelab.yml).
+if [ -s "$SITE/homelab.html" ]; then
+  pass "homelab.html exists and is non-empty"
+  if err=$(ruby -rjson -e '
+    html = File.read(ARGV[0])
+    m = html.match(%r{<script type="application/json" id="homelab-data">(.*?)</script>}m)
+    abort "no homelab-data block" unless m
+    devices = (JSON.parse(m[1])["devices"] || [])
+    abort "no devices" if devices.empty?
+    tiers = %w[network servers gpu pis storage cooling]
+    kinds = %w[nuc jetson seeed pi4 pi3 pi-zero switch router nas fan ruuvi]
+    ids = {}
+    devices.each do |d|
+      id = d["id"].to_s
+      abort "duplicate id #{id}" if ids[id]
+      ids[id] = d
+    end
+    devices.each do |d|
+      id = d["id"]
+      abort "#{id} has unknown tier #{d["tier"]}" unless tiers.include?(d["tier"])
+      abort "#{id} has unknown kind #{d["kind"]}" unless kinds.include?(d["kind"])
+      up = d["uplink"]
+      abort "#{id} uplink #{up} not found" if up && up != "internet" && !ids[up]
+    end
+    devices.each do |d|
+      seen = {}
+      cur = d
+      while cur && cur["uplink"] && cur["uplink"] != "internet"
+        abort "uplink cycle at #{d["id"]}" if seen[cur["id"]]
+        seen[cur["id"]] = true
+        cur = ids[cur["uplink"]]
+      end
+    end
+  ' "$SITE/homelab.html" 2>&1); then
+    pass "homelab data is valid"
+  else
+    fail "homelab data invalid: $err"
+  fi
+  if grep -qiE '\b10\.[0-9]+\.[0-9]+\.[0-9]+|\b100\.[0-9]+\.[0-9]+\.[0-9]+|tailscale|magicdns|\.ts\.net' "$SITE/homelab.html"; then
+    fail "homelab.html leaks private network details"
+  else
+    pass "homelab.html carries no internal addresses or remote-access names"
+  fi
+else
+  fail "homelab.html missing or empty"
+fi
+
+if grep -q "location.href='/homelab.html'" "$SITE/index.html" && grep -q 'href="/homelab.html"' "$SITE/index.html"; then
+  pass "index.html HomeLab tile links to /homelab.html"
+else
+  fail "index.html HomeLab tile does not link to /homelab.html"
+fi
+
 echo
 if [ "$fails" -gt 0 ]; then
   echo "$fails check(s) failed"

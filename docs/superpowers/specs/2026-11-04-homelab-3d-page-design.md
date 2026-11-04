@@ -1,6 +1,6 @@
 # Home-lab 3D page — design spec
 
-_Status: approved design, awaiting spec review · Date: 2026-11-04 · Author: Diyaz Yakubov (with Claude)_
+_Status: approved design and spec · Date: 2026-11-04 · Author: Diyaz Yakubov (with Claude)_
 
 Internal planning document. Not published (see `exclude` in `_config.yml`).
 
@@ -14,8 +14,10 @@ animated traffic.
 
 Success means:
 
-- It reads as *Diyaz's actual lab* (layout matches the April 2026 photo), not
-  a generic server render.
+- It reads as *Diyaz's actual lab* — the real devices, roles and connections —
+  not a generic server render. Physical fidelity to the real cabinet does
+  **not** matter (decided at spec review): the layout is idealised to explain
+  the lab, grouped by tier.
 - It explains the lab: every device answers "what is this, what does it run,
   how is it connected".
 - It stays fast and accessible: the same information is available without
@@ -26,8 +28,7 @@ Success means:
 ## 2. Source of truth and disclosure
 
 Hardware, roles and services come from the home-lab repo
-(`~/di/projects/home-lab`: `README.md`, `architecture.md`, `.history/posts.md`,
-photo `.history/IMG_2929.jpg`).
+(`~/di/projects/home-lab`: `README.md`, `architecture.md`).
 
 **Published:** device models, specs, roles, named services (OpenClaw, n8n,
 SolidTime, Obsidian sync, Pi-hole/CoreDNS, Prometheus + Grafana, llama.cpp CPU
@@ -48,8 +49,7 @@ Tailscale details, SSH/key setup, ports, secrets, anything from `.sops.yaml`.
   1. Breadcrumbs (Home › Home Lab), `h1`, one-paragraph intro.
   2. Scene panel: canvas, **Rack | Network** toggle, reset-view button, info
      card (side panel ≥ 900px, bottom sheet below).
-  3. "What runs here": the devices as plain HTML, grouped by location
-     (top shelf, second shelf, desk, network). Each entry is a button that
+  3. "What runs here": the devices as plain HTML, grouped by tier. Each entry is a button that
      also selects the device in the scene.
   4. Home-lab posts (posts tagged `homelab`), rendered only if any exist.
 
@@ -70,36 +70,33 @@ Per device:
 | `specs`     | short line ("64 GB DDR4 · 1 TB NVMe")                                   |
 | `role`      | one line ("K3s primary server")                                         |
 | `services`  | list of service names                                                   |
-| `kind`      | which mesh to build: `nuc`, `jetson`, `seeed`, `pi4`, `pi3-stack`, `pi-zero`, `switch`, `router`, `nas`, `fan`, `ruuvi` |
-| `location`  | `top-shelf`, `second-shelf`, `cabinet-top`, `desk`                      |
-| `pos`       | `[x, z]` on its shelf in cabinet units (from the photo), plus `stack` index for stacked devices |
+| `kind`      | which mesh to build: `nuc`, `jetson`, `seeed`, `pi4`, `pi3`, `pi-zero`, `switch`, `router`, `nas`, `fan`, `ruuvi` |
+| `tier`      | which shelf: `network`, `servers`, `gpu`, `pis`, `storage`, `cooling` |
 | `uplink`    | `id` of the device it connects to (builds the topology tree); `link: usb-c-40g` marks the Jetson↔Seeed link |
 | `links`     | optional `{label, url}` list: related posts, projects, papers          |
 
-Devices (from the README and the photo):
+Devices (from the home-lab README). Shelf positions within a tier are
+computed by the scene (evenly spaced, left to right in data order), so the
+data file carries no coordinates.
 
-| Device                 | Location     | Role / services                                                    | Uplink        |
-| ---------------------- | ------------ | ------------------------------------------------------------------ | ------------- |
-| TP-Link Deco           | desk         | Gateway, DHCP, WiFi                                                | internet      |
-| TP-LINK TL-SG108       | top shelf    | Primary 8-port gigabit switch                                      | Deco          |
-| Teltonika TSW100       | second shelf | Secondary 5-port switch                                            | TL-SG108      |
-| NUC-1                  | top shelf    | K3s primary server; n8n, SolidTime, OpenClaw                       | TL-SG108      |
-| NUC-2                  | top shelf    | K3s HA server; CPU inference (llama.cpp, 70B+), OpenClaw, Obsidian sync | TL-SG108 |
-| Jetson Orin Nano       | top shelf    | GPU inference tier 1 (7B–14B models)                               | TL-SG108      |
-| Seeed Studio           | top shelf    | GPU inference tier 1, paired with the Jetson                       | Jetson (USB-C 40 Gbps) |
-| Raspberry Pi 4 ×3      | top shelf ×2, second shelf ×1 | K3s agents; Prometheus + Grafana                  | TSW100        |
-| Raspberry Pi 3 ×3      | second shelf (acrylic stack) | Pi-hole / CoreDNS, monitoring                       | TSW100        |
-| Raspberry Pi Zero W    | second shelf | Edge / sensor node                                                 | TSW100        |
-| QNAP NAS               | desk         | Central storage (NFS/iSCSI), backups                               | TL-SG108      |
-| Noctua fans ×2 + NA-FC1| cabinet top  | Cooling (no network)                                               | —             |
-| Ruuvi Tag              | top shelf    | Shelf temperature sensor (no network link drawn)                   | —             |
+| Device                  | Tier     | Role / services                                                        | Uplink        |
+| ----------------------- | -------- | ---------------------------------------------------------------------- | ------------- |
+| TP-Link Deco            | network  | Gateway, DHCP, WiFi                                                    | internet      |
+| TP-LINK TL-SG108        | network  | Primary 8-port gigabit switch                                          | Deco          |
+| Teltonika TSW100        | network  | Secondary 5-port switch                                                | TL-SG108      |
+| NUC-1                   | servers  | K3s primary server; n8n, SolidTime, OpenClaw                           | TL-SG108      |
+| NUC-2                   | servers  | K3s HA server; CPU inference (llama.cpp, 70B+), OpenClaw, Obsidian sync | TL-SG108     |
+| Jetson Orin Nano        | gpu      | GPU inference tier 1 (7B–14B models)                                   | TL-SG108      |
+| Seeed Studio            | gpu      | GPU inference tier 1, paired with the Jetson                           | Jetson (USB-C 40 Gbps) |
+| Raspberry Pi 4 ×3       | pis      | K3s agents; Prometheus + Grafana                                       | TSW100        |
+| Raspberry Pi 3 ×3       | pis      | Pi-hole / CoreDNS, monitoring                                          | TSW100        |
+| Raspberry Pi Zero W     | pis      | Edge / sensor node                                                     | TSW100        |
+| QNAP NAS                | storage  | Central storage (NFS/iSCSI), backups                                   | TL-SG108      |
+| Noctua fans ×2 + NA-FC1 | cooling  | Cooling, on the cabinet roof (no network)                              | —             |
+| Ruuvi Tag               | servers  | Shelf temperature sensor (no network link drawn)                       | —             |
 
-**Assumptions to confirm at spec review:**
-
-1. The flat TP-LINK box in the middle of the top shelf is the TL-SG108
-   switch, and the Deco router sits outside the cabinet (shown on the desk).
-2. The black box on the second shelf (left) is the TSW100 with the third Pi 4.
-3. The Pi Zero W lives on the second shelf (it is not visible in the photo).
+Multiples (Pi 4 ×3, Pi 3 ×3) are separate entries so each can be selected and
+drawn in the topology.
 
 The edge-research papers ran on a NUC + Raspberry Pi testbed; device cards
 for the NUCs and Pis link to the relevant project pages
@@ -108,9 +105,10 @@ for the NUCs and Pis link to the relevant project pages
 ## 5. Rack view (default)
 
 - **Model:** procedural low-poly meshes built in code from boxes and
-  cylinders (rounded where cheap): the light grey DELTACO cabinet with the
-  front door removed, two shelves, two Noctua fans on top that spin, devices
-  placed per §4. QNAP and Deco on a desk surface beside the cabinet.
+  cylinders (rounded where cheap): an open-front cabinet (the DELTACO, styled
+  freely) with one shelf per tier, top to bottom — network, servers, gpu,
+  pis, storage — and two Noctua fans on the roof that spin. The Jetson↔Seeed
+  USB-C cable is visible on the gpu shelf.
 - **Style:** site palette. Warm dark scene background (`#2a2521`-ish, follows
   light/dark theme tokens), muted greys for devices, gold (`#c9a227`) for
   hover highlight, status LEDs and packets. Soft key + fill light, subtle
@@ -147,9 +145,9 @@ for the NUCs and Pis link to the relevant project pages
   2; ~40 meshes, no shadows beyond one cheap contact shadow.
 - **Reduced motion** (`prefers-reduced-motion: reduce`): no auto-rotate, no
   packets, no fan spin, view switch is instant.
-- **No WebGL / module load failure:** canvas replaced by the rack photo
-  (`IMG_2929`, resized WebP, already public on LinkedIn) with a caption; the
-  HTML list still works. The page never shows a blank panel.
+- **No WebGL / module load failure:** the scene panel shows a short note
+  ("The 3D view needs WebGL — here's everything in it below") and the HTML
+  list still works. The page never shows a blank panel.
 - **Analytics:** `homelab_device_selected` (device id) and
   `homelab_view_toggled` (view). `analytics.js` keeps its `capture` helper
   private, so the scene module calls `window.posthog.capture` itself with the
@@ -162,7 +160,7 @@ for the NUCs and Pis link to the relevant project pages
   `check-build.sh`, `check-build-test.sh`, and the `--future` build.
 - Playwright: rack and network views at 1280px and 390px, light and dark;
   hover/select a device; toggle views; no console errors; no horizontal
-  overflow; WebGL-disabled fallback renders the photo and list.
+  overflow; WebGL-disabled fallback renders the note and list.
 - Grep the built page for `10.10.`, `100.`-range addresses, `tailscale`,
   hostnames: none present.
 - Screenshots shared with Diyaz for approval **before** the PR is merged.

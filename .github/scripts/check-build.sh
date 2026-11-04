@@ -489,6 +489,36 @@ else
   fail "index.html HomeLab tile does not link to /homelab.html"
 fi
 
+# --- home page product card ------------------------------------------------
+# One slide per product with a `home` block in _data/projects.yml. A missing
+# field renders as empty text or an empty CSS value rather than a build error.
+if err=$(ruby -e '
+  site = ARGV[0]
+  html = File.read(File.join(site, "index.html"))
+  slides = html.scan(%r{<a class="product-slide[^"]*"(.*?)</a>}m).map(&:first)
+  abort "no product slides" if slides.empty?
+  slides.each do |s|
+    id = s[/data-product="([^"]*)"/, 1].to_s
+    abort "a slide has no data-product" if id.empty?
+    href = s[/href="([^"]*)"/, 1].to_s
+    abort "#{id} link #{href} is not https" unless href.start_with?("https://")
+    %w[--product-bg --product-fg --product-accent].each do |v|
+      abort "#{id} colour #{v} missing" unless s =~ /#{v}: #[0-9A-Fa-f]{3,8};/
+    end
+    logo = s[%r{src="/(assets/images/logos/[^"]+)"}, 1]
+    abort "#{id} has no logo" unless logo
+    abort "#{id} logo #{logo} missing" unless File.size?(File.join(site, logo))
+    { "name" => "product-name", "tagline" => "product-tagline", "cta" => "product-cta" }.each do |what, cls|
+      text = s[%r{class="#{cls}">([^<]*)<}, 1].to_s.sub("&rarr;", "").strip
+      abort "#{id} has no #{what}" if text.empty?
+    end
+  end
+' "$SITE" 2>&1); then
+  pass "home product card is complete"
+else
+  fail "home products invalid: $err"
+fi
+
 echo
 if [ "$fails" -gt 0 ]; then
   echo "$fails check(s) failed"

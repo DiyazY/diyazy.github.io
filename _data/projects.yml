@@ -42,12 +42,25 @@
 #   links        list of { label, url, icon }; icon is globe | github | paper.
 #                llms.txt links to the first entry, or emits a bare name if
 #                there are none. summary is likewise optional there.
+#   home         optional; puts the item on the home page's rotating product
+#                card, which links to its first link's url. Fields: order
+#                (rotation order, 1 first), logo (file in
+#                assets/images/logos/), tagline, cta (button text), and the
+#                card colours bg, fg (text) and accent (button).
 
 - section: Live
   llms_section: Projects
   items:
     - name: TopTop.dev
       slug: toptop
+      home:
+        order: 3
+        logo: toptop.svg
+        tagline: Need software built? Nordic quality, fair rates.
+        cta: Talk to TopTop
+        bg: "#F1EAE0"
+        fg: "#2A2522"
+        accent: "#2A2522"
       image: toptop.webp
       badge:
         text: Live
@@ -67,6 +80,14 @@
 
     - name: busypipe
       slug: busypipe
+      home:
+        order: 1
+        logo: busypipe.svg
+        tagline: See what's trending on TikTok before everyone else.
+        cta: Try it free
+        bg: "#131923"
+        fg: "#FFFFFF"
+        accent: "#F97316"
       image: busypipe.webp
       badge:
         text: Live
@@ -89,6 +110,14 @@
 
     - name: EuroJackpot Stats
       slug: eurojackpot-stats
+      home:
+        order: 2
+        logo: eurojackpot-stats.svg
+        tagline: Pick your numbers with 990+ draws of data behind them.
+        cta: Generate numbers
+        bg: "#0E1F52"
+        fg: "#FFFFFF"
+        accent: "#F6C763"
       image: eurojackpotstats.webp
       badge:
         text: Live

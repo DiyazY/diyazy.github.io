@@ -32,8 +32,34 @@ description: "Diyaz Yakubov — engineer and founder of busypipe. Writing about 
     {% endfor %}
   </div>
 
-  <div class="item-diy diy mob-h-12vh" onclick="location.href='/blog.html?tag=diy'">
-    <h2 class="title"><a href="/blog.html?tag=diy">Do It Yourself</a></h2>
+  {%- comment -%}
+    Products with a `home` block in _data/projects.yml, in home.order. One
+    slide shows at a time; assets/js/home-products.js rotates them and shows
+    the dots. Without JS the first slide stays up and the dots stay hidden.
+  {%- endcomment -%}
+  {%- assign home_products = "" | split: "" -%}
+  {%- for group in site.data.projects -%}
+    {%- for item in group.items -%}
+      {%- if item.home -%}{%- assign home_products = home_products | push: item -%}{%- endif -%}
+    {%- endfor -%}
+  {%- endfor -%}
+  {%- assign home_products = home_products | sort: "home.order" %}
+  <div class="item-products mob-h-auto" data-home-products>
+    {%- for p in home_products %}
+    <a class="product-slide{% if forloop.first %} is-active{% endif %}" href="{{ p.links[0].url }}" data-product="{{ p.slug }}"
+       style="--product-bg: {{ p.home.bg }}; --product-fg: {{ p.home.fg }}; --product-accent: {{ p.home.accent }};"
+       {%- unless forloop.first %} aria-hidden="true" tabindex="-1"{% endunless %}>
+      <img class="product-logo" src="{{ site.baseurl }}/assets/images/logos/{{ p.home.logo }}" alt="" width="64" height="64">
+      <h2 class="product-name">{{ p.name }}</h2>
+      <p class="product-tagline">{{ p.home.tagline }}</p>
+      <span class="product-cta">{{ p.home.cta }} &rarr;</span>
+    </a>
+    {%- endfor %}
+    <div class="product-dots" role="group" aria-label="Choose a product" hidden>
+      {%- for p in home_products %}
+      <button type="button" class="product-dot" data-index="{{ forloop.index0 }}" aria-label="{{ p.name }}" aria-pressed="{% if forloop.first %}true{% else %}false{% endif %}"></button>
+      {%- endfor %}
+    </div>
   </div>
 
   <div class="item-homelab homelab mob-h-12vh" onclick="location.href='/homelab.html'">
@@ -52,3 +78,5 @@ description: "Diyaz Yakubov — engineer and founder of busypipe. Writing about 
     {% include particles.html %}
   </div>
 </div>
+
+<script src="{{ site.baseurl }}/assets/js/home-products.js" defer></script>

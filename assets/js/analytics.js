@@ -83,12 +83,15 @@
       return;
     }
 
-    // 3. Homepage category tiles (DIY / HomeLab / Art) and the About tile.
-    var tile = target.closest('.item-diy, .item-homelab, .item-art, .item-about');
+    // 3. Homepage product card, then the HomeLab / Art / About tiles. A
+    // product slide is also an outbound link, so step 4 records that too.
+    var product = target.closest('.product-slide');
+    if (product) {
+      capture('home_product_clicked', { product: product.getAttribute('data-product') });
+    }
+    var tile = target.closest('.item-homelab, .item-art, .item-about');
     if (tile) {
-      var name = tile.classList.contains('item-diy')
-        ? 'diy'
-        : tile.classList.contains('item-homelab')
+      var name = tile.classList.contains('item-homelab')
         ? 'homelab'
         : tile.classList.contains('item-art')
         ? 'art'

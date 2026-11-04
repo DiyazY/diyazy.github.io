@@ -10,9 +10,8 @@
   padding: 20px;
 }
 
-.item-diy {
+.item-products {
   grid-area: 1 / 2 / 2 / 3;
-  cursor: pointer;
 }
 
 .item-homelab {
@@ -42,14 +41,14 @@
   border-radius: 0;
 }
 
-.item-diy,
+.item-products,
 .item-homelab,
 .item-art {
   transition: transform var(--transition-fast, 0.15s ease),
               box-shadow var(--transition-fast, 0.15s ease);
 }
 
-.item-diy:hover,
+.item-products:hover,
 .item-homelab:hover,
 .item-art:hover {
   transform: scale(1.02);
@@ -64,16 +63,138 @@
   background-size: cover;
 }
 
-.diy {
-  background-image: url(../images/diy.webp);
-  background-position: center;
-  background-size: cover;
-}
-
 .art {
   background-image: url(../images/art.webp);
   background-size: cover;
   background-position: center;
+}
+
+/* Rotating product card. Slides share one grid cell, so the cell is as tall
+   as the tallest slide and the crossfade never shifts the layout. Colours come
+   from each product's `home` block in _data/projects.yml. */
+.panel-container > .item-products {
+  position: relative;
+  display: grid;
+  overflow: hidden;
+  background-color: #131923;
+}
+
+.product-slide {
+  grid-area: 1 / 1;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 10px;
+  padding: 28px 24px 56px;
+  text-align: center;
+  text-decoration: none;
+  background: var(--product-bg);
+  color: var(--product-fg);
+  opacity: 0;
+  visibility: hidden;
+  transition: opacity 0.6s ease, visibility 0s linear 0.6s;
+}
+
+.product-slide.is-active {
+  opacity: 1;
+  visibility: visible;
+  transition: opacity 0.6s ease, visibility 0s;
+}
+
+.product-slide:hover,
+.product-slide:focus {
+  color: var(--product-fg);
+  text-decoration: none;
+}
+
+.product-slide:focus-visible {
+  outline: 3px solid var(--product-accent);
+  outline-offset: -6px;
+}
+
+.product-logo {
+  width: 64px;
+  height: 64px;
+}
+
+.product-name {
+  margin: 0;
+  font-size: 1.7em;
+  line-height: 1.1;
+  letter-spacing: -0.01em;
+}
+
+.product-tagline {
+  margin: 0;
+  max-width: 24ch;
+  font-size: 1.1em;
+  line-height: 1.35;
+  opacity: 0.9;
+}
+
+.product-cta {
+  margin-top: 6px;
+  padding: 8px 18px;
+  border-radius: 999px;
+  background: var(--product-accent);
+  color: var(--product-bg);
+  font-weight: 700;
+  transition: transform var(--transition-fast, 0.15s ease);
+}
+
+.product-slide:hover .product-cta {
+  transform: translateX(3px);
+}
+
+.product-dots {
+  position: absolute;
+  left: 0;
+  right: 0;
+  bottom: 12px;
+  display: flex;
+  justify-content: center;
+  gap: 4px;
+}
+
+.product-dots[hidden] {
+  display: none;
+}
+
+/* 24px hit area around an 8px dot. */
+.product-dot {
+  width: 24px;
+  height: 24px;
+  padding: 0;
+  border: 0;
+  background: none;
+  cursor: pointer;
+}
+
+.product-dot::before {
+  content: "";
+  display: block;
+  width: 8px;
+  height: 8px;
+  margin: auto;
+  border-radius: 50%;
+  background: var(--dot-color, #fff);
+  opacity: 0.4;
+  transition: transform 0.2s ease, opacity 0.2s ease, background 0.6s ease;
+}
+
+.product-dot[aria-pressed="true"]::before {
+  opacity: 1;
+  transform: scale(1.3);
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .product-slide,
+  .product-slide.is-active,
+  .product-cta,
+  .product-dot::before {
+    transition: none;
+  }
 }
 
 /* Panel Titles (for image panels) */
@@ -193,7 +314,7 @@
     grid-area: 1 / 1 / 2 / 2;
   }
 
-  .item-diy {
+  .item-products {
     grid-area: 1 / 2 / 2 / 3;
   }
 

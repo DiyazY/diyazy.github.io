@@ -1,0 +1,8 @@
+<!-- TopTop spinning top from toptop.dev, ink only for the cream home card. -->
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 64 64">
+  <style>g { stroke: #2A2522; }</style>
+  <g transform="rotate(-12 32 34)" fill="none" stroke-width="6" stroke-linejoin="round" stroke-linecap="round">
+    <path d="M32 7 V19"/>
+    <path d="M10 30 C10 25 19 19 32 19 C45 19 54 25 54 30 C54 36 40 46 32 57 C24 46 10 36 10 30 Z"/>
+  </g>
+</svg>

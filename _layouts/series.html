@@ -1,0 +1,45 @@
+---
+layout: default
+---
+{%- comment -%}
+  One series landing page. The page's body is the series intro; the parts are
+  every post tagged page.series_tag, oldest first. Front matter:
+    series_tag     required; the tag every part carries
+    title_prefix   stripped from part titles ("After the Feed | ")
+    numbered_from  number of the first post: 1 = "Part 1, Part 2…",
+                   0 = the first is an intro and the next is Part 1.
+                   Either way the first post is labelled "Start here".
+    subscribe      true to show the subscribe box, with subscribe_heading
+    image          cover; used for og:image
+    nav_parent     /series.html, so the nav highlights "series"
+    card_image     smaller cover for the card on /series.html (falls back to image)
+  The series index (series.html) lists every page using this layout.
+{%- endcomment -%}
+<link rel="stylesheet" href="{{ site.baseurl }}/assets/css/series.css">
+
+{%- assign offset = page.numbered_from | default: 1 -%}
+{%- assign series = site.posts | where_exp: "p", "p.tags contains page.series_tag" | sort: "date" -%}
+<div class="panel-container series-page">
+  <div class="series-container">
+    {% include breadcrumbs.html %}
+    <h1>{{ page.title }}</h1>
+
+    <div class="series-intro">
+      {{ content }}
+    </div>
+
+    <ol class="series-list">
+      {%- for post in series %}
+      <li class="series-item">
+        <span class="part-label">{% if forloop.first %}Start here{% else %}Part {{ forloop.index0 | plus: offset }}{% endif %}<span class="part-date">{{ post.date | date: "%b %Y" }}</span></span>
+        <h2><a href="{{ post.url }}">{{ post.title | remove_first: page.title_prefix }}</a></h2>
+        <p class="part-summary">{{ post.description | default: post.excerpt | strip_html | normalize_whitespace | truncate: 180 }}</p>
+      </li>
+      {%- endfor %}
+    </ol>
+
+    {%- if page.subscribe %}
+    {% include subscribe.html location="series" heading=page.subscribe_heading %}
+    {%- endif %}
+  </div>
+</div>

@@ -30,7 +30,7 @@
                     {% assign current = page.url | remove: '.html' %}
                     {% assign nav_url = item.url | remove: '.html' %}
                     <li>
-                        <a href="{{ item.url }}"{% if current == nav_url or page.url == item.url %} class="active"{% endif %}>
+                        <a href="{{ item.url }}"{% if current == nav_url or page.url == item.url or page.nav_parent == item.url %} class="active"{% endif %}>
                             {{ item.title }}
                         </a>
                     </li>

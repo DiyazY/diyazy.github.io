@@ -3,7 +3,7 @@
 import test from 'node:test';
 import assert from 'node:assert/strict';
 import {
-  TIERS, LAYER_GAP, rackLayout, topologyLayout, topologyLinks, validate, easeInOut, lerp3,
+  TIERS, LAYER_GAP, LEAF_GAP, rackLayout, topologyLayout, topologyLinks, validate, easeInOut, lerp3,
 } from '../../../assets/js/homelab-layout.js';
 
 const devices = [
@@ -59,6 +59,27 @@ test('topology is vertically centred', () => {
   const l = topologyLayout(devices);
   const y = [...l.values()].map(p => p.y);
   assert.ok(Math.abs(Math.max(...y) + Math.min(...y)) < 1e-9);
+});
+
+test('leaves are spaced LEAF_GAP apart in depth-first order', () => {
+  const l = topologyLayout(devices);
+  const xs = ['nuc-1', 'nuc-2', 'seeed'].map(id => l.get(id).x);
+  assert.ok(Math.abs(xs[1] - xs[0] - LEAF_GAP) < 1e-9);
+  assert.ok(Math.abs(xs[2] - xs[1] - LEAF_GAP) < 1e-9);
+});
+
+test('parents sit centred over their children', () => {
+  const l = topologyLayout(devices);
+  const kids = (id) => devices.filter(d => d.uplink === id).map(d => l.get(d.id).x);
+  for (const id of ['switch', 'jetson', 'router']) {
+    const xs = kids(id);
+    assert.ok(Math.abs(l.get(id).x - xs.reduce((a, b) => a + b, 0) / xs.length) < 1e-9, id);
+  }
+});
+
+test('topology is horizontally centred', () => {
+  const x = [...topologyLayout(devices).values()].map(p => p.x);
+  assert.ok(Math.abs(Math.max(...x) + Math.min(...x)) < 1e-9);
 });
 
 test('usb-c link is typed', () => {

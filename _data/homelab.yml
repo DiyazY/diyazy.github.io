@@ -8,6 +8,7 @@
 # Per device:
 #   id        stable slug; the scene and the list key on it
 #   name      display name
+#   short     optional shorter name for the network-view label
 #   model     hardware model
 #   specs     one short line
 #   role      one line, what it is for
@@ -32,6 +33,7 @@ intro: >-
 devices:
   - id: deco
     name: TP-Link Deco
+    short: Deco
     model: TP-Link Deco mesh router
     specs: Mesh WiFi · gigabit WAN/LAN
     role: Gateway, DHCP and WiFi
@@ -101,6 +103,7 @@ devices:
 
   - id: jetson
     name: Jetson Orin Nano
+    short: Jetson
     model: NVIDIA Jetson Orin Nano
     specs: Orin SoC · 8 GB · NVMe
     role: GPU inference, fast tier (7B–14B models)
@@ -111,6 +114,7 @@ devices:
 
   - id: seeed
     name: Seeed Studio
+    short: Seeed
     model: Seeed Studio AI node
     specs: 8 GB · NVMe
     role: GPU inference, paired with the Jetson to split larger models
@@ -122,6 +126,7 @@ devices:
 
   - id: pi4-1
     name: Raspberry Pi 4 · 1
+    short: Pi 4 · 1
     model: Raspberry Pi 4 Model B
     specs: BCM2711 · 4 GB
     role: K3s agent
@@ -135,6 +140,7 @@ devices:
 
   - id: pi4-2
     name: Raspberry Pi 4 · 2
+    short: Pi 4 · 2
     model: Raspberry Pi 4 Model B
     specs: BCM2711 · 4 GB
     role: K3s agent
@@ -148,6 +154,7 @@ devices:
 
   - id: pi4-3
     name: Raspberry Pi 4 · 3
+    short: Pi 4 · 3
     model: Raspberry Pi 4 Model B
     specs: BCM2711 · 4 GB
     role: K3s agent
@@ -161,6 +168,7 @@ devices:
 
   - id: pi3-1
     name: Raspberry Pi 3 · 1
+    short: Pi 3 · 1
     model: Raspberry Pi 3
     specs: BCM2837 · 1 GB
     role: Internal DNS
@@ -171,6 +179,7 @@ devices:
 
   - id: pi3-2
     name: Raspberry Pi 3 · 2
+    short: Pi 3 · 2
     model: Raspberry Pi 3
     specs: BCM2837 · 1 GB
     role: DNS filtering
@@ -181,6 +190,7 @@ devices:
 
   - id: pi3-3
     name: Raspberry Pi 3 · 3
+    short: Pi 3 · 3
     model: Raspberry Pi 3
     specs: BCM2837 · 1 GB
     role: Spare, ready to swap in
@@ -191,6 +201,7 @@ devices:
 
   - id: pi-zero
     name: Raspberry Pi Zero W
+    short: Pi Zero
     model: Raspberry Pi Zero W
     specs: BCM2835 · 512 MB
     role: Edge and sensor node
@@ -201,6 +212,7 @@ devices:
 
   - id: qnap
     name: QNAP NAS
+    short: NAS
     model: QNAP NAS
     specs: Network storage
     role: Central storage and backups

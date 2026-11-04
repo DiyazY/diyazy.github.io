@@ -13,7 +13,9 @@
 //   data-view      "rack" | "network"
 //   data-settled   "true" when no view transition is running
 //   data-motion    "full" | "reduced" (prefers-reduced-motion)
-import { SHELF_GAP, SHELF_WIDTH, TIERS, rackLayout, validate } from './homelab-layout.js';
+import {
+  SHELF_GAP, SHELF_WIDTH, TIERS, easeInOut, lerp3, rackLayout, topologyLayout, topologyLinks, validate,
+} from './homelab-layout.js';
 
 const container = document.getElementById('homelab-scene');
 const fallback = container.querySelector('.homelab-fallback');
@@ -67,9 +69,10 @@ async function start() {
   validate(devices);
   if (!webglAvailable()) throw new Error('WebGL unavailable');
 
-  const [THREE, { OrbitControls }] = await Promise.all([
+  const [THREE, { OrbitControls }, { CSS2DRenderer, CSS2DObject }] = await Promise.all([
     import('three'),
     import('three/addons/controls/OrbitControls.js'),
+    import('three/addons/renderers/CSS2DRenderer.js'),
   ]);
 
   const renderer = new THREE.WebGLRenderer({ antialias: true });
@@ -203,11 +206,27 @@ async function start() {
     return Math.max(height / (2 * v), width / (2 * v * camera.aspect)) * 1.3;
   }
 
-  function resetCamera() {
+  // Where the camera rests in each view: {position, target}.
+  // In portrait viewports the network tree is drawn left to right instead of
+  // top to bottom (see setupNetworkView), so its bounding box turns too.
+  const NETWORK_SIZE = { width: 13.5, height: 7 };
+  function cameraFor(view) {
+    const target = new THREE.Vector3(RACK_TARGET.x, RACK_TARGET.y, RACK_TARGET.z);
+    if (view === 'network') {
+      const dist = portrait()
+        ? fitDistance(NETWORK_SIZE.height, NETWORK_SIZE.width)
+        : fitDistance(NETWORK_SIZE.width, NETWORK_SIZE.height);
+      return { position: new THREE.Vector3(0, target.y + dist * 0.12, dist), target };
+    }
     const dist = fitDistance(W + 1, H + 1.6);
-    controls.target.set(RACK_TARGET.x, RACK_TARGET.y, RACK_TARGET.z);
-    camera.position.set(dist * 0.3, RACK_TARGET.y + dist * 0.32, dist * 0.9);
-    controls.autoRotate = !state.reducedMotion;
+    return { position: new THREE.Vector3(dist * 0.3, target.y + dist * 0.32, dist * 0.9), target };
+  }
+
+  function resetCamera() {
+    const { position, target } = cameraFor(state.view);
+    controls.target.copy(target);
+    camera.position.copy(position);
+    controls.autoRotate = state.view === 'rack' && !state.reducedMotion;
     controls.update();
   }
 
@@ -279,8 +298,9 @@ async function start() {
   controlsBar.hidden = false;
   schedule();
 
-  const ctx = { THREE, scene, camera, renderer, controls, meshes, fitDistance, resetCamera };
+  const ctx = { THREE, CSS2DRenderer, CSS2DObject, scene, camera, renderer, controls, meshes, cabinet, shadow, cameraFor, rack };
   ctx.select = setupInteraction(ctx);
+  setupNetworkView(ctx);
   return ctx;
 }
 
@@ -419,6 +439,208 @@ function setupInteraction({ THREE, camera, renderer, controls, meshes }) {
     };
   }
   return select;
+}
+
+// --- network view: devices rearrange into the topology ------------------------
+const TWEEN_S = 1.2;
+const portrait = () => container.clientWidth < container.clientHeight * 0.9;
+
+function setupNetworkView({ THREE, CSS2DRenderer, CSS2DObject, scene, camera, controls, meshes, cabinet, shadow, cameraFor, rack }) {
+  const topo = topologyLayout(devices);
+  const links = topologyLinks(devices);
+  // Portrait: rotate the tree a quarter turn so it flows left to right.
+  const lift = (p) => (portrait()
+    ? { x: -p.y, y: -p.x + RACK_TARGET.y, z: p.z }
+    : { x: p.x, y: p.y + RACK_TARGET.y, z: p.z });
+  const height = (id) => (byId.has(id) ? KINDS[byId.get(id).kind].size[1] : 0);
+
+  // Internet: a gold wireframe ball, only in the network view.
+  const internet = new THREE.Mesh(
+    new THREE.IcosahedronGeometry(0.35, 1),
+    new THREE.MeshBasicMaterial({ color: GOLD, wireframe: true, transparent: true, opacity: 0 }),
+  );
+  const placeInternet = () => { const ip = lift(topo.get('internet')); internet.position.set(ip.x, ip.y, ip.z); };
+  placeInternet();
+  internet.visible = false;
+  scene.add(internet);
+
+  // Everything that fades out in the network view: cabinet, shadow, and the
+  // devices with no place in the topology (fans, sensor).
+  const fading = [cabinet, shadow, ...devices.filter(d => !topo.has(d.id)).map(d => meshes.get(d.id))];
+  const fadeMats = [];
+  for (const o of fading) {
+    o.traverse((m) => {
+      if (!m.isMesh) return;
+      if (!m.material.userData.own) { m.material = m.material.clone(); m.material.userData.own = true; }
+      m.material.transparent = true;
+      fadeMats.push({ mat: m.material, base: m.material.opacity });
+    });
+  }
+
+  // Links: thin cylinders re-laid every frame between the two device centres.
+  const center = (id) => {
+    if (id === 'internet') return internet.position.clone();
+    const g = meshes.get(id);
+    return g.position.clone().add(new THREE.Vector3(0, height(id) / 2, 0));
+  };
+  const up = new THREE.Vector3(0, 1, 0);
+  const linkObjs = links.map((l) => {
+    const usb = l.kind === 'usb-c-40g';
+    const mesh = new THREE.Mesh(
+      new THREE.CylinderGeometry(usb ? 0.05 : 0.018, usb ? 0.05 : 0.018, 1, 8),
+      new THREE.MeshBasicMaterial({ color: usb ? GOLD : 0x9c8a5c, transparent: true, opacity: 0 }),
+    );
+    mesh.visible = false;
+    scene.add(mesh);
+    const packets = [0, 1].map((i) => {
+      const p = new THREE.Mesh(
+        new THREE.SphereGeometry(usb ? 0.06 : 0.045, 10, 10),
+        new THREE.MeshBasicMaterial({ color: GOLD, transparent: true, opacity: 0 }),
+      );
+      p.visible = false;
+      p.userData = { reverse: i === 1, period: usb ? 0.8 : 1.8 + Math.random() * 1.2, phase: Math.random() };
+      scene.add(p);
+      return p;
+    });
+    return { ...l, usb, mesh, packets };
+  });
+
+  // Labels: device names in the network view, plus the USB-C link.
+  const labelRenderer = new CSS2DRenderer();
+  // isolation keeps the renderer's per-label z-indexes inside this layer, so
+  // labels never draw over the info card or the controls.
+  Object.assign(labelRenderer.domElement.style, { position: 'absolute', inset: '0', pointerEvents: 'none', isolation: 'isolate', zIndex: '0' });
+  container.insertBefore(labelRenderer.domElement, container.querySelector('.homelab-controls'));
+  const labels = [];
+  const addLabel = (text, parent, y, extra = '') => {
+    const div = el('div', text, `homelab-label ${extra}`.trim());
+    const obj = new CSS2DObject(div);
+    obj.position.set(0, y, 0);
+    obj.visible = false;
+    parent.add(obj);
+    labels.push(obj);
+    return obj;
+  };
+  addLabel('Internet', internet, 0.6);
+  for (const d of devices) if (topo.has(d.id)) addLabel(d.short || d.name, meshes.get(d.id), height(d.id) + 0.28);
+  const usbLink = linkObjs.find(l => l.usb);
+  const usbLabel = usbLink ? addLabel('40 Gbps USB-C', usbLink.mesh, 0, 'homelab-label--link') : null;
+  if (usbLabel) usbLabel.position.set(0.75, 0, 0);
+
+  // Re-lay the network view if the viewport flips between portrait and
+  // landscape while it is showing.
+  let wasPortrait = portrait();
+  const onResize = () => {
+    labelRenderer.setSize(container.clientWidth, container.clientHeight);
+    if (portrait() !== wasPortrait) {
+      wasPortrait = portrait();
+      placeInternet();
+      if (state.view === 'network') setView('network', { quiet: true });
+    }
+  };
+  new ResizeObserver(onResize).observe(container);
+  onResize();
+
+  // fade: 0 = rack view, 1 = network view. Every transition starts from the
+  // current positions and fade, so toggling mid-way just turns around.
+  let fade = 0;
+  let tween = null;
+
+  function applyFade(f) {
+    for (const { mat, base } of fadeMats) mat.opacity = base * (1 - f);
+    for (const o of fading) { o.visible = f < 0.999; o.userData.hidden = f > 0.5; }
+    internet.visible = f > 0.001;
+    internet.material.opacity = f;
+    for (const l of linkObjs) { l.mesh.visible = f > 0.001; l.mesh.material.opacity = (l.usb ? 1 : 0.75) * f; }
+  }
+
+  function targetsFor(view) {
+    const out = new Map();
+    for (const d of devices) {
+      const p = view === 'network' && topo.has(d.id) ? lift(topo.get(d.id)) : rack.get(d.id);
+      out.set(d.id, p);
+    }
+    return out;
+  }
+
+  function setView(view, { quiet = false } = {}) {
+    if (view !== 'rack' && view !== 'network') return;
+    state.view = view;
+    container.dataset.view = view;
+    for (const b of container.querySelectorAll('.homelab-toggle [data-view]')) {
+      b.setAttribute('aria-pressed', String(b.dataset.view === view));
+    }
+    for (const l of labels) l.visible = view === 'network';
+    controls.autoRotate = false;
+    const cam = cameraFor(view);
+    tween = {
+      t: 0,
+      from: new Map([...meshes].map(([id, g]) => [id, g.position.clone()])),
+      to: targetsFor(view),
+      fadeFrom: fade,
+      fadeTo: view === 'network' ? 1 : 0,
+      camFrom: camera.position.clone(),
+      camTo: cam.position,
+      targetFrom: controls.target.clone(),
+      targetTo: cam.target,
+    };
+    container.dataset.settled = 'false';
+    if (state.reducedMotion) step(TWEEN_S);
+    if (!quiet) capture('homelab_view_toggled', { view });
+  }
+
+  function step(dt) {
+    if (!tween) return;
+    tween.t = Math.min(1, tween.t + dt / TWEEN_S);
+    const k = easeInOut(tween.t);
+    for (const [id, g] of meshes) {
+      const p = lerp3(tween.from.get(id), tween.to.get(id), k);
+      g.position.set(p.x, p.y, p.z);
+    }
+    fade = tween.fadeFrom + (tween.fadeTo - tween.fadeFrom) * k;
+    applyFade(fade);
+    camera.position.lerpVectors(tween.camFrom, tween.camTo, k);
+    controls.target.lerpVectors(tween.targetFrom, tween.targetTo, k);
+    if (tween.t === 1) {
+      tween = null;
+      container.dataset.settled = 'true';
+    }
+  }
+
+  const tmp = new THREE.Vector3();
+  frameHooks.push((dt, t) => {
+    step(dt);
+    if (fade <= 0.001) return;
+    for (const l of linkObjs) {
+      const a = center(l.from);
+      const b = center(l.to);
+      const len = a.distanceTo(b);
+      l.mesh.position.copy(a).add(b).multiplyScalar(0.5);
+      l.mesh.scale.set(1, len, 1);
+      l.mesh.quaternion.setFromUnitVectors(up, tmp.copy(b).sub(a).normalize());
+      for (const p of l.packets) {
+        const on = state.view === 'network' && !state.reducedMotion;
+        p.visible = on;
+        if (!on) continue;
+        let u = ((t / p.userData.period) + p.userData.phase) % 1;
+        if (p.userData.reverse) u = 1 - u;
+        p.position.lerpVectors(a, b, u);
+        p.material.opacity = fade * Math.sin(Math.PI * u);
+      }
+    }
+  });
+  afterRenderHooks.push(() => labelRenderer.render(scene, camera));
+
+  for (const b of container.querySelectorAll('.homelab-toggle [data-view]')) {
+    b.addEventListener('click', () => setView(b.dataset.view));
+  }
+
+  if (location.hostname === 'localhost') {
+    window.__homelabPosition = (id) => {
+      const g = meshes.get(id);
+      return g ? { x: g.position.x, y: g.position.y, z: g.position.z } : null;
+    };
+  }
 }
 
 // Per-frame callbacks registered by the interaction and network-view code.

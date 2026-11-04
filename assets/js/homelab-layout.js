@@ -10,7 +10,7 @@ const ALL_TIERS = [...TIERS, 'cooling'];
 export const SHELF_GAP = 1.1;   // vertical distance between shelves
 export const SHELF_WIDTH = 6;   // usable shelf width; devices spread across it
 export const LAYER_GAP = 1.4;   // vertical distance between topology layers
-const LAYER_WIDTH = 9;          // widest a topology layer may spread
+export const LEAF_GAP = 1.2;    // horizontal distance between neighbouring leaves
 
 // Even spacing across `width`, centred on 0.
 function spread(count, width) {
@@ -57,28 +57,27 @@ export function rackLayout(devices) {
 }
 
 // Map<id, {x, y, z}> for the virtual "internet" node and every device with an
-// uplink, as a layered tree. Each layer is ordered by its parents' x (then
-// data order), so branches don't cross. Centred vertically on 0.
+// uplink, as a tidy tree: leaves get evenly spaced slots in depth-first (data)
+// order, each parent sits centred over its children, so no links cross.
+// Centred on 0 both ways.
 export function topologyLayout(devices) {
   const linked = devices.filter(d => d.uplink);
-  const out = new Map([['internet', { x: 0, y: 0, z: 0 }]]);
-  let layer = ['internet'];
-  let depth = 0;
-  while (layer.length) {
-    depth += 1;
-    const parentX = new Map(layer.map(id => [id, out.get(id).x]));
-    const next = linked
-      .filter(d => parentX.has(d.uplink))
-      .map((d, i) => ({ d, i }))
-      .sort((a, b) => parentX.get(a.d.uplink) - parentX.get(b.d.uplink) || a.i - b.i)
-      .map(({ d }) => d.id);
-    const xs = spread(next.length, Math.min(LAYER_WIDTH, next.length * 1.3));
-    next.forEach((id, i) => out.set(id, { x: xs[i], y: -depth * LAYER_GAP, z: 0 }));
-    layer = next;
-  }
-  const yValues = [...out.values()].map(p => p.y);
-  const shift = -(Math.max(...yValues) + Math.min(...yValues)) / 2;
-  for (const p of out.values()) p.y += shift;
+  const children = (id) => linked.filter(d => d.uplink === id).map(d => d.id);
+  const out = new Map();
+  let slot = 0;
+  (function place(id, depth) {
+    const kids = children(id);
+    kids.forEach(k => place(k, depth + 1));
+    const x = kids.length
+      ? kids.reduce((sum, k) => sum + out.get(k).x, 0) / kids.length
+      : slot++ * LEAF_GAP;
+    out.set(id, { x, y: -depth * LAYER_GAP, z: 0 });
+  })('internet', 0);
+  const xs = [...out.values()].map(p => p.x);
+  const ys = [...out.values()].map(p => p.y);
+  const dx = -(Math.max(...xs) + Math.min(...xs)) / 2;
+  const dy = -(Math.max(...ys) + Math.min(...ys)) / 2;
+  for (const p of out.values()) { p.x += dx; p.y += dy; }
   return out;
 }
 
